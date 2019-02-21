@@ -3,12 +3,10 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * This class will be used to load the web documents(files or URLs) indicated in
- * a text file, and then produce the summary statistics about these web
- * documents. Formats of statistics: [source] [word count] [alphabetic range of
- * content words] [number of distinct keywords] [evaluation of the HTML format]
+ * a text file, and then calls the method of objects of WebDoc to produce the
+ * summary statistics about these web documents.
  * 
  * @author 180139796
  * @version 1.2 last Updated on 21/02/2019
@@ -23,12 +21,12 @@ public class WebTest {
 
 		// Read a txt file from the command args
 		try {
-			// wrapping the fileReader with bufferedReader to improve efficiency.
-			BufferedReader fileIn = new BufferedReader(new FileReader(args[0]));
-			System.out.println("-------------------File:" + args[0] + " has been read.--------------------");
+
+			BufferedReader fileInput = new BufferedReader(new FileReader(args[0]));
+			System.out.println("--------------------------Reading File:" + args[0] + "-----------------------------");
 
 			String tempEntry;
-			while ((tempEntry = fileIn.readLine()) != null) {
+			while ((tempEntry = fileInput.readLine()) != null) {
 				if (checkFileType(tempEntry) == WebDoc.FileType.WEB_URL) {
 					webDocCollection.add(new WebDoc(tempEntry, WebDoc.FileType.WEB_URL));
 				} else if (checkFileType(tempEntry) == WebDoc.FileType.LOCAL_URL) {
@@ -39,8 +37,9 @@ public class WebTest {
 				}
 			}
 
-			fileIn.close();
-			System.out.println("Reading finished---------------------------------------------------------");
+			fileInput.close();
+			System.out
+					.println("-----------------------------Reading finished-----------------------------------------");
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("You should enter the path of the file!");
@@ -49,6 +48,13 @@ public class WebTest {
 		} catch (IOException e) {
 			System.out.println("Exceptions occurred:");
 			e.printStackTrace();
+		}
+
+		System.out.println("\nStatistics Summary: (Excluding the files that cannot be accessed)");
+		for (WebDoc ob : webDocCollection) {
+			if (ob.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
+				System.out.println(ob.toString());
+			}
 		}
 
 	}
