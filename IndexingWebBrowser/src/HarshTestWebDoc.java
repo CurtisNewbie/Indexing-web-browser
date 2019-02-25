@@ -5,12 +5,20 @@ import java.util.regex.Pattern;
 public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
-		String path = "http://www.google.com";
-		WebDoc doc1 = new WebDoc(path, WebDoc.FileType.WEB_URL);
-		System.out.println(doc1.toString());
+		String path = "File:test10.htm";
+		WebDoc doc1 = new WebDoc(path);
+//		System.out.println(doc1.getContent());
+//		System.out.println(doc1.toString());
+		
+//		WebIndex obj = new WebIndex();
+//		obj.add(doc1);
+//		System.out.println(obj.getAllDocuments());
+//		System.out.println(obj.getMatches("Google"));
+		
+		
 ////		WebDoc doc2 = new WebDoc("htt");
 ////		WebDoc doc3 = new WebDoc("file asdfasdf");
-////		WebDoc doc4 = new WebDoc("fiLe:assd");
+//		WebDoc doc4 = new WebDoc("fiLe:assd");
 
 //		String st = "as111df <21asdfjlj @123 / <[> a<asdf333kas2df?> ";
 //		
@@ -45,29 +53,8 @@ public class HarshTestWebDoc {
 //				"<meta name=\"keywords\" lang=\"en-us\" content=\"cultural differences, Texin, I18nGuy, XenCraft, consult, consultant, expert\">\r\n" + 
 //				"<meta name=\"keywords\" lang=\"en-gb\" content=\"internationalisation, localisation, globalisation\">\r\n" + 
 //				"<meta name=\"robots\" content=\"all\">"));
-	}
-	
-	//testing
-	
-	private static ArrayList<String> getKeyWords(String content) {
-
-		ArrayList<String> result = new ArrayList<>();
-		Pattern keywordPattern = Pattern.compile("<meta name=\"keywords\"(.*)content.?=\"([^>]*)\">");
-		Matcher keywordMatcher = keywordPattern.matcher(content);
-
-		StringBuilder tempOutput = new StringBuilder(""); // temporary output of keywords that may contain space, punctuation marks.
-		while (keywordMatcher.find()) {
-			tempOutput.append(keywordMatcher.group(2));
-		}
 		
-		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]++");
-		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
-		while (wordFilterMatcher.find()) { // refine the result; extract words from the temporary output.
-			result.add(wordFilterMatcher.group(0) + " ");
-		}
-
-		return result; // return the arraylist; though it's passing the references of this object, but
-						// this method will only initiate once.
 	}
+
 
 }
