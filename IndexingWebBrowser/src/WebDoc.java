@@ -12,7 +12,7 @@ import java.io.*;
  * summary of the document.
  * 
  * @author 180139796
- * @version 1.4 last Updated on 21/02/2019
+ * @version 1.5 last Updated on 25/02/2019
  */
 public class WebDoc {
 
@@ -46,8 +46,8 @@ public class WebDoc {
 	private FileStatus fileStatus;
 
 	/**
-	 * The entry of this file. If its a local web document, it may includes"File:"
-	 * at the beginning.
+	 * The entry of this file. If it's a local web document, it may include "File:"
+	 * at the beginning. If it's a web URL, it may include "http" at the beginning.
 	 */
 	private String entry;
 
@@ -67,6 +67,11 @@ public class WebDoc {
 	 */
 	private TreeSet<String> keyWords;
 
+	/**
+	 * Quality of syntax - It refers to whether HTML or JS tags are correctly closed
+	 * with closing tags and correctly nested.
+	 */
+	private String syntaxQuality;
 	/**
 	 * The collection of content words, excluding HTML and JS tags, numbers and
 	 * duplicate words.
@@ -110,7 +115,7 @@ public class WebDoc {
 			}
 
 			// check whether is well formed?
-			this.checkQualityOfFormat();
+			this.syntaxQuality = this.checkQualityOfSyntax();
 			this.keyWords = this.extractKeyWords();
 			this.numOfKeyWords = this.keyWords.size();
 			this.contentWords = this.extractContentWords();
@@ -133,13 +138,12 @@ public class WebDoc {
 	 * [The name of this entry] [Number of content words] [Alphabetical range of
 	 * content words] [Number of keywords] [Quality of the HTML]
 	 * 
-	 * @return A String of the statistics summary.
+	 * @return a String of the statistics summary.
 	 * 
 	 */
 	@Override
 	public String toString() {
-		return entry + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeyWords + " "
-				+ "well-formed/partly-formed/ill-formed";
+		return entry + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeyWords + " " + syntaxQuality;
 	}
 
 	/**
@@ -147,7 +151,7 @@ public class WebDoc {
 	 * the keywords; there is a space between each keyword. This method only runs
 	 * once.
 	 * 
-	 * @return A string that contains all the keywords.
+	 * @return a TreeSet of all the keywords.
 	 */
 	private TreeSet<String> extractKeyWords() {
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
@@ -172,7 +176,7 @@ public class WebDoc {
 	 * tags. Content words cannot be numbers, punctuation marks or anything that is
 	 * not a-zA-Z. This method only runs once.
 	 * 
-	 * @return result A TreeSet of content words.
+	 * @return a TreeSet of all content words.
 	 */
 	private TreeSet<String> extractContentWords() {
 		String tempOutput = content;
@@ -192,7 +196,7 @@ public class WebDoc {
 	 * exceptions occur, the fileStatus is set to FAILED_READING and this method
 	 * returns an empty, no length string. This method only runs once.
 	 * 
-	 * @return A String that contains the content of the web URL, including all the
+	 * @return a String that contains the content of the web URL, including all the
 	 *         HTML and JS tags.
 	 */
 	private String readWebUrl() {
@@ -226,7 +230,7 @@ public class WebDoc {
 	 * exceptions occur, the fileStatus is set to FAILED_READING and this method
 	 * returns an empty, no length string. This method only runs once.
 	 * 
-	 * @return A String that contains the content of the local HTML file, including
+	 * @return a String that contains the content of the local HTML file, including
 	 *         all the HTML and JS tags.
 	 */
 	private String readLocalFile() {
@@ -261,15 +265,14 @@ public class WebDoc {
 
 	/**
 	 * Check whether the type of this entry is a web URL or a local web file or a
-	 * illegal entry.
+	 * illegal entry. the
 	 * 
-	 * @return The fileType of this file.
+	 * @return the FileType (Enum) of this file.
 	 */
 	private FileType checkFileType() {
 		Pattern urlPattern = Pattern.compile("http[:s]", Pattern.CASE_INSENSITIVE); // Identify whether it's a URL.
 		Pattern localFilePattern = Pattern.compile("file:", Pattern.CASE_INSENSITIVE); // Identify whether it's a local
 																						// file.
-
 		Matcher urlMatcher = urlPattern.matcher(entry);
 		Matcher localFileMatcher = localFilePattern.matcher(entry);
 
@@ -284,27 +287,37 @@ public class WebDoc {
 		}
 	}
 
-	private void checkQualityOfFormat() {
-		System.out.println("Checking HTML format....");
+	/**
+	 * Check the quality of syntax. It refers to whether HTML or JS tags are
+	 * correctly closed with closing tags and correctly nested. A string is returned
+	 * to refer the quality of the syntax - "well-formed"; "partly-formed";
+	 * "ill-formed".
+	 * 
+	 * @return a string that indicates the quality of the syntax.
+	 */
+	private String checkQualityOfSyntax() {
 		Pattern syntaxPattern = Pattern.compile("<([!/a-zA-Z]*)[^>]*>");
 		Matcher syntaxChecker = syntaxPattern.matcher(content);
-
 		Stack<String> syntaxStack = new Stack<>();
 		Stack<String> specialTagsStack = new Stack<>();
+		final String meta_tag = "[Mm][Ee][Tt][Aa]"; // <meta>
+		final String p_tag = "/{0,1}[Pp]"; // </p> or <p>
+		final String hr_tag = "[Hh][Rr]"; // <hr>
+		final String br_tag = "[Bb][Rr]"; // <br>
+		final String link_tag = "[Ll][Ii][Nn][Kk]"; // <link>
+		String tag; // E.g., Only the first word after '<'.
+		String wholeTag; // anything that is within < and >
 
-		String tag;
-		String wholeTag;
 		if (syntaxChecker.find()) { // First tag can only be pushed into the stack
 			tag = syntaxChecker.group(1);
 			wholeTag = syntaxChecker.group(0);
 			if (!wholeTag.matches("<.*/>") && !wholeTag.matches("<!.*>")) { // Allowed self-closing tags
-				if (!tag.matches("[Mm][Ee][Tt][Aa]") && !tag.matches("/{0,1}[Pp]") && !tag.matches("[Hh][Rr]")
-						&& !tag.matches("[Bb][Rr]") && !tag.matches("[Ll][Ii][Nn][Kk]")) { // Not allowed tags for
-																							// well-formed input
+				// Not including the special tags for partly well-formed input.
+				if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) && !tag.matches(br_tag)
+						&& !tag.matches(link_tag)) {
 					syntaxStack.push(tag);
-				} else if (tag.matches("[Mm][Ee][Tt][Aa]") || tag.matches("/{0,1}[Pp]") || tag.matches("[Hh][Rr]")
-						|| tag.matches("[Bb][Rr]") || tag.matches("[Ll][Ii][Nn][Kk]")) { // Allowed tags for partly
-																							// well-formed input
+				} else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag) || tag.matches(br_tag)
+						|| tag.matches(link_tag)) { // Allowed tags for partly well-formed input
 					specialTagsStack.push(tag);
 				} else {
 					// do nothing
@@ -315,21 +328,20 @@ public class WebDoc {
 				tag = syntaxChecker.group(1);
 				wholeTag = syntaxChecker.group(0);
 				if (!wholeTag.matches("<.*/>") && !wholeTag.matches("<!.*>")) { // Allowed self-closing tags
-					if (!tag.matches("[Mm][Ee][Tt][Aa]") && !tag.matches("/{0,1}[/Pp]") && !tag.matches("[Hh][Rr]")
-							&& !tag.matches("[Bb][Rr]") && !tag.matches("[Ll][Ii][Nn][Kk]")) { // Not allowed tags for
-																								// well-formed input
-
-						if (!syntaxStack.empty() && ("/" + syntaxStack.peek()).equalsIgnoreCase(tag)) { // matches its closing tag
-							syntaxStack.pop(); // or the stack is empty.
+					// Not including the special tags for partly well-formed input.
+					if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) && !tag.matches(br_tag)
+							&& !tag.matches(link_tag)) {
+						// matches its closing tag or the stack is empty.
+						if (!syntaxStack.empty() && ("/" + syntaxStack.peek()).equalsIgnoreCase(tag)) {
+							syntaxStack.pop();
 						} else {
 							syntaxStack.push(tag);
 						}
-
-					} else if (tag.matches("[Mm][Ee][Tt][Aa]") || tag.matches("/{0,1}[Pp]") || tag.matches("[Hh][Rr]")
-							|| tag.matches("[Bb][Rr]") || tag.matches("[Ll][Ii][Nn][Kk]")) { // Allowed tags for partly
-						
-						if (!specialTagsStack.empty() && ("/" + specialTagsStack.peek()).equalsIgnoreCase(tag)) { // matches its closing tag
-							specialTagsStack.pop(); // or the stack is empty.
+					} else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag) || tag.matches(br_tag)
+							|| tag.matches(link_tag)) {// Allowed tags for partly well-formed input
+						// matches its closing tag or the stack is empty.
+						if (!specialTagsStack.empty() && ("/" + specialTagsStack.peek()).equalsIgnoreCase(tag)) {
+							specialTagsStack.pop();
 						} else {
 							specialTagsStack.push(tag);
 						}
@@ -339,15 +351,13 @@ public class WebDoc {
 				}
 			}
 		}
-		System.out.println(syntaxStack.toString());
-		System.out.println(specialTagsStack.toString());
 
 		if (syntaxStack.size() == 0 && specialTagsStack.size() == 0) {
-			System.out.println("Well Formed");
+			return "well-formed";
 		} else if (syntaxStack.size() == 0 && specialTagsStack.size() > 0) {
-			System.out.println("partly-formed");
+			return "partly-formed";
 		} else {
-			System.out.println("ill-formed");
+			return "ill-formed";
 		}
 	}
 
@@ -357,7 +367,7 @@ public class WebDoc {
 	 * accessed. If the file status returned is FAILED_READING; it means the content
 	 * of this file is not accessible.
 	 * 
-	 * @return The fileStatus of this file.
+	 * @return the fileStatus of this file.
 	 */
 	public FileStatus getFileStatus() {
 		return fileStatus;
@@ -366,7 +376,7 @@ public class WebDoc {
 	/**
 	 * Get the content words that have already been extracted from the URL.
 	 * 
-	 * @return tempTreeSet A TreeSet of content words.
+	 * @return a TreeSet of all content words.
 	 */
 	public TreeSet<String> getContentWords() {
 		TreeSet<String> tempTreeSet = new TreeSet<>();
@@ -379,7 +389,7 @@ public class WebDoc {
 	/**
 	 * Get the keywords that have already been extracted from the URL.
 	 * 
-	 * @return tempTreeSet A TreeSet of keyWords.
+	 * @return a TreeSet of all keyWords.
 	 */
 	public TreeSet<String> getKeywords() {
 		TreeSet<String> tempTreeSet = new TreeSet<>();
@@ -390,9 +400,11 @@ public class WebDoc {
 	}
 
 	/**
-	 * Get the entry as a String.
+	 * Get the entry as a String. If the web document is a web URL, it may be like
+	 * this: "http://www.google.co.uk". If it's a local web document, it may be like
+	 * this: "file:test111.htm".
 	 * 
-	 * @return entry The entry of this file.
+	 * @return the entry of this file.
 	 */
 	public String getEntry() {
 		return entry;

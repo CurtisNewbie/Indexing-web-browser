@@ -2,12 +2,14 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * This class will be used to load the web documents(files or URLs) indicated in
+ * This class will be used to read the web documents(entries: files or URLs) indicated in
  * a text file, and then calls the method of objects of WebDoc to produce the
- * summary statistics about these web documents.
+ * summary statistics about these web documents. A WebIndex will then be created to provide
+ * additional functionalities, such as searching and providing a overall summary of the WebDoc
+ * in this WebIndex. 
  * 
  * @author 180139796
- * @version 1.4 last Updated on 24/02/2019
+ * @version 1.5 last Updated on 25/02/2019
  * 
  */
 public class WebTest {
@@ -54,7 +56,7 @@ public class WebTest {
 		
 		System.out.println("\n" + wi.getAllDocuments()); // Get all the documents stored in the object of WebIndex.
 		System.out.println(wi.getMatches("elephant"));	 // Return the entry of the web document that contains this word.
- 		System.out.println(wi.getMatches("peanuts"));
+ 		System.out.println(wi.getMatches("helvetica")); 
 		System.out.println("\n" + wi.toString());		 // Return all the URLs that are stored in this object of WebIndex.
 		
 		
