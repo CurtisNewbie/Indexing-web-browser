@@ -12,7 +12,7 @@ import java.io.*;
  * summary of the document.
  * 
  * @author 180139796
- * @version 1.5 last Updated on 25/02/2019
+ * @version 1.6 last Updated on 26/02/2019
  */
 public class WebDoc {
 
