@@ -5,8 +5,9 @@ import java.util.regex.Pattern;
 public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
-		String path = "File:test10.htm";
+		String path = "http://www.google.co.uk";
 		WebDoc doc1 = new WebDoc(path);
+		System.out.println(doc1.getContentWords());
 //		System.out.println(doc1.getContent());
 //		System.out.println(doc1.toString());
 		

@@ -65,7 +65,7 @@ public class WebDoc {
 	 * The collection of keywords, excluding HTML and JS tags, numbers and duplicate
 	 * words.
 	 */
-	private TreeSet<String> keyWords;
+	private TreeSet<String> keywords;
 
 	/**
 	 * Quality of syntax - It refers to whether HTML or JS tags are correctly closed
@@ -116,15 +116,15 @@ public class WebDoc {
 
 			// check whether is well formed?
 			this.syntaxQuality = this.checkQualityOfSyntax();
-			this.keyWords = this.extractKeyWords();
-			this.numOfKeyWords = this.keyWords.size();
+			this.keywords = this.extractKeyWords();
+			this.numOfKeyWords = this.keywords.size();
 			this.contentWords = this.extractContentWords();
 			this.numOfContentWords = this.contentWords.size();
 
 			try {
 				this.rangeOfWords = this.contentWords.first() + "-" + this.contentWords.last();
 			} catch (NoSuchElementException e) {
-				rangeOfWords = "NoContentWords";
+				rangeOfWords = " "; // not content words.
 			}
 		} else { // Entry is in incorrect format.
 			System.out.println("Warning:\"" + entry
@@ -155,16 +155,16 @@ public class WebDoc {
 	 */
 	private TreeSet<String> extractKeyWords() {
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-		Pattern keywordPattern = Pattern.compile("<meta name=\"keywords\"([^>]*)content.?=\"([^>]*)\">");
+		Pattern keywordPattern = Pattern.compile("<meta name=\"keywords\"([^>]*?)contents?=\"([^>]*)\"\\s?/?>");
 		Matcher keywordMatcher = keywordPattern.matcher(content);
+
 		StringBuilder tempOutput = new StringBuilder("");
 		while (keywordMatcher.find()) {
 			tempOutput.append(keywordMatcher.group(2));
 		}
-
-		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]++"); // temporary output of keywords may contain space,
-																	// and
-		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput); // punctuation marks.
+		// temporary output of keywords may contain space and punctuation marks.
+		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]+");
+		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
 		while (wordFilterMatcher.find()) { // refine the result; extract words from the temporary output.
 			result.add(wordFilterMatcher.group(0));
 		}
@@ -180,7 +180,14 @@ public class WebDoc {
 	 */
 	private TreeSet<String> extractContentWords() {
 		String tempOutput = content;
-		tempOutput = tempOutput.replaceAll("(<[^>]*>)", " "); // Replace the tags - <...> with a space
+		// Replace the <script> ... </script> with a space.
+		tempOutput = tempOutput.replaceAll("<script[^>]*>.*?</script>", " ");
+
+		// Replace the <style> ... </style> with a space.
+		tempOutput = tempOutput.replaceAll("<style[^>]*>.*?</style>", " ");
+
+		// Replace the tags - <...> with a space
+		tempOutput = tempOutput.replaceAll("(<[^>]*?>)", " ");
 
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]++");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
@@ -305,8 +312,8 @@ public class WebDoc {
 		final String hr_tag = "[Hh][Rr]"; // <hr>
 		final String br_tag = "[Bb][Rr]"; // <br>
 		final String link_tag = "[Ll][Ii][Nn][Kk]"; // <link>
-		String tag; // E.g., Only the first word after '<'.
-		String wholeTag; // anything that is within < and >
+		String tag; // Only the first word after '<'. E.g., <style ...>
+		String wholeTag; // Anything that is within < and >
 
 		if (syntaxChecker.find()) { // First tag can only be pushed into the stack
 			tag = syntaxChecker.group(1);
@@ -389,11 +396,11 @@ public class WebDoc {
 	/**
 	 * Get the keywords that have already been extracted from the URL.
 	 * 
-	 * @return a TreeSet of all keyWords.
+	 * @return a TreeSet of all keywords.
 	 */
 	public TreeSet<String> getKeywords() {
 		TreeSet<String> tempTreeSet = new TreeSet<>();
-		for (String st : keyWords) {
+		for (String st : keywords) {
 			tempTreeSet.add(st);
 		}
 		return tempTreeSet;
