@@ -81,7 +81,7 @@ public class WebDoc {
 	/**
 	 * The number of keywords, excluding the duplicate words.
 	 */
-	private int numOfKeyWords;
+	private int numOfKeywords;
 
 	/**
 	 * The number of contentWords, excluding the duplicate words.
@@ -116,8 +116,8 @@ public class WebDoc {
 
 			// check whether is well formed?
 			this.syntaxQuality = this.checkQualityOfSyntax();
-			this.keywords = this.extractKeyWords();
-			this.numOfKeyWords = this.keywords.size();
+			this.keywords = this.extractKeywords();
+			this.numOfKeywords = this.keywords.size();
 			this.contentWords = this.extractContentWords();
 			this.numOfContentWords = this.contentWords.size();
 
@@ -143,7 +143,7 @@ public class WebDoc {
 	 */
 	@Override
 	public String toString() {
-		return entry + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeyWords + " " + syntaxQuality;
+		return entry + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeywords + " " + syntaxQuality;
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class WebDoc {
 	 * 
 	 * @return a TreeSet of all the keywords.
 	 */
-	private TreeSet<String> extractKeyWords() {
+	private TreeSet<String> extractKeywords() {
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 		Pattern keywordPattern = Pattern.compile("<meta name=\"keywords\"([^>]*?)contents?=\"([^>]*)\"\\s?/?>");
 		Matcher keywordMatcher = keywordPattern.matcher(content);
@@ -423,7 +423,7 @@ public class WebDoc {
 	 * @return numOfKeyWords The number of keywords.
 	 */
 	public int getNumOfKeywords() {
-		return numOfKeyWords;
+		return numOfKeywords;
 	}
 
 	/**
