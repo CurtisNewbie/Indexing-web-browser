@@ -5,18 +5,20 @@ import java.util.regex.Pattern;
 public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
-		String path = "http://www.google.co.uk";
-		WebDoc doc1 = new WebDoc(path);
-		System.out.println(doc1.getContentWords());
+		String path = "";
+		if (path != "") {
+			WebDoc doc1 = new WebDoc(path);
+			System.out.println(doc1.getContentWords());
+		}
+	
 //		System.out.println(doc1.getContent());
 //		System.out.println(doc1.toString());
-		
+
 //		WebIndex obj = new WebIndex();
 //		obj.add(doc1);
 //		System.out.println(obj.getAllDocuments());
 //		System.out.println(obj.getMatches("Google"));
-		
-		
+
 ////		WebDoc doc2 = new WebDoc("htt");
 ////		WebDoc doc3 = new WebDoc("file asdfasdf");
 //		WebDoc doc4 = new WebDoc("fiLe:assd");
@@ -54,8 +56,7 @@ public class HarshTestWebDoc {
 //				"<meta name=\"keywords\" lang=\"en-us\" content=\"cultural differences, Texin, I18nGuy, XenCraft, consult, consultant, expert\">\r\n" + 
 //				"<meta name=\"keywords\" lang=\"en-gb\" content=\"internationalisation, localisation, globalisation\">\r\n" + 
 //				"<meta name=\"robots\" content=\"all\">"));
-		
-	}
 
+	}
 
 }

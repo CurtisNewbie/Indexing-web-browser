@@ -12,7 +12,7 @@ import java.io.*;
  * summary of the document.
  * 
  * @author 180139796
- * @version 1.6 last Updated on 26/02/2019
+ * @version 1.7 last Updated on 27/02/2019
  */
 public class WebDoc {
 
@@ -103,7 +103,7 @@ public class WebDoc {
 	 */
 	public WebDoc(String url) {
 		this.entry = url;
-		this.fileType = this.checkFileType();
+		this.checkFileType();
 
 		if (fileType != FileType.INCORRECT_ENTRY_FORMAT) { // Entry is in correct format.
 			if (fileType == FileType.WEB_URL) {
@@ -114,8 +114,7 @@ public class WebDoc {
 				this.content = readLocalFile();
 			}
 
-			// check whether is well formed?
-			this.syntaxQuality = this.checkQualityOfSyntax();
+			this.syntaxQuality = this.checkQualityOfSyntax(); // check whether is well formed.
 			this.keywords = this.extractKeywords();
 			this.numOfKeywords = this.keywords.size();
 			this.contentWords = this.extractContentWords();
@@ -131,19 +130,6 @@ public class WebDoc {
 					+ "\" is neither a web url, nor a local html file. Please makes sure it's correct");
 			this.fileStatus = FileStatus.FAILED_READING;
 		}
-	}
-
-	/**
-	 * Return a String that provides the basic statistical summary of this file:
-	 * [The name of this entry] [Number of content words] [Alphabetical range of
-	 * content words] [Number of keywords] [Quality of the HTML]
-	 * 
-	 * @return a String of the statistics summary.
-	 * 
-	 */
-	@Override
-	public String toString() {
-		return entry + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeywords + " " + syntaxQuality;
 	}
 
 	/**
@@ -223,7 +209,7 @@ public class WebDoc {
 			System.out.println("The format of this url may be incorrect.");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (FileNotFoundException e) {
-			System.out.println("File:\"" + entry + "\" is not found. Check if the url is correct.");
+			System.out.println("URL:\"" + entry + "\" is not found. Check if the url is correct.");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
 			System.out.println("Connection fails, please make sure you have connected to the Internet.");
@@ -261,10 +247,10 @@ public class WebDoc {
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
 		} catch (FileNotFoundException e) {
-			System.out.println("File:\"" + localentry + "\"cannot be found.");
+			System.out.println("File:\"" + localentry + "\" cannot be found.");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("File:\"" + localentry + "\"cannot be accessed.");
+			System.out.println("File:\"" + localentry + "\" cannot be accessed.");
 			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
@@ -272,12 +258,11 @@ public class WebDoc {
 
 	/**
 	 * Check whether the type of this entry is a web URL or a local web file or a
-	 * illegal entry. the
-	 * 
-	 * @return the FileType (Enum) of this file.
+	 * illegal entry. A warning will be displayed if the format of the entry is
+	 * incorrect.
 	 */
-	private FileType checkFileType() {
-		Pattern urlPattern = Pattern.compile("http[:s]", Pattern.CASE_INSENSITIVE); // Identify whether it's a URL.
+	private void checkFileType() {
+		Pattern urlPattern = Pattern.compile("https?:", Pattern.CASE_INSENSITIVE); // Identify whether it's a URL.
 		Pattern localFilePattern = Pattern.compile("file:", Pattern.CASE_INSENSITIVE); // Identify whether it's a local
 																						// file.
 		Matcher urlMatcher = urlPattern.matcher(entry);
@@ -285,12 +270,13 @@ public class WebDoc {
 
 		// Check whether the entry is a URL or a local file.
 		if (urlMatcher.lookingAt()) { // for a URL.
-			return FileType.WEB_URL;
+			fileType = FileType.WEB_URL;
 		} else if (localFileMatcher.lookingAt()) {
-			return FileType.LOCAL_WEB_DOC;
+			fileType = FileType.LOCAL_WEB_DOC;
 		} else {
-			System.out.println(entry + "The format of this entry:\"" + entry + "\"is incorrect.");
-			return FileType.INCORRECT_ENTRY_FORMAT;
+			System.out.println("Warning:\"" + entry
+					+ "\" is neither a web url, nor a local html file. Please makes sure it's correct");
+			fileType = FileType.INCORRECT_ENTRY_FORMAT;
 		}
 	}
 
@@ -366,6 +352,19 @@ public class WebDoc {
 		} else {
 			return "ill-formed";
 		}
+	}
+
+	/**
+	 * Return a String that provides the basic statistical summary of this file:
+	 * [The name of this entry] [Number of content words] [Alphabetical range of
+	 * content words] [Number of keywords] [Quality of the HTML]
+	 * 
+	 * @return a String of the statistics summary.
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return entry + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeywords + " " + syntaxQuality;
 	}
 
 	/**
