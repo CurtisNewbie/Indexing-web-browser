@@ -49,7 +49,7 @@ public class WebTest {
 		
 		for (WebDoc ob : webDocCollection) {
 			
-			// Only the objects of WebDoc that successfully accessed.
+			// Only the objects of WebDoc that successfully read their content from the URL or files.
 			if (ob.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
 				System.out.println(ob.toString()); // Call toString() of all the objects of WebDoc.
 				wi.add(ob);  //add objects into the object of WebIndex

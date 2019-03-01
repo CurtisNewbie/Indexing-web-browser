@@ -228,17 +228,17 @@ public class WebDoc {
 	 */
 	private String readLocalFile() {
 		StringBuilder result = new StringBuilder("");
-		String localentry = entry;
+		String localWebEntry = entry;
 
 		Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
 		Matcher entryMatcher = entryPattern.matcher(entry);
 		if (entryMatcher.find()) {
-			localentry = entryMatcher.group(2); // extract the true file path.
+			localWebEntry = entryMatcher.group(2); // extract the true file path.
 		}
 
 		// Read File
 		try {
-			FileReader fileInput = new FileReader(localentry);
+			FileReader fileInput = new FileReader(localWebEntry);
 			BufferedReader reader = new BufferedReader(fileInput);
 			String temp;
 			while ((temp = reader.readLine()) != null) {
@@ -247,10 +247,10 @@ public class WebDoc {
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
 		} catch (FileNotFoundException e) {
-			System.out.println("File:\"" + localentry + "\" cannot be found.");
+			System.out.println("File:\"" + localWebEntry + "\" cannot be found.");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("File:\"" + localentry + "\" cannot be accessed.");
+			System.out.println("File:\"" + localWebEntry + "\" cannot be accessed.");
 			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
