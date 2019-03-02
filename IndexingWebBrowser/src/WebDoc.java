@@ -133,9 +133,8 @@ public class WebDoc {
 	}
 
 	/**
-	 * It extracts the keywords from the URL, and return a string that contains all
-	 * the keywords; there is a space between each keyword. This method only runs
-	 * once.
+	 * It extracts the keywords from the URL, and return an object of TreeSet that contains all
+	 * the keywords. This method only runs once.
 	 * 
 	 * @return a TreeSet of all the keywords.
 	 */
@@ -148,6 +147,7 @@ public class WebDoc {
 		while (keywordMatcher.find()) {
 			tempOutput.append(keywordMatcher.group(2));
 		}
+		
 		// temporary output of keywords may contain space and punctuation marks.
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]+");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
@@ -178,6 +178,7 @@ public class WebDoc {
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]++");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		
 		while (wordFilterMatcher.find()) { // refine the result; extract words from the temporary output.
 			result.add(wordFilterMatcher.group(0));
 		}
