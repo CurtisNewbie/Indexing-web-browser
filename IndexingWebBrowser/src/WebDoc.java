@@ -123,7 +123,7 @@ public class WebDoc {
 			try {
 				this.rangeOfWords = this.contentWords.first() + "-" + this.contentWords.last();
 			} catch (NoSuchElementException e) {
-				rangeOfWords = " "; // not content words.
+				rangeOfWords = " "; // no content words.
 			}
 		} else { // Entry is in incorrect format.
 			System.out.println("Warning:\"" + entry
@@ -206,13 +206,14 @@ public class WebDoc {
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
 		} catch (MalformedURLException e) {
-			System.out.println("The format of this url may be incorrect.");
+			System.out.println("Warining --- The format of \"" + entry + "\" may be incorrect.");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (FileNotFoundException e) {
-			System.out.println("URL:\"" + entry + "\" is not found. Check if the url is correct.");
+			System.out.println("Warining --- URL:\"" + entry + "\" cannot be found. Check if the url is correct.");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("Connection fails, please make sure you have connected to the Internet.");
+			System.out.println("Warining --- Connection to\"" + entry
+					+ "\"fails, please make sure you have connected to the Internet.");
 			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
@@ -247,10 +248,10 @@ public class WebDoc {
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
 		} catch (FileNotFoundException e) {
-			System.out.println("File:\"" + localWebEntry + "\" cannot be found.");
+			System.out.println("Warning --- File:\"" + localWebEntry + "\" cannot be found.");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("File:\"" + localWebEntry + "\" cannot be accessed.");
+			System.out.println("Warning --- File:\"" + localWebEntry + "\" cannot be accessed.");
 			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
@@ -282,8 +283,9 @@ public class WebDoc {
 
 	/**
 	 * Check the quality of syntax. It refers to whether HTML or JS tags are
-	 * correctly closed with closing tags and correctly nested. A string is returned
-	 * to refer the quality of the syntax - "well-formed"; "partly-formed";
+	 * correctly closed with closing tags and correctly nested. When the syntax
+	 * other than HTML is used, the accuracy cannot be guaranteed. A string is
+	 * returned to refer the quality of the syntax - "well-formed"; "partly-formed";
 	 * "ill-formed".
 	 * 
 	 * @return a string that indicates the quality of the syntax.
