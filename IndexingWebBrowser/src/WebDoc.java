@@ -110,7 +110,7 @@ public class WebDoc {
 				System.out.println("Web Url:" + entry);
 				this.content = readWebUrl();
 			} else if (fileType == FileType.LOCAL_WEB_DOC) {
-				System.err.println("Local url:" + entry);
+				System.out.println("Local url:" + entry);
 				this.content = readLocalFile();
 			}
 
@@ -125,16 +125,12 @@ public class WebDoc {
 			} catch (NoSuchElementException e) {
 				rangeOfWords = " "; // no content words.
 			}
-		} else { // Entry is in incorrect format.
-			System.out.println("Warning:\"" + entry
-					+ "\" is neither a web url, nor a local html file. Please makes sure it's correct");
-			this.fileStatus = FileStatus.FAILED_READING;
 		}
 	}
 
 	/**
-	 * It extracts the keywords from the URL, and return an object of TreeSet that contains all
-	 * the keywords. This method only runs once.
+	 * It extracts the keywords from the URL, and return an object of TreeSet that
+	 * contains all the keywords. This method only runs once.
 	 * 
 	 * @return a TreeSet of all the keywords.
 	 */
@@ -147,7 +143,7 @@ public class WebDoc {
 		while (keywordMatcher.find()) {
 			tempOutput.append(keywordMatcher.group(2));
 		}
-		
+
 		// temporary output of keywords may contain space and punctuation marks.
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]+");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
@@ -178,7 +174,7 @@ public class WebDoc {
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]++");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-		
+
 		while (wordFilterMatcher.find()) { // refine the result; extract words from the temporary output.
 			result.add(wordFilterMatcher.group(0));
 		}
@@ -198,7 +194,7 @@ public class WebDoc {
 
 		try {
 			URL url = new URL(entry);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
 
 			String eachLine = "";
 			while ((eachLine = reader.readLine()) != null) {
@@ -207,14 +203,14 @@ public class WebDoc {
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
 		} catch (MalformedURLException e) {
-			System.out.println("Warining --- The format of \"" + entry + "\" may be incorrect.");
+			System.out.println("[Warning --- \"" + entry + "\" --- The URL format is incorrect.]");
 			fileStatus = FileStatus.FAILED_READING;
-		} catch (FileNotFoundException e) {
-			System.out.println("Warining --- URL:\"" + entry + "\" cannot be found. Check if the url is correct.");
+		} catch (IllegalArgumentException e) {
+			System.out.println("[Warning --- \"" + entry + "\" --- The protocol is incorrect, please make sure the URL is correct.]");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("Warining --- Connection to\"" + entry
-					+ "\"fails, please make sure you have connected to the Internet.");
+			System.out.println("[Warning --- Connection to \"" + entry
+					+ "\" fails, please make sure you have connected to the Internet or the URL is correct.]");
 			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
@@ -249,10 +245,10 @@ public class WebDoc {
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
 		} catch (FileNotFoundException e) {
-			System.out.println("Warning --- File:\"" + localWebEntry + "\" cannot be found.");
+			System.out.println("[Warning --- File:\"" + localWebEntry + "\" cannot be found.]");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("Warning --- File:\"" + localWebEntry + "\" cannot be accessed.");
+			System.out.println("[Warning --- File:\"" + localWebEntry + "\" cannot be accessed.]");
 			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
@@ -279,6 +275,7 @@ public class WebDoc {
 			System.out.println("Warning:\"" + entry
 					+ "\" is neither a web url, nor a local html file. Please makes sure it's correct");
 			fileType = FileType.INCORRECT_ENTRY_FORMAT;
+			this.fileStatus = FileStatus.FAILED_READING;
 		}
 	}
 
@@ -384,6 +381,7 @@ public class WebDoc {
 
 	/**
 	 * Get the content words that have already been extracted from the URL.
+	 * If the 
 	 * 
 	 * @return a TreeSet of all content words.
 	 */
