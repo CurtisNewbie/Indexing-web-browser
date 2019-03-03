@@ -143,7 +143,7 @@ public class WebDoc {
 			tempOutput.append(keywordMatcher.group(2));
 		}
 
-		// temporary output of keywords may contain space and punctuation marks.
+		// temporary output of keywords that may contain space and punctuation marks.
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]+");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
 		while (wordFilterMatcher.find()) { // refine the result; extract words from the temporary output.
@@ -255,7 +255,7 @@ public class WebDoc {
 
 	/**
 	 * Check whether the type of this entry is a web URL or a local web file or a
-	 * illegal entry. A warning will be displayed if the format of the entry is
+	 * illegal entry. A warning message will be displayed if the format of the entry is
 	 * incorrect.
 	 */
 	private void checkFileType() {
@@ -282,7 +282,7 @@ public class WebDoc {
 	 * Check the quality of syntax. It refers to whether HTML or JS tags are
 	 * correctly closed with closing tags and correctly nested. When any syntax
 	 * other than HTML is used, the accuracy cannot be guaranteed. A string is
-	 * returned to refer the quality of the syntax - "well-formed"; "partly-formed";
+	 * returned to indicate the quality of the syntax - "well-formed"; "partly-formed";
 	 * "ill-formed".
 	 * 
 	 * @return a string that indicates the quality of the syntax.
@@ -290,8 +290,10 @@ public class WebDoc {
 	private String checkQualityOfSyntax() {
 		Pattern syntaxPattern = Pattern.compile("<([!/a-zA-Z]*)[^>]*>");
 		Matcher syntaxChecker = syntaxPattern.matcher(content);
-		Stack<String> syntaxStack = new Stack<>();
-		Stack<String> specialTagsStack = new Stack<>();
+		
+		Stack<String> syntaxStack = new Stack<>(); // Stack for normal tags
+		Stack<String> specialTagsStack = new Stack<>(); // stack for special tags
+		
 		final String meta_tag = "[Mm][Ee][Tt][Aa]"; // <meta>
 		final String p_tag = "/{0,1}[Pp]"; // </p> or <p>
 		final String hr_tag = "[Hh][Rr]"; // <hr>
