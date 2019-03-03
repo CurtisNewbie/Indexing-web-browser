@@ -358,7 +358,7 @@ public class WebDoc {
 	/**
 	 * Return a String that provides the basic statistical summary of this file:
 	 * [The name of this entry] [Number of content words] [Alphabetical range of
-	 * content words] [Number of keywords] [Quality of the HTML]
+	 * content words] [Number of keywords] [Quality of the HTML syntax]
 	 * 
 	 * @return a String of the statistics summary.
 	 * 
@@ -420,7 +420,7 @@ public class WebDoc {
 	/**
 	 * Get the number of keywords as an integer.
 	 * 
-	 * @return numOfKeyWords The number of keywords.
+	 * @return the number of keywords.
 	 */
 	public int getNumOfKeywords() {
 		return numOfKeywords;
@@ -429,7 +429,7 @@ public class WebDoc {
 	/**
 	 * Get the number of content words.
 	 * 
-	 * @return numOfContentWords The number of Content words.
+	 * @return the number of Content words.
 	 */
 	public int getNumOfContentWords() {
 		return numOfContentWords;
