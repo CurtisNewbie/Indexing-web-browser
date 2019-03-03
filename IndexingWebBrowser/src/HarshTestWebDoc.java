@@ -1,16 +1,39 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.*;
 
 public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
-		String path = "";
-		if (path != "") {
+		String path = "http://www.googlasdasdsade.com";
+		try {
 			WebDoc doc1 = new WebDoc(path);
-			System.out.println(doc1.getContentWords());
+			System.out.println(doc1.getContentWords().toString());
+			System.out.println(doc1.getEntry());
+		} catch (Exception e) {
+			System.out.println("Errors");
 		}
-	
+//		try {	
+//		URL url = new URL(path);
+//		BufferedReader br = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
+//		System.out.println(br.readLine());
+//		br.close();
+//		} catch (MalformedURLException e) {
+//			// TODO: handle exception
+//			System.out.println("URL incorrect");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
+//		System.out.println(doc1.getContentWords().toString());
+//	
 //		System.out.println(doc1.getContent());
 //		System.out.println(doc1.toString());
 

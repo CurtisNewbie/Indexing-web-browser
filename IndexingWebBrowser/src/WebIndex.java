@@ -7,7 +7,6 @@ import java.util.ArrayList;
  * WebIndex.
  * 
  * @author 180139796
- * @version 1.5 last Updated on 25/02/2019
  */
 public class WebIndex {
 

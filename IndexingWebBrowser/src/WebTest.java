@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * providing a overall summary of the WebDoc in this WebIndex.
  * 
  * @author 180139796
- * @version 1.7 last Updated on 27/02/2019
  * 
  */
 public class WebTest {

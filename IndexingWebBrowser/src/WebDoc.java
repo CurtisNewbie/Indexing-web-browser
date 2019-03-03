@@ -12,7 +12,6 @@ import java.io.*;
  * summary of the document.
  * 
  * @author 180139796
- * @version 1.7 last Updated on 27/02/2019
  */
 public class WebDoc {
 
@@ -47,7 +46,7 @@ public class WebDoc {
 
 	/**
 	 * The entry of this file. If it's a local web document, it may include "File:"
-	 * at the beginning. If it's a web URL, it may include "http" at the beginning.
+	 * at the beginning. If it's a web URL, it may include "http:" at the beginning.
 	 */
 	private String entry;
 
@@ -281,7 +280,7 @@ public class WebDoc {
 
 	/**
 	 * Check the quality of syntax. It refers to whether HTML or JS tags are
-	 * correctly closed with closing tags and correctly nested. When the syntax
+	 * correctly closed with closing tags and correctly nested. When any syntax
 	 * other than HTML is used, the accuracy cannot be guaranteed. A string is
 	 * returned to refer the quality of the syntax - "well-formed"; "partly-formed";
 	 * "ill-formed".
@@ -381,9 +380,8 @@ public class WebDoc {
 
 	/**
 	 * Get the content words that have already been extracted from the URL.
-	 * If the 
 	 * 
-	 * @return a TreeSet of all content words.
+	 * @return a TreeSet (deep copy) of all content words.
 	 */
 	public TreeSet<String> getContentWords() {
 		TreeSet<String> tempTreeSet = new TreeSet<>();
@@ -396,7 +394,7 @@ public class WebDoc {
 	/**
 	 * Get the keywords that have already been extracted from the URL.
 	 * 
-	 * @return a TreeSet of all keywords.
+	 * @return a TreeSet (deep copy) of all keywords.
 	 */
 	public TreeSet<String> getKeywords() {
 		TreeSet<String> tempTreeSet = new TreeSet<>();
