@@ -272,8 +272,8 @@ public class WebDoc {
 		} else if (localFileMatcher.lookingAt()) {
 			fileType = FileType.LOCAL_WEB_DOC;
 		} else {
-			System.out.println("Warning:\"" + entry
-					+ "\" is neither a web url, nor a local html file. Please makes sure it's correct");
+			System.out.println("[Warning --- \"" + entry
+					+ "\" is neither a web url, nor a local html file. Please makes sure it in correct entry format.]");
 			fileType = FileType.INCORRECT_ENTRY_FORMAT;
 			this.fileStatus = FileStatus.FAILED_READING;
 		}
