@@ -291,7 +291,7 @@ public class WebDoc {
 		Pattern syntaxPattern = Pattern.compile("<([!/a-zA-Z]*)[^>]*>");
 		Matcher syntaxChecker = syntaxPattern.matcher(content);
 		
-		Stack<String> syntaxStack = new Stack<>(); // Stack for normal tags
+		Stack<String> normalTagStack = new Stack<>(); // Stack for normal tags
 		Stack<String> specialTagsStack = new Stack<>(); // stack for special tags
 		
 		final String meta_tag = "[Mm][Ee][Tt][Aa]"; // <meta>
@@ -309,7 +309,7 @@ public class WebDoc {
 				// Not including the special tags for partly well-formed input.
 				if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) && !tag.matches(br_tag)
 						&& !tag.matches(link_tag)) {
-					syntaxStack.push(tag);
+					normalTagStack.push(tag);
 				} else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag) || tag.matches(br_tag)
 						|| tag.matches(link_tag)) { // Allowed tags for partly well-formed input
 					specialTagsStack.push(tag);
@@ -326,10 +326,10 @@ public class WebDoc {
 					if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) && !tag.matches(br_tag)
 							&& !tag.matches(link_tag)) {
 						// matches its closing tag or the stack is empty.
-						if (!syntaxStack.empty() && ("/" + syntaxStack.peek()).equalsIgnoreCase(tag)) {
-							syntaxStack.pop();
+						if (!normalTagStack.empty() && ("/" + normalTagStack.peek()).equalsIgnoreCase(tag)) {
+							normalTagStack.pop();
 						} else {
-							syntaxStack.push(tag);
+							normalTagStack.push(tag);
 						}
 					} else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag) || tag.matches(br_tag)
 							|| tag.matches(link_tag)) {// Allowed tags for partly well-formed input
@@ -346,9 +346,9 @@ public class WebDoc {
 			}
 		}
 
-		if (syntaxStack.size() == 0 && specialTagsStack.size() == 0) {
+		if (normalTagStack.size() == 0 && specialTagsStack.size() == 0) {
 			return "well-formed";
-		} else if (syntaxStack.size() == 0 && specialTagsStack.size() > 0) {
+		} else if (normalTagStack.size() == 0 && specialTagsStack.size() > 0) {
 			return "partly-formed";
 		} else {
 			return "ill-formed";
