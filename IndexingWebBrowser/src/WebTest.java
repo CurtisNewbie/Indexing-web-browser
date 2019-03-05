@@ -56,9 +56,14 @@ public class WebTest {
 		}
 
 		System.out.println("\n" + wi.getAllDocuments()); // Get all the documents stored in the object of WebIndex.
+		
 		System.out.println(wi.getMatches("elephant")); // Return the entry of the web document that contains this word.
 		System.out.println(wi.getMatches("helvetica"));
-		System.out.println("\n" + wi.toString()); // Return all the URLs that are stored in this object of WebIndex.
+		
+		System.out.println("\n" + wi.toString()); // Get all the documents stored in the object of WebIndex
+
+		
+		
 
 	}
 
