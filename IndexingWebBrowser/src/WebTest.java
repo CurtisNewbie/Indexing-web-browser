@@ -66,6 +66,7 @@ public class WebTest {
 		Scanner keyboard = new Scanner(System.in); // Get the string keyboard input to search through the web index.
 		System.out.println("\nWhat do you want to search?");
 		System.out.println(wi.getMatches(keyboard.nextLine()));
+		keyboard.close();
 		
 
 	}
