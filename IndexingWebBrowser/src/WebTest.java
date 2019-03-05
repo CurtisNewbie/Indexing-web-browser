@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * This class will be used to read the web documents(entries: files or URLs)
@@ -62,7 +63,9 @@ public class WebTest {
 		
 		System.out.println("\n" + wi.toString()); // Get all the documents stored in the object of WebIndex
 
-		
+		Scanner keyboard = new Scanner(System.in); // Get the string keyboard input to search through the web index.
+		System.out.println("\nWhat do you want to search?");
+		System.out.println(wi.getMatches(keyboard.nextLine()));
 		
 
 	}
