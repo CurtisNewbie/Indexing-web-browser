@@ -208,8 +208,8 @@ public class WebDoc {
 			System.out.println("[Warning --- \"" + entry + "\" --- The protocol is incorrect, please make sure the URL is correct.]");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("[Warning --- Connection to \"" + entry
-					+ "\" fails, please make sure you have connected to the Internet or the URL is correct.]");
+			System.out.println("[Warning --- Cannot connect to \"" + entry
+					+ "\", please make sure that you have connected to the Internet or that the URL is correct.]");
 			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
@@ -272,7 +272,7 @@ public class WebDoc {
 			fileType = FileType.LOCAL_WEB_DOC;
 		} else {
 			System.out.println("[Warning --- \"" + entry
-					+ "\" is neither a web url, nor a local html file. Please makes sure it in correct entry format.]");
+					+ "\" is neither a web url, nor a local html file. Please makes sure it's in correct entry format.]");
 			fileType = FileType.INCORRECT_ENTRY_FORMAT;
 			this.fileStatus = FileStatus.FAILED_READING;
 		}
