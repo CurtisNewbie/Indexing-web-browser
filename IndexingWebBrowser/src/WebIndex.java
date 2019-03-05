@@ -3,8 +3,8 @@ import java.util.ArrayList;
 /**
  * It is a web index that can check the web documents and see which contains a
  * particular string. It also contains the keywords or content words extracted
- * from each web document. It can also provide overall statistics summary of this
- * WebIndex.
+ * from each web document. It can also provide overall statistics summary of
+ * this WebIndex.
  * 
  * @author 180139796
  */
@@ -40,8 +40,8 @@ public class WebIndex {
 	}
 
 	/**
-	 * Add an object of WebDoc into the index and increment numOfDocs by one.
-	 * Add the number of keywords and content words to the numOfKeywords and
+	 * Add an object of WebDoc into the index and increment numOfDocs by one. Add
+	 * the number of keywords and content words to the numOfKeywords and
 	 * numOfContentWords.
 	 * 
 	 * @param doc An object of WebDoc
@@ -82,6 +82,7 @@ public class WebIndex {
 				"Through searching keywords - Word:\"" + wd + "\" found in:\n");
 		StringBuilder ContentWordsResult = new StringBuilder(
 				"Through searching contentWords - Word:\"" + wd + "\" found in:\n");
+
 		for (WebDoc doc : webDocs) {
 			if (doc.getContentWords().contains(wd)) {
 				ContentWordsResult.append(doc.getEntry() + "\n");
