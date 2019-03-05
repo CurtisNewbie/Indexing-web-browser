@@ -135,12 +135,19 @@ public class WebDoc {
 	 */
 	private TreeSet<String> extractKeywords() {
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-		Pattern keywordPattern = Pattern.compile("<meta name=\"keywords\"([^>]*?)contents?=\"([^>]*)\"\\s?/?>");
-		Matcher keywordMatcher = keywordPattern.matcher(content);
+		Pattern keywordPatternNormalOrder = Pattern.compile("<[Mm][Ee][Tt][Aa]\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"([^>]*?)[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s?/?>");
+		Matcher keywordMatcherNormalOrder = keywordPatternNormalOrder.matcher(content);
+
+		Pattern keywordPatternReverseOrder = Pattern.compile("<[Mm][Ee][Tt][Aa]\\s*[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"\\s*/?>");
+		Matcher keywordMatcherReverseOrder = keywordPatternReverseOrder.matcher(content);
 
 		StringBuilder tempOutput = new StringBuilder("");
-		while (keywordMatcher.find()) {
-			tempOutput.append(keywordMatcher.group(2));
+		while (keywordMatcherNormalOrder.find()) {
+			tempOutput.append(keywordMatcherNormalOrder.group(2));
+		}
+		
+		while (keywordMatcherReverseOrder.find()) {
+			tempOutput.append(keywordMatcherReverseOrder.group(1));
 		}
 
 		// temporary output of keywords that may contain space and punctuation marks.
