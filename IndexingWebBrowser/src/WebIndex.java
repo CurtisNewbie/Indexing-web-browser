@@ -82,51 +82,6 @@ public class WebIndex {
 		numOfWords = webDocsMap.size();
 	}
 
-//	/**
-//	 * Get all the WebDoc that are stored in this index as a String.
-//	 * 
-//	 * @return a String that summarises all the WebDoc in this index.
-//	 */
-//	public String getAllDocuments() {
-//		return webDocsMap.keySet().toString();
-//	}
-
-	/**
-	 * Search a string through content words and keywords.
-	 * 
-	 * @param wd the String that is searched.
-	 * @return a string that indicates all the entries that contains this string in
-	 *         their content words and keywords.
-	 */
-//	public String getMatches(String wd) {
-//		boolean keywordsFound = false;
-//		boolean contentWordsFound = false;
-//		StringBuilder keywordsResult = new StringBuilder(
-//				"Through searching keywords - Word:\"" + wd + "\" found in:\n");
-//		StringBuilder ContentWordsResult = new StringBuilder(
-//				"Through searching contentWords - Word:\"" + wd + "\" found in:\n");
-//
-//		for (WebDoc doc : webDocs) {
-//			if (doc.getContentWords().contains(wd)) {
-//				ContentWordsResult.append(doc.getEntry() + "\n");
-//				contentWordsFound = true;
-//			}
-//			if (doc.getKeywords().contains(wd)) {
-//				keywordsResult.append(doc.getEntry() + "\n");
-//				keywordsFound = true;
-//			}
-//		}
-//
-//		if (contentWordsFound == false) {
-//			ContentWordsResult.append("Nothing Found.");
-//		}
-//
-//		if (keywordsFound == false) {
-//			keywordsResult.append("Nothing Found");
-//		}
-//		return keywordsResult.toString() + "\n" + ContentWordsResult.toString();
-//	}
-
 	public Set<WebDoc> getMatches(String wd) {
 		return webDocsMap.get(wd);
 	}
