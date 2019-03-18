@@ -25,7 +25,7 @@ public class WebTest {
 		// Read a txt file from the command args
 		try {
 			BufferedReader fileInput = new BufferedReader(new FileReader(args[0]));
-			System.out.println("--------------------------Reading File:" + args[0] + "-----------------------------");
+//			System.out.println("--------------------------Reading File:" + args[0] + "-----------------------------");
 
 			String tempEntry;
 			while ((tempEntry = fileInput.readLine()) != null) {
@@ -34,10 +34,11 @@ public class WebTest {
 				}
 			}
 			fileInput.close();
-			System.out.println("-----------------------------Reading finished--------------------------------------");
+//			System.out.println("-----------------------------Reading finished--------------------------------------");
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("You should enter the path of the file!");
+			System.exit(0);
 		} catch (FileNotFoundException e) {
 			System.out.println("File is not found! Try this format - C:\\foldername\\filename.txt");
 		} catch (IOException e) {
@@ -75,6 +76,7 @@ public class WebTest {
 			System.out.println(wd.getEntry() + "\n");
 		}
 		
+		System.out.println("-------------------------------------");
 		Set<WebDoc> keyResult = webIndexKey.getMatches("peanuts");
 		for (WebDoc wd : keyResult) {
 			System.out.println(wd.getEntry() + "\n");
@@ -84,9 +86,24 @@ public class WebTest {
 		System.out.println("------------andandandand--------------");
 		System.out.println(QueryBuilder.parse("and(elephant,whale)").matches(webIndexContent).toString());
 		System.out.println("-----------orororor--------------");
-		System.out.println(QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent).toString());
+		Set<WebDoc> orDoc = QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent);
+		if(orDoc == null) {
+			System.out.println("empty");
+		} else {
+			for(WebDoc wd : orDoc) {
+				System.out.println(wd);
+			}
+		}
+		
 		System.out.println("------------notnotnot------------------");
-		System.out.println(QueryBuilder.parse("and(elephant,NoT(elephant)").matches(webIndexContent).toString());
+		Set<WebDoc> notDoc = QueryBuilder.parse("and(elephant,NoT(elephant)").matches(webIndexContent);
+		if(notDoc == null) {
+			System.out.println("empty");
+		} else {
+			for(WebDoc wd : notDoc) {
+				System.out.println(wd);
+			}
+		}
 		
 	}
 
