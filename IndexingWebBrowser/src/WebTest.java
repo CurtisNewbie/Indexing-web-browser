@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.xml.ws.WebEndpoint;
+
 /**
  * This class will be used to read the web documents(entries: files or URLs)
  * indicated in a text file, and then calls the method of objects of WebDoc to
@@ -43,8 +45,9 @@ public class WebTest {
 		}
 
 		// Create a new object of WebIndex.
-		WebIndex wi = new WebIndex();
-
+		WebIndex webIndexContent = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
+		WebIndex webIndexKey = new WebIndex(WebIndex.TypeOfWords.KEYWORD);
+				
 		System.out.println("\n-----Statistics Summary: (Excluding the files that cannot be accessed)-----");
 		
 		for (WebDoc ob : webDocCollection) {
@@ -52,21 +55,21 @@ public class WebTest {
 			// Only the objects of WebDoc that successfully read their content from the URL or files.
 			if (ob.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
 				System.out.println(ob.toString()); // Call toString() of all the objects of WebDoc.
-				wi.add(ob);  //add objects into the object of WebIndex
+				webIndexContent.add(ob);  //add objects into the object of WebIndex
+				webIndexKey.add(ob);
 			}
 		}
 
-		System.out.println("\n" + wi.getAllDocuments()); // Get all the documents stored in the object of WebIndex.
+		System.out.println("\n" + webIndexContent.getAllDocuments()); // Get all the documents stored in the object of WebIndex.
 		
-		System.out.println(wi.getMatches("elephant")); // Return the entry of the web document that contains this word.
-		System.out.println(wi.getMatches("helvetica"));
+		System.out.println(webIndexContent.getMatches("elephant")); // Return the entry of the web document that contains this word.
+		System.out.println(webIndexContent.getMatches("document"));
 		
-		System.out.println("\n" + wi.toString()); // Get all the documents stored in the object of WebIndex
+		System.out.println("\n" + webIndexContent.toString()); // Get all the documents stored in the object of WebIndex
 
-		Scanner keyboard = new Scanner(System.in); // Get the string keyboard input to search through the web index.
-		System.out.println("\nWhat do you want to search?");
-		System.out.println(wi.getMatches(keyboard.nextLine()));
-		keyboard.close();
+		System.out.println("\n" + webIndexKey.getAllDocuments());
+		System.out.println("\n" + webIndexKey.getMatches("peanuts"));
+		
 		
 
 	}
