@@ -38,5 +38,9 @@ public class AndQuery implements Query {
 			return null;
 		}
 	}
+	
+	public String toString() {
+		return queryLeft + " " + queryRight;
+	}
 
 }

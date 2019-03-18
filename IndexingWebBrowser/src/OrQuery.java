@@ -9,7 +9,6 @@ public class OrQuery implements Query {
 
 		queryLeft = left;
 		queryRight = right;
-		System.out.println(toString());
 	}
 
 	@Override

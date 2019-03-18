@@ -12,5 +12,9 @@ public class AtomicQuery implements Query {
 	public Set<WebDoc> matches(WebIndex wind) {
 		return wind.getMatches(query);
 	}
+	
+	public String toString() {
+		return query;
+	}
 
 }
