@@ -21,7 +21,7 @@ public class AndQuery implements Query {
 		leftResult = left.matches(wind);
 		rightResult = right.matches(wind);
 
-		if (leftResult != null & rightResult != null) {
+		if (leftResult != null && rightResult != null) {
 			if ((leftResult instanceof NotQuery) && (rightResult instanceof NotQuery)) {
 				return null;
 			} else if ((leftResult instanceof NotQuery) && !(rightResult instanceof NotQuery)) {
@@ -34,11 +34,16 @@ public class AndQuery implements Query {
 				rightResult.retainAll(leftResult);
 				return rightResult;
 			}
+		} else if (leftResult == null && rightResult != null) {
+			return leftResult;
+		} else if(leftResult != null && rightResult == null) {
+			return rightResult;
 		} else {
 			return null;
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return queryLeft + " " + queryRight;
 	}
