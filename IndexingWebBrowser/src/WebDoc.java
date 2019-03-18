@@ -106,10 +106,10 @@ public class WebDoc implements Comparable<WebDoc> {
 
 		if (fileType != FileType.INCORRECT_ENTRY_FORMAT) { // Entry is in correct format.
 			if (fileType == FileType.WEB_URL) {
-				System.out.println("Web Url:" + entry);
+//				System.out.println("Web Url:" + entry);
 				this.content = readWebUrl();
 			} else if (fileType == FileType.LOCAL_WEB_DOC) {
-				System.out.println("Local url:" + entry);
+//				System.out.println("Local url:" + entry);
 				this.content = readLocalFile();
 			}
 

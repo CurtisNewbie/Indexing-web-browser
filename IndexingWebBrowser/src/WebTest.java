@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.ws.WebEndpoint;
 
@@ -21,11 +22,12 @@ public class WebTest {
 
 		// temporary collections for objects of WebDoc
 		ArrayList<WebDoc> webDocCollection = new ArrayList<>();
+		ArrayList<String> queryCollection = new ArrayList<>();
 
 		// Read a txt file from the command args
 		try {
 			BufferedReader fileInput = new BufferedReader(new FileReader(args[0]));
-//			System.out.println("--------------------------Reading File:" + args[0] + "-----------------------------");
+			BufferedReader QueryFileInput = new BufferedReader(new FileReader(args[1]));
 
 			String tempEntry;
 			while ((tempEntry = fileInput.readLine()) != null) {
@@ -34,8 +36,14 @@ public class WebTest {
 				}
 			}
 			fileInput.close();
-//			System.out.println("-----------------------------Reading finished--------------------------------------");
-
+			
+			String tempQuery;
+			while ((tempQuery = QueryFileInput.readLine()) != null) {
+				if (!tempQuery.matches("\\s*")) {
+					queryCollection.add(tempQuery);
+				}
+			}
+			QueryFileInput.close();
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("You should enter the path of the file!");
 			System.exit(0);
@@ -54,8 +62,7 @@ public class WebTest {
 
 		for (WebDoc ob : webDocCollection) {
 
-			// Only the objects of WebDoc that successfully read their content from the URL
-			// or files.
+			// Only the objects that successfully read their content from the URL or files.
 			if (ob.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
 				System.out.println(ob.toString()); // Call toString() of all the objects of WebDoc.
 				webIndexContent.add(ob); // add objects into the object of WebIndex
@@ -75,7 +82,7 @@ public class WebTest {
 		for (WebDoc wd : contentResult) {
 			System.out.println(wd.getEntry() + "\n");
 		}
-		
+
 		System.out.println("-------------------------------------");
 		Set<WebDoc> keyResult = webIndexKey.getMatches("peanuts");
 		for (WebDoc wd : keyResult) {
@@ -83,27 +90,10 @@ public class WebTest {
 		}
 
 		
-		System.out.println("------------andandandand--------------");
-		System.out.println(QueryBuilder.parse("and(elephant,whale)").matches(webIndexContent).toString());
-		System.out.println("-----------orororor--------------");
-		Set<WebDoc> orDoc = QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent);
-		if(orDoc == null) {
-			System.out.println("empty");
-		} else {
-			for(WebDoc wd : orDoc) {
-				System.out.println(wd);
-			}
-		}
-		
-		System.out.println("------------notnotnot------------------");
-		Set<WebDoc> notDoc = QueryBuilder.parse("and(elephant,NoT(elephant)").matches(webIndexContent);
-		if(notDoc == null) {
-			System.out.println("empty");
-		} else {
-			for(WebDoc wd : notDoc) {
-				System.out.println(wd);
-			}
-		}
+		ArrayList<Set<WebDoc>> queryResult = new ArrayList<>();
+		queryResult.add(QueryBuilder.parse("and(elephant,whale)").matches(webIndexContent));
+		queryResult.add(QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent));
+		queryResult.add(QueryBuilder.parse("and(elephant,NoT(elephant)").matches(webIndexContent));
 		
 	}
 
