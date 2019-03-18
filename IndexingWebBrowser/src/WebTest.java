@@ -80,6 +80,14 @@ public class WebTest {
 			System.out.println(wd.getEntry() + "\n");
 		}
 
+		
+		System.out.println("------------andandandand--------------");
+		System.out.println(QueryBuilder.parse("and(elephant,whale)").matches(webIndexContent).toString());
+		System.out.println("-----------orororor--------------");
+		System.out.println(QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent).toString());
+		System.out.println("------------notnotnot------------------");
+		System.out.println(QueryBuilder.parse("and(elephant,NoT(elephant)").matches(webIndexContent).toString());
+		
 	}
 
 }
