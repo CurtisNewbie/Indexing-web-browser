@@ -13,8 +13,8 @@ import java.util.TreeSet;
  * @author 180139796
  */
 public class WebIndex {
-	
-	public enum TypeOfWords{
+
+	public enum TypeOfWords {
 		KEYWORD, CONTENT_WORD
 	}
 
@@ -22,7 +22,7 @@ public class WebIndex {
 //	 * A collection of objects of WebDoc
 //	 */
 //	private ArrayList<WebDoc> webDocs;
-	
+
 	private TypeOfWords type;
 
 	/**
@@ -52,24 +52,32 @@ public class WebIndex {
 	}
 
 	/**
-	 * Add an object of WebDoc into the index and increment numOfDocs by one. 
-	 * Assign the size of the map to the numOfWords.
+	 * Add an object of WebDoc into the index and increment numOfDocs by one. Assign
+	 * the size of the map to the numOfWords.
 	 * 
 	 * @param doc An object of WebDoc
 	 */
 	public void add(WebDoc doc) {
 
-		if (!doc.getContentWords().isEmpty()) {
-			for (String word : doc.getContentWords()) {
-				Set newSet = new TreeSet<WebDoc>();
+		Set<String> tempWordSet;
+		if (type == TypeOfWords.CONTENT_WORD) {
+			tempWordSet = doc.getContentWords();
+		} else {
+			tempWordSet = doc.getKeywords();
+		}
+		
+		if (!tempWordSet.isEmpty()) {
+			for (String word : tempWordSet) {
+				Set<WebDoc> newSet = new TreeSet<WebDoc>();
 				newSet.add(doc);
-				Set temp = webDocsMap.putIfAbsent(word, newSet);
+				Set<WebDoc> temp = webDocsMap.putIfAbsent(word, newSet); // return null if the key is already associated with a key
 
 				if (temp != null) { // If the key is already associated with a value.
 					temp.add(doc);
 				}
 			}
 		}
+		
 		numOfDocs++;
 		numOfWords = webDocsMap.size();
 		System.out.println(webDocsMap.size());
@@ -119,8 +127,8 @@ public class WebIndex {
 //		}
 //		return keywordsResult.toString() + "\n" + ContentWordsResult.toString();
 //	}
-	
-	public Set<WebDoc> getMatches(String wd){
+
+	public Set<WebDoc> getMatches(String wd) {
 		return webDocsMap.get(wd);
 	}
 
@@ -131,8 +139,8 @@ public class WebIndex {
 	 */
 	@Override
 	public String toString() {
-		
-		if(type == TypeOfWords.KEYWORD) {
+
+		if (type == TypeOfWords.KEYWORD) {
 			return "WebIndex over keywords contains " + numOfWords + " from " + numOfDocs + " documents";
 		} else {
 			return "WebIndex over contents contains " + numOfWords + " from " + numOfDocs + " documents";
