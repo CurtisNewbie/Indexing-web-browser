@@ -20,11 +20,10 @@ public class WebTest {
 
 	public static void main(String[] args) {
 
-		// temporary collections for objects of WebDoc
 		ArrayList<WebDoc> webDocCollection = new ArrayList<>();
 		ArrayList<String> queryCollection = new ArrayList<>();
 
-		// Read a txt file from the command args
+		// Read two txt files from the command args
 		try {
 			BufferedReader fileInput = new BufferedReader(new FileReader(args[0]));
 			BufferedReader QueryFileInput = new BufferedReader(new FileReader(args[1]));
@@ -36,7 +35,7 @@ public class WebTest {
 				}
 			}
 			fileInput.close();
-			
+
 			String tempQuery;
 			while ((tempQuery = QueryFileInput.readLine()) != null) {
 				if (!tempQuery.matches("\\s*")) {
@@ -54,47 +53,67 @@ public class WebTest {
 			e.printStackTrace();
 		}
 
-		// Create a new object of WebIndex.
+		// New objects of WebIndex, one for keywords, one for content words.
 		WebIndex webIndexContent = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
 		WebIndex webIndexKey = new WebIndex(WebIndex.TypeOfWords.KEYWORD);
 
-		System.out.println("\n-----Statistics Summary: (Excluding the files that cannot be accessed)-----");
-
 		for (WebDoc wd : webDocCollection) {
-
 			// Only the objects that successfully read their content from the URL or files.
 			if (wd.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
-				System.out.println(wd.toString()); // Call toString() of all the objects of WebDoc.
-				webIndexContent.add(wd); // add objects into the object of WebIndex
+				System.out.println(wd.toString());
+				webIndexContent.add(wd);
 				webIndexKey.add(wd);
 			}
 		}
+		System.out.println();
 
-//		System.out.println("\n" + webIndexContent.getAllDocuments()); // Get all the documents stored in the object of WebIndex.
-//		System.out.println("\n" + webIndexKey.getAllDocuments());
-		System.out.println("\n" + webIndexContent.toString() + "\n");
-		Set<WebDoc> contentResult = webIndexContent.getMatches("elephant");
-		for (WebDoc wd : contentResult) {
-			System.out.println(wd.getEntry() + "\n");
+		// Testing WebIndex .toString()
+		System.out.println(webIndexContent.toString());
+		System.out.println(webIndexKey.toString() + "\n");
+
+		// Testing WebIndex .getMatches()
+		Set<WebDoc> contentMatchingResult = webIndexContent.getMatches("elephant");
+		if (contentMatchingResult != null) {
+			System.out.println(contentMatchingResult.toString());
 		}
+		System.out.println();
 
-		contentResult = webIndexContent.getMatches("document");
-		for (WebDoc wd : contentResult) {
-			System.out.println(wd.getEntry() + "\n");
+		contentMatchingResult = webIndexContent.getMatches("document");
+		if (contentMatchingResult != null) {
+			System.out.println(contentMatchingResult.toString());
 		}
+		System.out.println();
 
-		System.out.println("-------------------------------------");
-		Set<WebDoc> keyResult = webIndexKey.getMatches("peanuts");
-		for (WebDoc wd : keyResult) {
-			System.out.println(wd.getEntry() + "\n");
+		Set<WebDoc> keyMatchingResult = webIndexKey.getMatches("peanuts");
+		if (keyMatchingResult != null) {
+			System.out.println(keyMatchingResult.toString());
 		}
-
+		System.out.println();
 		
+		
+		
+		// Testing Query
 		ArrayList<Set<WebDoc>> queryResult = new ArrayList<>();
-		queryResult.add(QueryBuilder.parse("and(elephant,whale)").matches(webIndexContent));
-		queryResult.add(QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent));
-		queryResult.add(QueryBuilder.parse("and(elephant,NoT(elephant)").matches(webIndexContent));
+//		queryResult.add(QueryBuilder.parse("and(elephant,whale)").matches(webIndexContent));
+//		queryResult.add(QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent));
+//		queryResult.add(QueryBuilder.parse("and(elephant,NoT(extra)").matches(webIndexContent));
 		
+		System.out.println(QueryBuilder.parse("and(elephant,whale)").toString());
+		System.out.println(QueryBuilder.parse("or(Peanuts,elephant)").toString());
+		System.out.println(QueryBuilder.parse("and(elephant,NoT(extra)").toString());
+//		for(String queryStr : queryCollection) {
+//			queryResult.add(QueryBuilder.parse(queryStr).matches(webIndexContent));
+//		}
+		System.out.println("------------------------------------------");
+		int n = 0;
+		for (Set<WebDoc> setWd : queryResult) {
+			n++;
+			System.out.print(n);
+			if (setWd != null) {
+				System.out.println(setWd.toString() + "\n");
+			}
+		}
+
 	}
 
 }
