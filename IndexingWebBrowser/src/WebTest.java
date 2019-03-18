@@ -60,13 +60,13 @@ public class WebTest {
 
 		System.out.println("\n-----Statistics Summary: (Excluding the files that cannot be accessed)-----");
 
-		for (WebDoc ob : webDocCollection) {
+		for (WebDoc wd : webDocCollection) {
 
 			// Only the objects that successfully read their content from the URL or files.
-			if (ob.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
-				System.out.println(ob.toString()); // Call toString() of all the objects of WebDoc.
-				webIndexContent.add(ob); // add objects into the object of WebIndex
-				webIndexKey.add(ob);
+			if (wd.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
+				System.out.println(wd.toString()); // Call toString() of all the objects of WebDoc.
+				webIndexContent.add(wd); // add objects into the object of WebIndex
+				webIndexKey.add(wd);
 			}
 		}
 
