@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * It is a web index that can check the web documents and see which contains a
@@ -11,50 +13,66 @@ import java.util.Set;
  * @author 180139796
  */
 public class WebIndex {
+	
+	public enum TypeOfWords{
+		KEYWORD, CONTENT_WORD
+	}
+
+//	/**
+//	 * A collection of objects of WebDoc
+//	 */
+//	private ArrayList<WebDoc> webDocs;
+	
+	private TypeOfWords type;
 
 	/**
-	 * A collection of objects of WebDoc
+	 * The 'keys' are the words (content words or keywords), the 'values' are the
+	 * collection of WebDoc.
 	 */
-	private ArrayList<WebDoc> webDocs;
-
 	private Map<String, Set<WebDoc>> webDocsMap;
-	
+
 	/**
 	 * Number of WebDoc in this web index.
 	 */
 	private int numOfDocs;
 
 	/**
-	 * Number of keywords read from these WebDoc.
+	 * Number of words (keywords or content words) read from these WebDoc.
 	 */
-	private int numOfKeywords;
+	private int numOfWords;
 
 	/**
-	 * Number of content words read from these WebDoc.
+	 * Initialise the webDocs. Assign 0 to numOfDocs and numOfWord.
 	 */
-	private int numOfContentWords;
-
-	/**
-	 * Initialise the webDocs. Assign 0 to numOfDocs and numOfKeywords.
-	 */
-	public WebIndex() {
-		this.webDocs = new ArrayList<>();
+	public WebIndex(TypeOfWords type) {
+		this.type = type;
+		webDocsMap = new HashMap<>();
 		this.numOfDocs = 0;
-		this.numOfKeywords = 0;
+		this.numOfWords = 0;
 	}
 
 	/**
-	 * Add an object of WebDoc into the index and increment numOfDocs by one. Add
-	 * the number of keywords and content words to the numOfKeywords and
-	 * numOfContentWords.
+	 * Add an object of WebDoc into the index and increment numOfDocs by one. 
+	 * Assign the size of the map to the numOfWords.
 	 * 
 	 * @param doc An object of WebDoc
 	 */
 	public void add(WebDoc doc) {
-		webDocs.add(doc);
+
+		if (!doc.getContentWords().isEmpty()) {
+			for (String word : doc.getContentWords()) {
+				Set newSet = new TreeSet<WebDoc>();
+				newSet.add(doc);
+				Set temp = webDocsMap.putIfAbsent(word, newSet);
+
+				if (temp != null) { // If the key is already associated with a value.
+					temp.add(doc);
+				}
+			}
+		}
 		numOfDocs++;
-		numOfKeywords += doc.getNumOfKeywords();
-		numOfContentWords += doc.getNumOfContentWords();
+		numOfWords = webDocsMap.size();
+		System.out.println(webDocsMap.size());
 	}
 
 	/**
@@ -63,13 +81,7 @@ public class WebIndex {
 	 * @return a String that summarises all the WebDoc in this index.
 	 */
 	public String getAllDocuments() {
-		StringBuilder sb = new StringBuilder("This WebIndex includes these documents:\n");
-		int index = 0;
-		for (WebDoc wd : webDocs) {
-			index++;
-			sb.append("[" + index + "]" + wd.getEntry() + "\n");
-		}
-		return sb.toString();
+		return webDocsMap.values().toString();
 	}
 
 	/**
@@ -79,33 +91,37 @@ public class WebIndex {
 	 * @return a string that indicates all the entries that contains this string in
 	 *         their content words and keywords.
 	 */
-	public String getMatches(String wd) {
-		boolean keywordsFound = false;
-		boolean contentWordsFound = false;
-		StringBuilder keywordsResult = new StringBuilder(
-				"Through searching keywords - Word:\"" + wd + "\" found in:\n");
-		StringBuilder ContentWordsResult = new StringBuilder(
-				"Through searching contentWords - Word:\"" + wd + "\" found in:\n");
-
-		for (WebDoc doc : webDocs) {
-			if (doc.getContentWords().contains(wd)) {
-				ContentWordsResult.append(doc.getEntry() + "\n");
-				contentWordsFound = true;
-			}
-			if (doc.getKeywords().contains(wd)) {
-				keywordsResult.append(doc.getEntry() + "\n");
-				keywordsFound = true;
-			}
-		}
-
-		if (contentWordsFound == false) {
-			ContentWordsResult.append("Nothing Found.");
-		}
-
-		if (keywordsFound == false) {
-			keywordsResult.append("Nothing Found");
-		}
-		return keywordsResult.toString() + "\n" + ContentWordsResult.toString();
+//	public String getMatches(String wd) {
+//		boolean keywordsFound = false;
+//		boolean contentWordsFound = false;
+//		StringBuilder keywordsResult = new StringBuilder(
+//				"Through searching keywords - Word:\"" + wd + "\" found in:\n");
+//		StringBuilder ContentWordsResult = new StringBuilder(
+//				"Through searching contentWords - Word:\"" + wd + "\" found in:\n");
+//
+//		for (WebDoc doc : webDocs) {
+//			if (doc.getContentWords().contains(wd)) {
+//				ContentWordsResult.append(doc.getEntry() + "\n");
+//				contentWordsFound = true;
+//			}
+//			if (doc.getKeywords().contains(wd)) {
+//				keywordsResult.append(doc.getEntry() + "\n");
+//				keywordsFound = true;
+//			}
+//		}
+//
+//		if (contentWordsFound == false) {
+//			ContentWordsResult.append("Nothing Found.");
+//		}
+//
+//		if (keywordsFound == false) {
+//			keywordsResult.append("Nothing Found");
+//		}
+//		return keywordsResult.toString() + "\n" + ContentWordsResult.toString();
+//	}
+	
+	public Set<WebDoc> getMatches(String wd){
+		return webDocsMap.get(wd);
 	}
 
 	/**
@@ -115,7 +131,11 @@ public class WebIndex {
 	 */
 	@Override
 	public String toString() {
-		return "WebIndex over keywords contains " + numOfKeywords + " from " + numOfDocs + " documents"
-				+ "\nWebIndex over contents contains " + numOfContentWords + " from " + numOfDocs + " documents";
+		
+		if(type == TypeOfWords.KEYWORD) {
+			return "WebIndex over keywords contains " + numOfWords + " from " + numOfDocs + " documents";
+		} else {
+			return "WebIndex over contents contains " + numOfWords + " from " + numOfDocs + " documents";
+		}
 	}
 }
