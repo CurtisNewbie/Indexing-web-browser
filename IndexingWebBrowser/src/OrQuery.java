@@ -9,6 +9,7 @@ public class OrQuery implements Query {
 
 		queryLeft = left;
 		queryRight = right;
+		System.out.println(toString());
 	}
 
 	@Override
@@ -22,11 +23,23 @@ public class OrQuery implements Query {
 
 		leftResult = left.matches(wind);
 		rightResult = right.matches(wind);
-
-		for (WebDoc wd : leftResult) {
-			rightResult.add(wd);
+		
+		if (leftResult != null & rightResult != null) {
+			for (WebDoc wd : leftResult) {
+				rightResult.add(wd);
+			}
+			return rightResult;
+		} else if (leftResult == null && rightResult != null) {
+			return rightResult;
+		} else if (leftResult != null && rightResult == null) {
+			return leftResult;
+		} else {
+			return null;
 		}
-		return rightResult;
+	}
+
+	public String toString() {
+		return queryLeft + " " + queryRight;
 	}
 
 }
