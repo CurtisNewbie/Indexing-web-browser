@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * It is a web index that can check the web documents and see which contains a
@@ -15,6 +17,8 @@ public class WebIndex {
 	 */
 	private ArrayList<WebDoc> webDocs;
 
+	private Map<String, Set<WebDoc>> webDocsMap;
+	
 	/**
 	 * Number of WebDoc in this web index.
 	 */
