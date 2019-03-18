@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Set;
 
 import javax.xml.ws.WebEndpoint;
 
@@ -47,30 +48,37 @@ public class WebTest {
 		// Create a new object of WebIndex.
 		WebIndex webIndexContent = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
 		WebIndex webIndexKey = new WebIndex(WebIndex.TypeOfWords.KEYWORD);
-				
+
 		System.out.println("\n-----Statistics Summary: (Excluding the files that cannot be accessed)-----");
-		
+
 		for (WebDoc ob : webDocCollection) {
-			
-			// Only the objects of WebDoc that successfully read their content from the URL or files.
+
+			// Only the objects of WebDoc that successfully read their content from the URL
+			// or files.
 			if (ob.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
 				System.out.println(ob.toString()); // Call toString() of all the objects of WebDoc.
-				webIndexContent.add(ob);  //add objects into the object of WebIndex
+				webIndexContent.add(ob); // add objects into the object of WebIndex
 				webIndexKey.add(ob);
 			}
 		}
 
-		System.out.println("\n" + webIndexContent.getAllDocuments()); // Get all the documents stored in the object of WebIndex.
-		
-		System.out.println(webIndexContent.getMatches("elephant")); // Return the entry of the web document that contains this word.
-		System.out.println(webIndexContent.getMatches("document"));
-		
-		System.out.println("\n" + webIndexContent.toString()); // Get all the documents stored in the object of WebIndex
+//		System.out.println("\n" + webIndexContent.getAllDocuments()); // Get all the documents stored in the object of WebIndex.
+//		System.out.println("\n" + webIndexKey.getAllDocuments());
+		System.out.println("\n" + webIndexContent.toString() + "\n");
+		Set<WebDoc> contentResult = webIndexContent.getMatches("elephant");
+		for (WebDoc wd : contentResult) {
+			System.out.println(wd.getEntry() + "\n");
+		}
 
-		System.out.println("\n" + webIndexKey.getAllDocuments());
-		System.out.println("\n" + webIndexKey.getMatches("peanuts"));
+		contentResult = webIndexContent.getMatches("document");
+		for (WebDoc wd : contentResult) {
+			System.out.println(wd.getEntry() + "\n");
+		}
 		
-		
+		Set<WebDoc> keyResult = webIndexKey.getMatches("peanuts");
+		for (WebDoc wd : keyResult) {
+			System.out.println(wd.getEntry() + "\n");
+		}
 
 	}
 
