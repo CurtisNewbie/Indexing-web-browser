@@ -156,7 +156,7 @@ public class WebDoc implements Comparable<WebDoc> {
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]+");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
 		while (wordFilterMatcher.find()) { // refine the result; extract words from the temporary output.
-			result.add(wordFilterMatcher.group(0));
+			result.add(wordFilterMatcher.group(0).toLowerCase());
 		}
 		return result;
 	}
@@ -184,7 +184,7 @@ public class WebDoc implements Comparable<WebDoc> {
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
 		while (wordFilterMatcher.find()) { // refine the result; extract words from the temporary output.
-			result.add(wordFilterMatcher.group(0));
+			result.add(wordFilterMatcher.group(0).toLowerCase());
 		}
 		return result;
 	}
