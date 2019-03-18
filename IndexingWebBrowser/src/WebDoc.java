@@ -13,7 +13,7 @@ import java.io.*;
  * 
  * @author 180139796
  */
-public class WebDoc {
+public class WebDoc implements Comparable<WebDoc> {
 
 	/**
 	 * Type of file. It is used to verify whether the entry is in the correct
@@ -135,17 +135,19 @@ public class WebDoc {
 	 */
 	private TreeSet<String> extractKeywords() {
 		TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-		Pattern keywordPatternNormalOrder = Pattern.compile("<[Mm][Ee][Tt][Aa]\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"([^>]*?)[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s?/?>");
+		Pattern keywordPatternNormalOrder = Pattern.compile(
+				"<[Mm][Ee][Tt][Aa]\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"([^>]*?)[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s?/?>");
 		Matcher keywordMatcherNormalOrder = keywordPatternNormalOrder.matcher(content);
 
-		Pattern keywordPatternReverseOrder = Pattern.compile("<[Mm][Ee][Tt][Aa]\\s*[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"\\s*/?>");
+		Pattern keywordPatternReverseOrder = Pattern.compile(
+				"<[Mm][Ee][Tt][Aa]\\s*[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"\\s*/?>");
 		Matcher keywordMatcherReverseOrder = keywordPatternReverseOrder.matcher(content);
 
 		StringBuilder tempOutput = new StringBuilder("");
 		while (keywordMatcherNormalOrder.find()) {
 			tempOutput.append(keywordMatcherNormalOrder.group(2));
 		}
-		
+
 		while (keywordMatcherReverseOrder.find()) {
 			tempOutput.append(keywordMatcherReverseOrder.group(1));
 		}
@@ -212,7 +214,8 @@ public class WebDoc {
 			System.out.println("[Warning --- \"" + entry + "\" --- The URL format is incorrect.]");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IllegalArgumentException e) {
-			System.out.println("[Warning --- \"" + entry + "\" --- The protocol is incorrect, please make sure the URL is correct.]");
+			System.out.println("[Warning --- \"" + entry
+					+ "\" --- The protocol is incorrect, please make sure the URL is correct.]");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
 			System.out.println("[Warning --- Cannot connect to \"" + entry
@@ -262,8 +265,8 @@ public class WebDoc {
 
 	/**
 	 * Check whether the type of this entry is a web URL or a local web file or a
-	 * illegal entry. A warning message will be displayed if the format of the entry is
-	 * incorrect.
+	 * illegal entry. A warning message will be displayed if the format of the entry
+	 * is incorrect.
 	 */
 	private void checkFileType() {
 		Pattern urlPattern = Pattern.compile("https?:", Pattern.CASE_INSENSITIVE); // Identify whether it's a URL.
@@ -289,18 +292,18 @@ public class WebDoc {
 	 * Check the quality of syntax. It refers to whether HTML or JS tags are
 	 * correctly closed with closing tags and correctly nested. When any syntax
 	 * other than HTML is used, the accuracy cannot be guaranteed. A string is
-	 * returned to indicate the quality of the syntax - "well-formed"; "partly-formed";
-	 * "ill-formed".
+	 * returned to indicate the quality of the syntax - "well-formed";
+	 * "partly-formed"; "ill-formed".
 	 * 
 	 * @return a string that indicates the quality of the syntax.
 	 */
 	private String checkQualityOfSyntax() {
 		Pattern syntaxPattern = Pattern.compile("<([!/a-zA-Z]*)[^>]*>");
 		Matcher syntaxChecker = syntaxPattern.matcher(content);
-		
+
 		Stack<String> normalTagStack = new Stack<>(); // Stack for normal tags
 		Stack<String> specialTagsStack = new Stack<>(); // stack for special tags
-		
+
 		final String meta_tag = "[Mm][Ee][Tt][Aa]"; // <meta>
 		final String p_tag = "/{0,1}[Pp]"; // </p> or <p>
 		final String hr_tag = "[Hh][Rr]"; // <hr>
@@ -440,6 +443,11 @@ public class WebDoc {
 	 */
 	public int getNumOfContentWords() {
 		return numOfContentWords;
+	}
+
+	@Override
+	public int compareTo(WebDoc webdoc) {
+		return entry.compareTo(webdoc.getEntry());
 	}
 
 }
