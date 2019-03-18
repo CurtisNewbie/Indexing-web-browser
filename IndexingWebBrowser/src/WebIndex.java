@@ -80,17 +80,16 @@ public class WebIndex {
 		
 		numOfDocs++;
 		numOfWords = webDocsMap.size();
-		System.out.println(webDocsMap.size());
 	}
 
-	/**
-	 * Get all the WebDoc that are stored in this index as a String.
-	 * 
-	 * @return a String that summarises all the WebDoc in this index.
-	 */
-	public String getAllDocuments() {
-		return webDocsMap.values().toString();
-	}
+//	/**
+//	 * Get all the WebDoc that are stored in this index as a String.
+//	 * 
+//	 * @return a String that summarises all the WebDoc in this index.
+//	 */
+//	public String getAllDocuments() {
+//		return webDocsMap.keySet().toString();
+//	}
 
 	/**
 	 * Search a string through content words and keywords.
