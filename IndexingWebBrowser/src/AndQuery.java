@@ -1,51 +1,75 @@
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
+
+import javafx.animation.Interpolator;
 
 public class AndQuery implements Query {
 
-	private String queryLeft;
-	private String queryRight;
-	
-	public AndQuery(String left, String right) {
-		queryLeft = left;
-		queryRight = right;
+	private TreeSet<String> queryStr;
+	private ArrayList<Set<WebDoc>> normalQueryResult;
+	private ArrayList<Set<WebDoc>> notQueryResult;
+
+	public AndQuery(TreeSet<String> queryCol) {
+		queryStr = queryCol;
 	}
 
 	@Override
 	public Set<WebDoc> matches(WebIndex wind) {
-		Set<WebDoc> leftResult;
-		Set<WebDoc> rightResult;
-
-		Query left = QueryBuilder.parse(queryLeft);
-		Query right = QueryBuilder.parse(queryRight);
-
-		leftResult = left.matches(wind);
-		rightResult = right.matches(wind);
-
-		if (leftResult != null && rightResult != null) {
-			if ((leftResult instanceof NotQuery) && (rightResult instanceof NotQuery)) {
-				return null;
-			} else if ((leftResult instanceof NotQuery) && !(rightResult instanceof NotQuery)) {
-				rightResult.removeAll(leftResult);
-				return rightResult;
-			} else if (!(leftResult instanceof NotQuery) && (rightResult instanceof NotQuery)) {
-				leftResult.removeAll(rightResult);
-				return leftResult;
+		// Get the results of all the sub-queries
+		for (String eachQuery : queryStr) {
+			Query subQuery = QueryBuilder.parse(eachQuery);
+			if (subQuery instanceof NotQuery) {
+				notQueryResult.add(subQuery.matches(wind));
 			} else {
-				rightResult.retainAll(leftResult);
-				return rightResult;
+				normalQueryResult.add(subQuery.matches(wind));
 			}
-		} else if (leftResult == null && rightResult != null) {
-			return leftResult;
-		} else if(leftResult != null && rightResult == null) {
-			return rightResult;
-		} else {
-			return null;
 		}
+		this.removeNull();
+
+		// Retain all the common elements for the sub-queries that
+		// are not NotQuery
+		for (Set<WebDoc> eachSet : normalQueryResult) {
+			normalQueryResult.get(0).retainAll(eachSet);
+		}
+
+		// Put all the Sets of NotQuery together.
+		for (Set<WebDoc> eachSet : notQueryResult) {
+			notQueryResult.get(0).addAll(eachSet);
+		}
+
+		normalQueryResult.get(0).removeAll(notQueryResult.get(0)); // The final result.
+		return normalQueryResult.get(0);
 	}
-	
+
 	@Override
 	public String toString() {
-		return queryLeft + " " + queryRight;
+		StringBuilder sb = new StringBuilder();
+		Iterator<String> eachQuery = queryStr.iterator();
+
+		while (eachQuery.hasNext()) {
+			sb.append(eachQuery.next());
+		}
+		return sb.toString();
+	}
+
+	private void removeNull() {
+		Iterator<Set<WebDoc>> iteratorOfSet = normalQueryResult.iterator();
+		while (iteratorOfSet.hasNext()) {
+			Set<WebDoc> eachSet = iteratorOfSet.next();
+			if (eachSet == null) {
+				iteratorOfSet.remove();
+			}
+		}
+
+		Iterator<Set<WebDoc>> iteratorOfNotQuery = notQueryResult.iterator();
+		while (iteratorOfNotQuery.hasNext()) {
+			Set<WebDoc> eachSet = iteratorOfSet.next();
+			if (eachSet == null) {
+				iteratorOfSet.remove();
+			}
+		}
 	}
 
 }
