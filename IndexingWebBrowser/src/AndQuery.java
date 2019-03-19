@@ -11,8 +11,8 @@ public class AndQuery implements Query {
 	private ArrayList<Set<WebDoc>> normalQueryResult;
 	private ArrayList<Set<WebDoc>> notQueryResult;
 
-	public AndQuery(TreeSet<String> queryCol) {
-		queryStr = queryCol;
+	public AndQuery(TreeSet<String> SubQuery) {
+		queryStr = SubQuery;
 	}
 
 	@Override
@@ -38,7 +38,6 @@ public class AndQuery implements Query {
 		for (Set<WebDoc> eachSet : notQueryResult) {
 			notQueryResult.get(0).addAll(eachSet);
 		}
-
 		normalQueryResult.get(0).removeAll(notQueryResult.get(0)); // The final result.
 		return normalQueryResult.get(0);
 	}
@@ -49,7 +48,7 @@ public class AndQuery implements Query {
 		Iterator<String> eachQuery = queryStr.iterator();
 
 		while (eachQuery.hasNext()) {
-			sb.append(eachQuery.next());
+			sb.append(eachQuery.next() + " ");
 		}
 		return sb.toString();
 	}

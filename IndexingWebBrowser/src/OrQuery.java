@@ -34,7 +34,7 @@ public class OrQuery implements Query {
 		Iterator<String> eachQuery = queryStr.iterator();
 
 		while (eachQuery.hasNext()) {
-			sb.append(eachQuery.next());
+			sb.append(eachQuery.next() + " ");
 		}
 		return sb.toString();
 	}
