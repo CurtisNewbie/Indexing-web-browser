@@ -1,3 +1,7 @@
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+
+import sun.util.locale.StringTokenIterator;
 
 public class QueryBuilder {
 
@@ -6,33 +10,37 @@ public class QueryBuilder {
 
 	public static Query parse(String q) {
 
-		String str = q.toLowerCase();
-		str.trim();
+		String wholeQuery = q.toLowerCase();
+		wholeQuery.trim();
 
-		if (!str.contains("and") && !str.contains("or") && !str.contains("not")) {
-			return new AtomicQuery(str);
+		if (!wholeQuery.contains("and") && !wholeQuery.contains("or") && !wholeQuery.contains("not")) {
+			return new AtomicQuery(wholeQuery);
 		} else {
-			String leftQuery;
-			String rightQuery;
+			TreeSet<String> subQuery = new TreeSet<>();
+			;
 			String notQuery;
 			int Starting_Index;
-			int first_Comma_Index = str.indexOf(',');
 
-			if (str.startsWith("and")) {
+			if (wholeQuery.startsWith("and")) {
 				Starting_Index = 4; // "and(" starting from 4
-				leftQuery = str.substring(Starting_Index, first_Comma_Index);
-				rightQuery = str.substring(first_Comma_Index + 1, str.length() - 1);
-				return new AndQuery(leftQuery, rightQuery);
-			} else if (str.startsWith("not")) {
+				String elements = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
+				StringTokenizer token = new StringTokenizer(elements, ",");
+				while(token.hasMoreTokens()) {
+					subQuery.add(token.nextToken());
+				}
+				return new AndQuery(subQuery);
+			} else if (wholeQuery.startsWith("not")) {
 				Starting_Index = 4;
-				leftQuery = str.substring(Starting_Index, str.length()-1);
-				return new NotQuery(leftQuery);
-			} else { // str.startsWith("or");
+				notQuery = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
+				return new NotQuery(notQuery);
+			} else { // wholeQuery.startsWith("or");
 				Starting_Index = 3; // "or(" starting from 3
-				leftQuery = str.substring(Starting_Index, first_Comma_Index);
-				rightQuery = str.substring(first_Comma_Index + 1, str.length() - 1); // Ending before the closing
-																						// bracket.
-				return new OrQuery(leftQuery, rightQuery);
+				String elements = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
+				StringTokenizer token = new StringTokenizer(elements, ",");
+				while(token.hasMoreTokens()) {
+					subQuery.add(token.nextToken());
+				}
+				return new OrQuery(subQuery);
 			}
 		}
 	}
