@@ -1,8 +1,6 @@
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-import sun.util.locale.StringTokenIterator;
-
 public class QueryBuilder {
 
 	// Or (A,C)
