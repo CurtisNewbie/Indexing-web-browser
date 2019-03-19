@@ -1,44 +1,52 @@
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class OrQuery implements Query {
 
-	private String queryLeft;
-	private String queryRight;
+	private TreeSet<String> queryStr;
+	private ArrayList<Set<WebDoc>> subQueryResult;
 
-	public OrQuery(String left, String right) {
-
-		queryLeft = left;
-		queryRight = right;
+	public OrQuery(TreeSet<String> queryCol) {
+		queryStr = queryCol;
 	}
 
 	@Override
 	public Set<WebDoc> matches(WebIndex wind) {
-
-		Set<WebDoc> leftResult;
-		Set<WebDoc> rightResult;
-
-		Query left = QueryBuilder.parse(queryLeft);
-		Query right = QueryBuilder.parse(queryRight);
-
-		leftResult = left.matches(wind);
-		rightResult = right.matches(wind);
-		
-		if (leftResult != null & rightResult != null) {
-			for (WebDoc wd : leftResult) {
-				rightResult.add(wd);
+		// Get the results of all the sub-queries
+		for (String eachQuery : queryStr) {
+			Query subQuery = QueryBuilder.parse(eachQuery);
+			if (!(subQuery instanceof NotQuery)) { // In OrQuery, the NotQuery is not important.
+				subQueryResult.add(subQuery.matches(wind));
 			}
-			return rightResult;
-		} else if (leftResult == null && rightResult != null) {
-			return rightResult;
-		} else if (leftResult != null && rightResult == null) {
-			return leftResult;
-		} else {
-			return null;
 		}
+		this.removeNull();
+		
+		for (Set<WebDoc> eachSet : subQueryResult) {
+			subQueryResult.get(0).addAll(eachSet);
+		}
+		return subQueryResult.get(0);
 	}
 
 	public String toString() {
-		return queryLeft + " " + queryRight;
+		StringBuilder sb = new StringBuilder();
+		Iterator<String> eachQuery = queryStr.iterator();
+
+		while (eachQuery.hasNext()) {
+			sb.append(eachQuery.next());
+		}
+		return sb.toString();
+	}
+
+	private void removeNull() {
+		Iterator<Set<WebDoc>> iteratorOfSet = subQueryResult.iterator();
+		while (iteratorOfSet.hasNext()) {
+			Set<WebDoc> eachSet = iteratorOfSet.next();
+			if (eachSet == null) {
+				iteratorOfSet.remove();
+			}
+		}
 	}
 
 }
