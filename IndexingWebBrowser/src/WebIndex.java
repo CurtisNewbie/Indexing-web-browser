@@ -83,7 +83,10 @@ public class WebIndex {
 	}
 
 	public Set<WebDoc> getMatches(String wd) {
-		return webDocsMap.get(wd);
+		Set<WebDoc> deepCopySet = new TreeSet<>();
+		Set<WebDoc> resultSet = webDocsMap.get(wd);
+		deepCopySet.addAll(resultSet);
+		return deepCopySet;
 	}
 
 	/**
