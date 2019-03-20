@@ -12,15 +12,15 @@ public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
 		
-		System.out.println(QueryBuilder.parseSubquery("elephant,whale,and(fuck,dig),or(a,and(b,c))"));
-//		String path = "http://www.googlasdasdsade.com";
-//		try {
-//			WebDoc doc1 = new WebDoc(path);
-//			System.out.println(doc1.getContentWords().toString());
-//			System.out.println(doc1.getEntry());
-//		} catch (Exception e) {
-//			System.out.println("Errors");
-//		}
+//		System.out.println(QueryBuilder.parseSubquery("elephant,whale,and(fuck,dig),or(a,and(b,c))"));
+		String path = "file:Test.html";
+		try {
+			WebDoc doc1 = new WebDoc(path);
+			System.out.println(doc1.getContentWords().toString());
+			System.out.println(doc1.getEntry());
+		} catch (Exception e) {
+			System.out.println("Errors");
+		}
 //		try {	
 //		URL url = new URL(path);
 //		BufferedReader br = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
