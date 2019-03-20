@@ -206,7 +206,7 @@ public class WebDoc implements Comparable<WebDoc> {
 
 			String eachLine = "";
 			while ((eachLine = reader.readLine()) != null) {
-				result.append(eachLine);
+				result.append(eachLine + " ");
 			}
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
@@ -249,7 +249,7 @@ public class WebDoc implements Comparable<WebDoc> {
 			BufferedReader reader = new BufferedReader(fileInput);
 			String temp;
 			while ((temp = reader.readLine()) != null) {
-				result.append(temp);
+				result.append(temp + " ");
 			}
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
