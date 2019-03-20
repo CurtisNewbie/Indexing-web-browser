@@ -25,8 +25,10 @@ public class WebTest {
 
 		// Read two txt files from the command args
 		try {
-			BufferedReader fileInput = new BufferedReader(new FileReader(args[0]));
-			BufferedReader QueryFileInput = new BufferedReader(new FileReader(args[1]));
+//			BufferedReader fileInput = new BufferedReader(new FileReader(args[0]));
+//			BufferedReader QueryFileInput = new BufferedReader(new FileReader(args[1]));
+			BufferedReader fileInput = new BufferedReader(new FileReader("testFile.txt"));
+			BufferedReader QueryFileInput = new BufferedReader(new FileReader("sampleQueryFileStage2.txt"));
 
 			String tempEntry;
 			while ((tempEntry = fileInput.readLine()) != null) {
@@ -74,41 +76,48 @@ public class WebTest {
 		// Testing WebIndex .getMatches()
 		Set<WebDoc> contentMatchingResult = webIndexContent.getMatches("elephant");
 		if (contentMatchingResult != null) {
-			System.out.println(contentMatchingResult.toString());
+			System.out.println(contentMatchingResult.toString() + "\n");
 		}
-		System.out.println();
 
 		contentMatchingResult = webIndexContent.getMatches("document");
 		if (contentMatchingResult != null) {
-			System.out.println(contentMatchingResult.toString());
+			System.out.println(contentMatchingResult.toString() + "\n");
 		}
-		System.out.println();
 
 		Set<WebDoc> keyMatchingResult = webIndexKey.getMatches("peanuts");
 		if (keyMatchingResult != null) {
-			System.out.println(keyMatchingResult.toString());
+			System.out.println(keyMatchingResult.toString() + "\n");
 		}
-		System.out.println();
-		
-		
-		
+
 		// Testing Query
 		ArrayList<Set<WebDoc>> queryResult = new ArrayList<>();
-//		queryResult.add(QueryBuilder.parse("and(elephant,whale)").matches(webIndexContent));
+		try {
+			Query q = QueryBuilder.parse("and(elephant,whale)");
+			queryResult.add(q.matches(webIndexContent));
+			
 //		queryResult.add(QueryBuilder.parse("or(Peanuts,elephant)").matches(webIndexContent));
 //		queryResult.add(QueryBuilder.parse("and(elephant,NoT(extra)").matches(webIndexContent));
-		
-		System.out.println(QueryBuilder.parse("and(elephant,whale)").toString());
-		System.out.println(QueryBuilder.parse("or(Peanuts,elephant)").toString());
-		System.out.println(QueryBuilder.parse("and(elephant,NoT(extra)").toString());
+//		queryResult.add(QueryBuilder.parse("and(elephant,NoT(extra)").matches(webIndexContent));
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+
+//		System.out.println("[1]" + QueryBuilder.parse("and(elephant,whale)").toString());
+//		System.out.println("[2]" + QueryBuilder.parse("or(Peanuts,elephant)").toString());
+//		System.out.println("[3]" + QueryBuilder.parse("and(elephant,NoT(extra))").toString());
 //		for(String queryStr : queryCollection) {
 //			queryResult.add(QueryBuilder.parse(queryStr).matches(webIndexContent));
+//		}
+
+//		for(String query : queryCollection) {
+//			queryResult.add(QueryBuilder.parse(query).matches(webIndexContent));
+//			System.out.println(QueryBuilder.parse(query).toString());
 //		}
 		System.out.println("------------------------------------------");
 		int n = 0;
 		for (Set<WebDoc> setWd : queryResult) {
 			n++;
-			System.out.print(n);
+			System.out.print("[" + n + "]");
 			if (setWd != null) {
 				System.out.println(setWd.toString() + "\n");
 			}
