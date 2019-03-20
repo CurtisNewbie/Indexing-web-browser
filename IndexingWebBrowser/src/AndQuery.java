@@ -13,6 +13,8 @@ public class AndQuery implements Query {
 
 	public AndQuery(TreeSet<String> SubQuery) {
 		queryStr = SubQuery;
+		normalQueryResult = new ArrayList<>();
+		notQueryResult = new ArrayList<>();
 	}
 
 	@Override
@@ -34,11 +36,13 @@ public class AndQuery implements Query {
 			normalQueryResult.get(0).retainAll(eachSet);
 		}
 
-		// Put all the Sets of NotQuery together.
-		for (Set<WebDoc> eachSet : notQueryResult) {
-			notQueryResult.get(0).addAll(eachSet);
+		if (!notQueryResult.isEmpty()) {
+			// Put all the Sets of NotQuery together.
+			for (Set<WebDoc> eachSet : notQueryResult) {
+				notQueryResult.get(0).addAll(eachSet);
+			}
+			normalQueryResult.get(0).removeAll(notQueryResult.get(0));
 		}
-		normalQueryResult.get(0).removeAll(notQueryResult.get(0)); // The final result.
 		return normalQueryResult.get(0);
 	}
 
