@@ -10,6 +10,7 @@ public class OrQuery implements Query {
 
 	public OrQuery(TreeSet<String> queryCol) {
 		queryStr = queryCol;
+		subQueryResult = new ArrayList<>();
 	}
 
 	@Override
