@@ -22,12 +22,14 @@ public class OrQuery implements Query {
 				subQueryResult.add(subQuery.matches(wind));
 			}
 		}
-		this.removeNull();
-		
+
+		Set<WebDoc> finalSubQueryResult = new TreeSet<>();
 		for (Set<WebDoc> eachSet : subQueryResult) {
-			subQueryResult.get(0).addAll(eachSet);
+			if (eachSet != null) {
+				finalSubQueryResult.addAll(eachSet);
+			}
 		}
-		return subQueryResult.get(0);
+		return finalSubQueryResult;
 	}
 
 	public String toString() {
@@ -38,16 +40,6 @@ public class OrQuery implements Query {
 			sb.append(eachQuery.next() + " ");
 		}
 		return sb.toString();
-	}
-
-	private void removeNull() {
-		Iterator<Set<WebDoc>> iteratorOfSet = subQueryResult.iterator();
-		while (iteratorOfSet.hasNext()) {
-			Set<WebDoc> eachSet = iteratorOfSet.next();
-			if (eachSet == null) {
-				iteratorOfSet.remove();
-			}
-		}
 	}
 
 }
