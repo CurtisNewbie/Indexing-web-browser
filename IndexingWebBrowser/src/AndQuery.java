@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -28,22 +29,28 @@ public class AndQuery implements Query {
 				normalQueryResult.add(subQuery.matches(wind));
 			}
 		}
-		this.removeNull();
 
 		// Retain all the common elements for the sub-queries that
 		// are not NotQuery
+		Set<WebDoc> finalNormalQueryResult = new TreeSet<>();
 		for (Set<WebDoc> eachSet : normalQueryResult) {
-			normalQueryResult.get(0).retainAll(eachSet);
+			if (eachSet != null) {
+				finalNormalQueryResult.retainAll(eachSet);
+			}
 		}
 
+		// Retain all the common elements for all the NotQuery
+		Set<WebDoc> finalNotQueryResult = new TreeSet<>();
 		if (!notQueryResult.isEmpty()) {
 			// Put all the Sets of NotQuery together.
 			for (Set<WebDoc> eachSet : notQueryResult) {
-				notQueryResult.get(0).addAll(eachSet);
+				if (eachSet != null) {
+					finalNotQueryResult.addAll(eachSet);
+				}
 			}
-			normalQueryResult.get(0).removeAll(notQueryResult.get(0));
+			finalNormalQueryResult.removeAll(finalNotQueryResult);
 		}
-		return normalQueryResult.get(0);
+		return finalNormalQueryResult;
 	}
 
 	@Override
@@ -55,24 +62,6 @@ public class AndQuery implements Query {
 			sb.append(eachQuery.next() + " ");
 		}
 		return sb.toString();
-	}
-
-	private void removeNull() {
-		Iterator<Set<WebDoc>> iteratorOfSet = normalQueryResult.iterator();
-		while (iteratorOfSet.hasNext()) {
-			Set<WebDoc> eachSet = iteratorOfSet.next();
-			if (eachSet == null) {
-				iteratorOfSet.remove();
-			}
-		}
-
-		Iterator<Set<WebDoc>> iteratorOfNotQuery = notQueryResult.iterator();
-		while (iteratorOfNotQuery.hasNext()) {
-			Set<WebDoc> eachSet = iteratorOfSet.next();
-			if (eachSet == null) {
-				iteratorOfSet.remove();
-			}
-		}
 	}
 
 }
