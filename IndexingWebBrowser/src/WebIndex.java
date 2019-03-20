@@ -65,19 +65,20 @@ public class WebIndex {
 		} else {
 			tempWordSet = doc.getKeywords();
 		}
-		
+
 		if (!tempWordSet.isEmpty()) {
 			for (String word : tempWordSet) {
 				Set<WebDoc> newSet = new TreeSet<WebDoc>();
 				newSet.add(doc);
-				Set<WebDoc> temp = webDocsMap.putIfAbsent(word, newSet); // return null if the key is already associated with a key
+				Set<WebDoc> temp = webDocsMap.putIfAbsent(word, newSet); // return null if the key is already associated
+																			// with a key
 
 				if (temp != null) { // If the key is already associated with a value.
 					temp.add(doc);
 				}
 			}
 		}
-		
+
 		numOfDocs++;
 		numOfWords = webDocsMap.size();
 	}
@@ -85,8 +86,12 @@ public class WebIndex {
 	public Set<WebDoc> getMatches(String wd) {
 		Set<WebDoc> deepCopySet = new TreeSet<>();
 		Set<WebDoc> resultSet = webDocsMap.get(wd);
-		deepCopySet.addAll(resultSet);
-		return deepCopySet;
+		if (resultSet != null) {
+			deepCopySet.addAll(resultSet);
+			return deepCopySet;
+		} else {
+			return null;
+		}
 	}
 
 	/**
