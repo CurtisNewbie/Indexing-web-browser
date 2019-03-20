@@ -33,6 +33,7 @@ public class AndQuery implements Query {
 		// Retain all the common elements for the sub-queries that
 		// are not NotQuery
 		Set<WebDoc> finalNormalQueryResult = new TreeSet<>();
+		finalNormalQueryResult = normalQueryResult.get(0);
 		for (Set<WebDoc> eachSet : normalQueryResult) {
 			if (eachSet != null) {
 				finalNormalQueryResult.retainAll(eachSet);
