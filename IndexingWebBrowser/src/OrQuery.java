@@ -33,11 +33,11 @@ public class OrQuery implements Query {
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder("Or:");
 		Iterator<String> eachQuery = queryStr.iterator();
 
 		while (eachQuery.hasNext()) {
-			sb.append(eachQuery.next() + " ");
+			sb.append(eachQuery.next() + ", ");
 		}
 		return sb.toString();
 	}
