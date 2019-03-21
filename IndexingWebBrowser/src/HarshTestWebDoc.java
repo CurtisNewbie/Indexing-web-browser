@@ -12,15 +12,28 @@ public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
 		
+//		String wholeQuery = "abc";
+//		if (wholeQuery.startsWith("(") && wholeQuery.endsWith(")")) {
+//			wholeQuery = wholeQuery.substring(1, wholeQuery.length() - 1);
+//		}
+//		System.out.println(wholeQuery);
+//		System.out.println(wholeQuery.matches("abc|bcd"));
+		System.out.println("(ate or cat)  and (dog or fisshe) and not jdg");
+		System.out.println(QueryBuilder.extractInfixQuery("(ate or cat) and (dog or fisshe)"));
+//		System.out.println(QueryBuilder.splitQuery("(ate or cat) and (dog or fisshe)"));
+//		System.out.println(QueryBuilder.parse(QueryBuilder.parseInfixToPrefix("notfe")));
+//		System.out.println(QueryBuilder.parse("and(  bfff, addff)").toString());
+//		System.out.println(QueryBuilder.parseInfixForm((ate or cat) and (dog or fisshe))
+		
 //		System.out.println(QueryBuilder.parseSubquery("elephant,whale,and(fuck,dig),or(a,and(b,c))"));
-		String path = "file:Test.html";
-		try {
-			WebDoc doc1 = new WebDoc(path);
-			System.out.println(doc1.getContentWords().toString());
-			System.out.println(doc1.getEntry());
-		} catch (Exception e) {
-			System.out.println("Errors");
-		}
+//		String path = "file:Test.html";
+//		try {
+//			WebDoc doc1 = new WebDoc(path);
+//			System.out.println(doc1.getContentWords().toString());
+//			System.out.println(doc1.getEntry());
+//		} catch (Exception e) {
+//			System.out.println("Errors");
+//		}
 //		try {	
 //		URL url = new URL(path);
 //		BufferedReader br = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
