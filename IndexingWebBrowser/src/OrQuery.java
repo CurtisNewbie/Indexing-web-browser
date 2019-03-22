@@ -3,6 +3,14 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * This class is used to handle the prefix OrQuery, e.g.,
+ * or(banana,apple). It is part of the recursion that the matches() method will
+ * call the QueryBuilder.parse() to parse the sub-query of this OrQuery object,
+ * the sub-query can be an OrQuqery object as well.
+ * 
+ * @author 180139796
+ */
 public class OrQuery implements Query {
 
 	/**
@@ -28,10 +36,10 @@ public class OrQuery implements Query {
 	}
 
 	/**
-	 * This method searches through the given WebIndex based on the query to find all
-	 * the matched results. The OrQuery object finds the matched results of all the
-	 * sub-query and puts them together. As it is OrQuery, the notQuery is ignored,
-	 * as it will not affect the final result.
+	 * This method searches through the given WebIndex based on the query to find
+	 * all the matched results. The OrQuery object finds the matched results of all
+	 * the sub-query and puts them together. As it is OrQuery, the notQuery is
+	 * ignored, as it will not affect the final result.
 	 * 
 	 * @return a Set<WebDoc> that is found based on the query and the given
 	 *         WebIndex.
