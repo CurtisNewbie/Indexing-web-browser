@@ -37,12 +37,15 @@ public class AndQuery implements Query {
 		for (Set<WebDoc> eachSet : normalQueryResult) {
 			if (eachSet != null) {
 				finalNormalQueryResult.retainAll(eachSet);
+			} else { // one of the result is null, then the result should be null as well.
+				finalNormalQueryResult = null;
+				break;
 			}
 		}
 
 		// Retain all the common elements for all the NotQuery
 		Set<WebDoc> finalNotQueryResult = new TreeSet<>();
-		if (!notQueryResult.isEmpty()) {
+		if (!notQueryResult.isEmpty() && finalNormalQueryResult != null) {
 			// Put all the Sets of NotQuery together.
 			for (Set<WebDoc> eachSet : notQueryResult) {
 				if (eachSet != null) {
@@ -61,7 +64,7 @@ public class AndQuery implements Query {
 
 		while (eachQuery.hasNext()) {
 			stringBuilder.append("[" + eachQuery.next() + "]");
-			if(eachQuery.hasNext()) {
+			if (eachQuery.hasNext()) {
 				stringBuilder.append(",");
 			}
 		}
