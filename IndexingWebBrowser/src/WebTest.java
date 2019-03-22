@@ -54,6 +54,7 @@ public class WebTest {
 			System.exit(0);
 		} catch (FileNotFoundException e) {
 			System.out.println("File is not found! Try this format - C:\\foldername\\filename.txt");
+			System.exit(0);
 		} catch (IOException e) {
 			System.out.println("IOException occurs.");
 			e.printStackTrace();
@@ -118,44 +119,46 @@ public class WebTest {
 		}
 
 		/*
-		 * For Stage 2. Calling the .matches() method of each (prefix) Query object.
+		 * For Stage 2. 
+		 * Calling the .matches() method of each (prefix) Query object.
 		 * Calling the .toString() method of each (infix) Query object.
 		 */
 		try {
-			System.out.println("prefixQuery:");
+			System.out.println(
+					"---------------------Searching the web index according to the query:--------------------------");
 			for (String queryStr : prefixQueryCollection) {
-				System.out.println("Query:::" + queryStr);
+				System.out.println("PrefixQuery->\"" + queryStr + "\"");
 				if (queryStr.toLowerCase().matches("\\s*not\\s*\\(\\s*[A-Za-z]*\\s*\\)\\s*")) {
 					// It's a pure NotQuery that its sub-query is a atomic query. The result will be
-					// meaningless.
-					System.out.println("Result-> NULL");
+					// meaningless, so just make the result null.
+					System.out.println("Search Result-> NULL");
 					System.out.println();
 				} else {
-					System.out.println("Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
+					System.out.println("Search Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
 					System.out.println();
 				}
 			}
-
-			System.out.println("infixQuery:");
+			System.out.println("---------------------Transforming infix query into prefix query:---------------------");
 			for (String queryStr : infixQueryCollection) {
-				System.out.println("Query:::" + queryStr);
-				System.out.println("Result->" + QueryBuilder.parseInfixForm(queryStr).toString());
+				System.out.println("InfixQuery->\"" + queryStr + "\"");
+				System.out.println("PrefixQuery->" + QueryBuilder.parseInfixForm(queryStr).toString());
 				System.out.println();
 			}
 		} catch (StringIndexOutOfBoundsException e) {
 			System.out.println("This Query may be illegal.");
 		}
-
+		System.out.println("------------------------------------------------------------------------");
 		/*
 		 * For Stage 2. Further demonstrating how the QueryBuilder.parseInfixForm()
 		 * works: [each element]: e.g., A and B -> and([A],[B])
 		 */
 		System.out.println(
 				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
-		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B]):");
-		System.out.println("Manual Transformation to InfixFrom: (whale and fish) and not elephant");
-		System.out.println("Result of QueryBuilder.parseInfixForm().toString() : "
-				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString());
+		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B])");
+		System.out.println("PrefixForm: \"and(and(whale,fish),not(elephant))\"");
+		System.out.println("Manual Transformation to InfixFrom: \"(whale and fish) and not elephant\"");
+		System.out.println("Result of QueryBuilder.parseInfixForm().toString() : \""
+				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString() + "\"");
 
 		// More tests for processing prefix query - For Stage 2.
 		System.out.println("\n:::More tests for processing prefix query:");
@@ -169,7 +172,5 @@ public class WebTest {
 		System.out.println(QueryBuilder.parseInfixForm("Banana and ((cat and dog) and bird) or coffee").toString());
 		System.out.println(QueryBuilder.parseInfixForm("not Banana").toString());
 		System.out.println(QueryBuilder.parseInfixForm("not Banana and not Chocolate").toString());
-
 	}
-
 }
