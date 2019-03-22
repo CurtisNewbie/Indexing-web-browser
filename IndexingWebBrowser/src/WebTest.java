@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 /**
  * This class will be used to read the web documents(entries: files or URLs)
  * indicated in a text file as well as to read the query from another test file.
@@ -125,7 +124,7 @@ public class WebTest {
 		try {
 			System.out.println("prefixQuery:");
 			for (String queryStr : prefixQueryCollection) {
-				System.out.println("Query::::" + queryStr);
+				System.out.println("Query:::" + queryStr);
 				if (queryStr.toLowerCase().matches("\\s*not\\s*\\(\\s*[A-Za-z]*\\s*\\)\\s*")) {
 					// It's a pure NotQuery that its sub-query is a atomic query. The result will be
 					// meaningless.
@@ -139,7 +138,7 @@ public class WebTest {
 
 			System.out.println("infixQuery:");
 			for (String queryStr : infixQueryCollection) {
-				System.out.println("Query::::" + queryStr);
+				System.out.println("Query:::" + queryStr);
 				System.out.println("Result->" + QueryBuilder.parseInfixForm(queryStr).toString());
 				System.out.println();
 			}
