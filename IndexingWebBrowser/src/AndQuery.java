@@ -102,7 +102,7 @@ public class AndQuery implements Query {
 
 	/**
 	 * This method returns a String indicate the type of the query and the
-	 * sub-query. The sub-query is indicated using '[' and ']'. E.g., and(A,and(C,D)
+	 * sub-query. The sub-query is indicated using '[' and ']'. E.g., and(A,and(C,D))
 	 * -> AND([A],[and(C,D)])
 	 * 
 	 * @return a string that indicates the type of this query as well as the
