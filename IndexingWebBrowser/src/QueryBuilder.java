@@ -111,7 +111,7 @@ public class QueryBuilder {
 	 * atomic query is returned directly.
 	 * 
 	 * Infix query example: "(apple or banana) and cat and dog" - See explanation.
-	 * The first operator is "and" that is not covered the bracket, so it is
+	 * The first operator is "and" and it is not covered by the bracket, so it is
 	 * converted into "and((apple or banana),cat and dog)." Same logic applied for
 	 * other types of query.
 	 * 
