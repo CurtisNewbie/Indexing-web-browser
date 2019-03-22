@@ -123,7 +123,7 @@ public class WebTest {
 		 * Calling the .toString() method of each (infix) Query object.
 		 */
 		try {
-			System.out.println("prefixQuery:\n");
+			System.out.println("prefixQuery:");
 			for (String queryStr : prefixQueryCollection) {
 				System.out.println("Query::::" + queryStr);
 				if (queryStr.toLowerCase().matches("\\s*not\\s*\\(\\s*[A-Za-z]*\\s*\\)\\s*")) {
@@ -137,7 +137,7 @@ public class WebTest {
 				}
 			}
 
-			System.out.println("infixQuery:\n");
+			System.out.println("infixQuery:");
 			for (String queryStr : infixQueryCollection) {
 				System.out.println("Query::::" + queryStr);
 				System.out.println("Result->" + QueryBuilder.parseInfixForm(queryStr).toString());
