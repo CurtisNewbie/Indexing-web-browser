@@ -81,6 +81,13 @@ public class WebIndex {
 		numOfWords = webDocsMap.size();
 	}
 
+	/**
+	 * This method searches through the web index and finds the results that match
+	 * the given String. It returns a deep copy of the result as a Set<WebDoc>.
+	 * 
+	 * @param wd the String that is searched
+	 * @return a Set<WebDoc> that matches the String.
+	 */
 	public Set<WebDoc> getMatches(String wd) {
 		Set<WebDoc> deepCopySet = new TreeSet<>();
 		Set<WebDoc> resultSet = webDocsMap.get(wd);
