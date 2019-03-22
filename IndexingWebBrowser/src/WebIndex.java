@@ -13,20 +13,22 @@ import java.util.TreeSet;
  */
 public class WebIndex {
 
+	/**
+	 * It refers to the type of words that the web index stored.
+	 */
 	public enum TypeOfWords {
 		KEYWORD, CONTENT_WORD
 	}
 
-//	/**
-//	 * A collection of objects of WebDoc
-//	 */
-//	private ArrayList<WebDoc> webDocs;
-
+	/**
+	 * It indicates the type of words that the web index is trying to store.
+	 * (keywords or content words)
+	 */
 	private TypeOfWords type;
 
 	/**
 	 * The 'keys' are the words (content words or keywords), the 'values' are the
-	 * collection of WebDoc.
+	 * Set of WebDoc.
 	 */
 	private Map<String, Set<WebDoc>> webDocsMap;
 
