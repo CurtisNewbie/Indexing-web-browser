@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,7 +19,8 @@ public class WebTest {
 	public static void main(String[] args) {
 
 		ArrayList<WebDoc> webDocCollection = new ArrayList<>();
-		ArrayList<String> queryCollection = new ArrayList<>();
+		ArrayList<String> prefixQueryCollection = new ArrayList<>();
+		ArrayList<String> infixQueryCollection = new ArrayList<>();
 
 		// Read two txt files from the command args
 		try {
@@ -36,7 +38,12 @@ public class WebTest {
 			String tempQuery;
 			while ((tempQuery = QueryFileInput.readLine()) != null) {
 				if (!tempQuery.matches("\\s*")) {
-					queryCollection.add(tempQuery);
+					tempQuery = tempQuery.trim().toLowerCase();
+					if (tempQuery.matches("(and\\s*\\(.+,.+\\))|(or\\s*\\(.+,.+\\))|(not\\s*\\(.+\\))")) {
+						prefixQueryCollection.add(tempQuery);
+					} else {
+						infixQueryCollection.add(tempQuery);
+					}
 				}
 			}
 			QueryFileInput.close();
@@ -99,15 +106,32 @@ public class WebTest {
 //		System.out.println(QueryBuilder.parse("NoT(asdfasdf)").matches(webIndexContent));
 //		System.out.println((QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").matches(webIndexContent)));
 //
-//		System.out.println("\n[1]" + QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").toString());
+		System.out.println("\n[1]" + QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").toString());
 //		System.out.println("[2]" + QueryBuilder.parse("oR(Peanuts,elephant,not(yikes))").toString());
 //		System.out.println("[3]" + QueryBuilder.parse("NoT(asdfasdf)").toString());
 //		System.out.println("[4]" + QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").toString());
+		Iterator<String> prefixIterator = prefixQueryCollection.iterator();
+		while (prefixIterator.hasNext()) {
+			String queryStr = prefixIterator.next();
+			// (and or) (and , or) (and and) (and , and) (or and) (or , and)
+			if (queryStr.matches("(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)")) {
+				prefixIterator.remove();
+			}
+		}
 
-		for (String queryStr : queryCollection) {
-			System.out.println(QueryBuilder.parse(queryStr).matches(webIndexContent));
-			System.out.println("Division : " + QueryBuilder.parse(queryStr).toString());
-			System.out.println();
+		for (String queryStr : prefixQueryCollection) {
+			try {
+				System.out.println(QueryBuilder.parse(queryStr).matches(webIndexContent));
+				System.out.println("PreFixQuery : " + QueryBuilder.parse(queryStr).toString());
+				System.out.println();
+			} catch (StringIndexOutOfBoundsException e) {
+				System.out.println("Query format maybe illegal : " + queryStr);
+			}
+
+//		for (String queryStr : infixQueryCollection) {
+////			System.out.println(QueryBuilder.parseInfixForm(queryStr).matches(webIndexContent));
+//			System.out.println("InFixQuery : " + QueryBuilder.parseInfixForm(queryStr).toString());
+//			System.out.println();
 		}
 
 	}
