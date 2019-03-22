@@ -14,16 +14,23 @@ import java.io.*;
 public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
-		WebDoc wd = new WebDoc("https://www.google.com");
-		WebIndex wind = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
-		wind.add(wd);
-		try {
-			System.out.println(QueryBuilder.parse("and(and,or)").matches(wind));
-		} catch(StringIndexOutOfBoundsException e) {
-			System.out.println("Query format may be incorrect");
-		}
+//		WebDoc wd = new WebDoc("https://www.google.com");
+//		WebIndex wind = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
+//		wind.add(wd);
+//		try {
+//			System.out.println(QueryBuilder.parse("and(and,or)").matches(wind));
+//		} catch(StringIndexOutOfBoundsException e) {
+//			System.out.println("Query format may be incorrect");
+//		}
+//		System.out.println(QueryBuilder.parseInfixString("not this and not that"));
 		
-		
+
+			String queryStr = "and ) ((   (";
+			// (and and) (and or) (or and) (or or) (not and) (not not) (not or)
+			if (queryStr.matches("(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?[()]{2,}.*)")) {
+				System.out.println("got yo!");
+			}
+	
 //		String wholeQuery = "abc";
 //		if (wholeQuery.startsWith("(") && wholeQuery.endsWith(")")) {
 //			wholeQuery = wholeQuery.substring(1, wholeQuery.length() - 1);
