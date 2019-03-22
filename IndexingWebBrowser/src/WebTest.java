@@ -167,10 +167,10 @@ public class WebTest {
 
 		// More tests for processing infix query - For Stage 2.
 		System.out.println("\n:::More tests for processing infix query:");
-		System.out.println(QueryBuilder.parseInfixString("Banana and (cat and dog) and bird or not coffee").toString());
-		System.out.println(QueryBuilder.parseInfixString("Banana and ((cat and dog) and bird) or coffee").toString());
-		System.out.println(QueryBuilder.parseInfixString("not Banana").toString());
-		System.out.println(QueryBuilder.parseInfixString("not Banana and not Chocolate").toString());
+		System.out.println(QueryBuilder.parseInfixForm("Banana and (cat and dog) and bird or not coffee").toString());
+		System.out.println(QueryBuilder.parseInfixForm("Banana and ((cat and dog) and bird) or coffee").toString());
+		System.out.println(QueryBuilder.parseInfixForm("not Banana").toString());
+		System.out.println(QueryBuilder.parseInfixForm("not Banana and not Chocolate").toString());
 
 	}
 
