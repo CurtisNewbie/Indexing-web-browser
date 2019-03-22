@@ -17,11 +17,10 @@ public class QueryBuilder {
 		} else {
 			String notQuery;
 			int Starting_Index;
-
 			if (wholeQuery.startsWith("and")) {
 				Starting_Index = 4; // "and(" starting from 4
 				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
-				return new AndQuery(parsePrefixSubquery(subQueryInBracket));
+				return new AndQuery(parsePrefixSubquery(subQueryInBracket)); 
 			} else if (wholeQuery.startsWith("not")) {
 				Starting_Index = 4;
 				notQuery = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
