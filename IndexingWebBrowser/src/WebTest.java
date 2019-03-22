@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
 /**
  * This class will be used to read the web documents(entries: files or URLs)
  * indicated in a text file, and then calls the method of objects of WebDoc to
@@ -26,27 +28,30 @@ public class WebTest {
 		try {
 			BufferedReader fileInput = new BufferedReader(new FileReader(args[0]));
 			BufferedReader QueryFileInput = new BufferedReader(new FileReader(args[1]));
-
-			String tempEntry;
-			while ((tempEntry = fileInput.readLine()) != null) {
-				if (!tempEntry.matches("\\s*")) {
-					webDocCollection.add(new WebDoc(tempEntry));
-				}
-			}
-			fileInput.close();
-
-			String tempQuery;
-			while ((tempQuery = QueryFileInput.readLine()) != null) {
-				if (!tempQuery.matches("\\s*")) {
-					tempQuery = tempQuery.trim().toLowerCase();
-					if (tempQuery.matches("(and\\s*\\(.+,.+\\))|(or\\s*\\(.+,.+\\))|(not\\s*\\(.+\\))")) {
-						prefixQueryCollection.add(tempQuery);
-					} else {
-						infixQueryCollection.add(tempQuery);
+			try {
+				String tempEntry;
+				while ((tempEntry = fileInput.readLine()) != null) {
+					if (!tempEntry.matches("\\s*")) {
+						webDocCollection.add(new WebDoc(tempEntry));
 					}
 				}
+
+				String tempQuery;
+				while ((tempQuery = QueryFileInput.readLine()) != null) {
+					if (!tempQuery.matches("\\s*")) {
+						tempQuery = tempQuery.trim().toLowerCase();
+						if (tempQuery.matches("(and\\s*\\(.+,.+\\))|(or\\s*\\(.+,.+\\))|(not\\s*\\(.+\\))")) {
+							prefixQueryCollection.add(tempQuery);
+						} else {
+							infixQueryCollection.add(tempQuery);
+						}
+					}
+				}
+			} finally {
+				System.out.println("System existing!");
+				fileInput.close();
+				QueryFileInput.close();
 			}
-			QueryFileInput.close();
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("You should enter the path of the file!");
 			System.exit(0);
@@ -119,20 +124,27 @@ public class WebTest {
 			}
 		}
 
-		for (String queryStr : prefixQueryCollection) {
-			try {
-				System.out.println(QueryBuilder.parse(queryStr).matches(webIndexContent));
-				System.out.println("PreFixQuery : " + QueryBuilder.parse(queryStr).toString());
-				System.out.println();
-			} catch (StringIndexOutOfBoundsException e) {
-				System.out.println("Query format maybe illegal : " + queryStr);
+		Iterator<String> infixIterator = prefixQueryCollection.iterator();
+		while (infixIterator.hasNext()) {
+			String queryStr = infixIterator.next();
+			// (and and) (and or) (or and) (or or) (not and) (not not) (not or)
+			if (queryStr.matches("(.*?and\\s*and.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)")) {
+				infixIterator.remove();
 			}
+		}
+
+//		try {
+//			System.out.println(QueryBuilder.parse(queryStr).matches(webIndexContent));
+//			System.out.println("InFixQuery : " + QueryBuilder.parse(queryStr).toString());
+//			System.out.println();
+//		} catch (StringIndexOutOfBoundsException e) {
+//			System.out.println("Query format maybe illegal : " + queryStr);
+//		}
 
 //		for (String queryStr : infixQueryCollection) {
 ////			System.out.println(QueryBuilder.parseInfixForm(queryStr).matches(webIndexContent));
 //			System.out.println("InFixQuery : " + QueryBuilder.parseInfixForm(queryStr).toString());
 //			System.out.println();
-		}
 
 	}
 
