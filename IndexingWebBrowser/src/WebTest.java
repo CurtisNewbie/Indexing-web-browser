@@ -85,21 +85,10 @@ public class WebTest {
 //			System.out.println(contentMatchingResult.toString() + "\n");
 //		}
 //
-//		contentMatchingResult = webIndexContent.getMatches("document");
-//		if (contentMatchingResult != null) {
-//			System.out.println(contentMatchingResult.toString() + "\n");
-//		}
-//
-//		contentMatchingResult = webIndexContent.getMatches("zebra");
-//		if (contentMatchingResult != null) {
-//			System.out.println(contentMatchingResult.toString() + "\n");
-//		}
-//
 //		Set<WebDoc> keyMatchingResult = webIndexKey.getMatches("zebra");
 //		if (keyMatchingResult != null) {
 //			System.out.println(keyMatchingResult.toString() + "\n");
 //		}
-//		System.out.println("-------------------------------------------------");
 
 //		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").matches(webIndexContent));
 //		System.out.println(QueryBuilder.parse("oR(Peanuts,elephant,not(yikes)").matches(webIndexContent));
@@ -110,31 +99,32 @@ public class WebTest {
 //		System.out.println("[2]" + QueryBuilder.parse("oR(Peanuts,elephant,not(yikes))").toString());
 //		System.out.println("[3]" + QueryBuilder.parse("NoT(asdfasdf)").toString());
 //		System.out.println("[4]" + QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").toString());
-		
+
 		// Get rid of the illegal prefixQuery - For Stage 2.
 		Iterator<String> prefixIterator = prefixQueryCollection.iterator();
 		while (prefixIterator.hasNext()) {
 			String queryStr = prefixIterator.next();
 			// (and or) (and , or) (and and) (and , and) (or and) (or , and)
-			if (queryStr.matches("(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)")) {
+			if (queryStr.matches("(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)|(.*?\\({1,}\\){1,}.*?)")) {
 				prefixIterator.remove();
 			}
 		}
-		// Get rid of the illegal infixQuery  - For Stage 2.
+		// Get rid of the illegal infixQuery - For Stage 2.
 		Iterator<String> infixIterator = infixQueryCollection.iterator();
 		while (infixIterator.hasNext()) {
 			String queryStr = infixIterator.next();
-			// It filters following illegal situations: (and and);(and or);(or and);(or or);(not and);(not not);(not or);and finally,
+			// It filters following illegal situations: (and and);(and or);(or and);(or
+			// or);(not and);(not not);(not or);and finally,
 			// more than two '(' or')' sticking together.
 			if (queryStr.matches(
-					"(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?[()]{2,}.*)")) {
+					"(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?\\({1,}\\){1,}.*?)")) {
 				infixIterator.remove();
 			}
 		}
 
 		/*
-		 *  Calling the matches() method for each (prefix) Query object.
-		 *  Calling the toString() method of each (infix) Query object.
+		 * Calling the .matches() method for each (prefix) Query object. Calling the
+		 * .toString() method of each (infix) Query object.
 		 */
 		try {
 			System.out.println("prefixQuery:\n");
@@ -154,18 +144,30 @@ public class WebTest {
 			System.out.println("This Query may be illegal.");
 		}
 
-//		try {
-//			System.out.println(QueryBuilder.parse(queryStr).matches(webIndexContent));
-//			System.out.println("InFixQuery : " + QueryBuilder.parse(queryStr).toString());
-//			System.out.println();
-//		} catch (StringIndexOutOfBoundsException e) {
-//			System.out.println("Query format maybe illegal : " + queryStr);
-//		}
+		/*
+		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: 
+		 * [each element]: e.g., A and B -> and([A],[B])
+		 */
+		System.out.println(
+				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
+		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B]):");
+		System.out.println("Manual Transformation to InfixFrom: (whale and fish) and not elephant");
+		System.out.println("Result of QueryBuilder.parseInfixForm().toString() : "
+				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString());
 
-//		for (String queryStr : infixQueryCollection) {
-////			System.out.println(QueryBuilder.parseInfixForm(queryStr).matches(webIndexContent));
-//			System.out.println("InFixQuery : " + QueryBuilder.parseInfixForm(queryStr).toString());
-//			System.out.println();
+		// More tests for processing prefix query
+		System.out.println("\n:::More tests for processing prefix query:");
+		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,banana)").toString());
+		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
+		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
+		System.out.println(QueryBuilder.parse("and(not(elephant),birdy,NoT(extra))").toString());
+
+		// More tests for processing infix query
+		System.out.println("\n:::More tests for processing infix query:");
+		System.out.println(QueryBuilder.parseInfixString("Banana and (cat and dog) and bird or not coffee").toString());
+		System.out.println(QueryBuilder.parseInfixString("Banana and ((cat and dog) and bird) or coffee").toString());
+		System.out.println(QueryBuilder.parseInfixString("not Banana").toString());
+		System.out.println(QueryBuilder.parseInfixString("not Banana and not Chocolate").toString());
 
 	}
 
