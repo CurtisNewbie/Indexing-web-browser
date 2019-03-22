@@ -63,7 +63,8 @@ public class QueryBuilder {
 		return parse(prefixQuery);
 	}
 
-	private static String parseInfixString(String str) {
+	//change it back to private
+	public static String parseInfixString(String str) {
 		String query = str.trim();
 		query = parseCoveringBracket(query); // get rid of all the outside closing bracket.
 		Stack<Character> bracket = new Stack<>();
@@ -72,7 +73,7 @@ public class QueryBuilder {
 		int endIndex = 0;
 		StringBuilder stringBuilder = new StringBuilder();
 
-		if (query.matches("not\\s*\\(.+\\)")) { // NotQuery
+		if (query.matches("(not\\s*\\(.+\\))|(not\\s*[A-Z-a-z]*)")) { // NotQuery
 			operator = "not";
 			endIndex = 3;
 		} else if (!query.contains("and") && !query.contains("not") && !query.contains("or")
@@ -115,8 +116,7 @@ public class QueryBuilder {
 		} else if (operator.equals("atomic")) {
 			return query;
 		} else { // it is for debugging, normal situation it should never occur
-			System.out.println("Incorrect Format!");
-			System.out.println(query);
+			System.out.println("parseInfixString(String q) -> Incorrect Format! Query:[" + query + "]" );
 			return null;
 		}
 	}
