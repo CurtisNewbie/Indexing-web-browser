@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
-
 /**
  * This class will be used to read the web documents(entries: files or URLs)
  * indicated in a text file, and then calls the method of objects of WebDoc to
@@ -132,6 +130,8 @@ public class WebTest {
 				infixIterator.remove();
 			}
 		}
+		
+
 
 //		try {
 //			System.out.println(QueryBuilder.parse(queryStr).matches(webIndexContent));
