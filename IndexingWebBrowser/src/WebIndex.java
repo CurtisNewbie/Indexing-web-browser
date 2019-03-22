@@ -65,7 +65,6 @@ public class WebIndex {
 		} else {
 			tempWordSet = doc.getKeywords();
 		}
-
 		if (!tempWordSet.isEmpty()) {
 			for (String word : tempWordSet) {
 				Set<WebDoc> newSet = new TreeSet<WebDoc>();
