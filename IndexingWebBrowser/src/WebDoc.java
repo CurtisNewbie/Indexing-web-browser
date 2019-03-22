@@ -446,8 +446,9 @@ public class WebDoc implements Comparable<WebDoc> {
 	}
 
 	/**
-	 * It compares the entry of the WebDoc. This method is to enable storing the
-	 * WebDoc into the TreeSet.
+	 * It compares this object with the specified object for order, in terms of the
+	 * entry of the WebDoc. This method is to enable storing the WebDoc into the
+	 * TreeSet.
 	 * 
 	 * @return a negative integer, zero, or a positive integer as this object is
 	 *         less than, equal to, or greater than the specified object.
