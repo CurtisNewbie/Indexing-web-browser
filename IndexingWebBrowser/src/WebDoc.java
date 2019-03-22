@@ -14,7 +14,6 @@ import java.io.*;
  * @author 180139796
  */
 public class WebDoc implements Comparable<WebDoc> {
-
 	/**
 	 * Type of file. It is used to verify whether the entry is in the correct
 	 * format, and whether it is a web URL or a local web document.
@@ -103,16 +102,12 @@ public class WebDoc implements Comparable<WebDoc> {
 	public WebDoc(String url) {
 		this.entry = url;
 		this.checkFileType();
-
 		if (fileType != FileType.INCORRECT_ENTRY_FORMAT) { // Entry is in correct format.
 			if (fileType == FileType.WEB_URL) {
-//				System.out.println("Web Url:" + entry);
 				this.content = readWebUrl();
 			} else if (fileType == FileType.LOCAL_WEB_DOC) {
-//				System.out.println("Local url:" + entry);
 				this.content = readLocalFile();
 			}
-
 			this.syntaxQuality = this.checkQualityOfSyntax(); // check whether is well formed.
 			this.keywords = this.extractKeywords();
 			this.numOfKeywords = this.keywords.size();
@@ -138,7 +133,6 @@ public class WebDoc implements Comparable<WebDoc> {
 		Pattern keywordPatternNormalOrder = Pattern.compile(
 				"<[Mm][Ee][Tt][Aa]\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"([^>]*?)[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s?/?>");
 		Matcher keywordMatcherNormalOrder = keywordPatternNormalOrder.matcher(content);
-
 		Pattern keywordPatternReverseOrder = Pattern.compile(
 				"<[Mm][Ee][Tt][Aa]\\s*[Cc][Oo][Nn][Tt][Ee][Nn][Tt][Ss]?=\"([^>]*)\"\\s*[Nn][Aa][Mm][Ee]=\"[Kk][Ee][Yy][Ww][Oo][Rr][Dd][Ss]\"\\s*/?>");
 		Matcher keywordMatcherReverseOrder = keywordPatternReverseOrder.matcher(content);
@@ -147,11 +141,9 @@ public class WebDoc implements Comparable<WebDoc> {
 		while (keywordMatcherNormalOrder.find()) {
 			tempOutput.append(keywordMatcherNormalOrder.group(2));
 		}
-
 		while (keywordMatcherReverseOrder.find()) {
 			tempOutput.append(keywordMatcherReverseOrder.group(1));
 		}
-
 		// temporary output of keywords that may contain space and punctuation marks.
 		Pattern wordFilterPattern = Pattern.compile("[a-zA-Z]+");
 		Matcher wordFilterMatcher = wordFilterPattern.matcher(tempOutput);
@@ -199,7 +191,6 @@ public class WebDoc implements Comparable<WebDoc> {
 	 */
 	private String readWebUrl() {
 		StringBuffer result = new StringBuffer(""); // Read the content into a temporary StringBuffer.
-
 		try {
 			URL url = new URL(entry);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
@@ -236,13 +227,11 @@ public class WebDoc implements Comparable<WebDoc> {
 	private String readLocalFile() {
 		StringBuilder result = new StringBuilder("");
 		String localWebEntry = entry;
-
 		Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
 		Matcher entryMatcher = entryPattern.matcher(entry);
 		if (entryMatcher.find()) {
 			localWebEntry = entryMatcher.group(2); // extract the true file path.
 		}
-
 		// Read File
 		try {
 			FileReader fileInput = new FileReader(localWebEntry);
@@ -300,10 +289,8 @@ public class WebDoc implements Comparable<WebDoc> {
 	private String checkQualityOfSyntax() {
 		Pattern syntaxPattern = Pattern.compile("<([!/a-zA-Z]*)[^>]*>");
 		Matcher syntaxChecker = syntaxPattern.matcher(content);
-
 		Stack<String> normalTagStack = new Stack<>(); // Stack for normal tags
 		Stack<String> specialTagsStack = new Stack<>(); // stack for special tags
-
 		final String meta_tag = "[Mm][Ee][Tt][Aa]"; // <meta>
 		final String p_tag = "/{0,1}[Pp]"; // </p> or <p>
 		final String hr_tag = "[Hh][Rr]"; // <hr>
@@ -355,7 +342,6 @@ public class WebDoc implements Comparable<WebDoc> {
 				}
 			}
 		}
-
 		if (normalTagStack.size() == 0 && specialTagsStack.size() == 0) {
 			return "well-formed";
 		} else if (normalTagStack.size() == 0 && specialTagsStack.size() > 0) {
