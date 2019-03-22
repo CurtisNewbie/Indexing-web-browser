@@ -6,10 +6,12 @@ import java.util.TreeSet;
 
 /**
  * This class will be used to read the web documents(entries: files or URLs)
- * indicated in a text file, and then calls the method of objects of WebDoc to
- * produce the summary statistics about these web documents. A WebIndex will
- * then be created to provide additional functionalities, such as searching and
- * providing a overall summary of the WebDoc in this WebIndex.
+ * indicated in a text file as well as to read the query from another test file.
+ * It then calls the method of objects of WebDoc to produce the summary statistics 
+ * about these web documents. A WebIndex will then be created to provide additional 
+ * functionalities, such as searching and providing a overall summary of the WebDoc 
+ * in this WebIndex. The query (infix and prefix) will be used to search for content 
+ * words and keywords.
  * 
  * @author 180139796
  * 
@@ -46,7 +48,6 @@ public class WebTest {
 					}
 				}
 			} finally {
-				System.out.println("System existing!");
 				fileInput.close();
 				QueryFileInput.close();
 			}
@@ -90,22 +91,16 @@ public class WebTest {
 //			System.out.println(keyMatchingResult.toString() + "\n");
 //		}
 
-//		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").matches(webIndexContent));
-//		System.out.println(QueryBuilder.parse("oR(Peanuts,elephant,not(yikes)").matches(webIndexContent));
-//		System.out.println(QueryBuilder.parse("NoT(asdfasdf)").matches(webIndexContent));
-//		System.out.println((QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").matches(webIndexContent)));
-//
-//		System.out.println("\n[1]" + QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").toString());
-//		System.out.println("[2]" + QueryBuilder.parse("oR(Peanuts,elephant,not(yikes))").toString());
-//		System.out.println("[3]" + QueryBuilder.parse("NoT(asdfasdf)").toString());
-//		System.out.println("[4]" + QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").toString());
-
 		// Get rid of the illegal prefixQuery - For Stage 2.
 		Iterator<String> prefixIterator = prefixQueryCollection.iterator();
 		while (prefixIterator.hasNext()) {
 			String queryStr = prefixIterator.next();
-			// (and or) (and , or) (and and) (and , and) (or and) (or , and)
-			if (queryStr.matches("(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)|(.*?\\({1,}\\){1,}.*?)")) {
+			/*
+			 * (and or); (and , or); (and and); (and , and); (or and); (or , and); and
+			 * finally, more than two '(' or')' sticking together.
+			 */
+			if (queryStr.matches(
+					"(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)|(.*?\\({1,}\\){1,}.*?)")) {
 				prefixIterator.remove();
 			}
 		}
@@ -113,9 +108,11 @@ public class WebTest {
 		Iterator<String> infixIterator = infixQueryCollection.iterator();
 		while (infixIterator.hasNext()) {
 			String queryStr = infixIterator.next();
-			// It filters following illegal situations: (and and);(and or);(or and);(or
-			// or);(not and);(not not);(not or);and finally,
-			// more than two '(' or')' sticking together.
+			/*
+			 * It filters following illegal situations: (and and); (and or); (or and); (or
+			 * or); (not and); (not not); (not or); and finally, more than two '(' or')'
+			 * sticking together.
+			 */
 			if (queryStr.matches(
 					"(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?\\({1,}\\){1,}.*?)")) {
 				infixIterator.remove();
@@ -123,8 +120,9 @@ public class WebTest {
 		}
 
 		/*
-		 * Calling the .matches() method for each (prefix) Query object. Calling the
-		 * .toString() method of each (infix) Query object.
+		 * For Stage 2.
+		 * Calling the .matches() method of each (prefix) Query object. 
+		 * Calling the .toString() method of each (infix) Query object.
 		 */
 		try {
 			System.out.println("prefixQuery:\n");
@@ -144,9 +142,10 @@ public class WebTest {
 			System.out.println("This Query may be illegal.");
 		}
 
-		/*
-		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: 
-		 * [each element]: e.g., A and B -> and([A],[B])
+		/* 
+		 * For Stage 2.
+		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: [each
+		 * element]: e.g., A and B -> and([A],[B])
 		 */
 		System.out.println(
 				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
@@ -155,14 +154,14 @@ public class WebTest {
 		System.out.println("Result of QueryBuilder.parseInfixForm().toString() : "
 				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString());
 
-		// More tests for processing prefix query
+		// More tests for processing prefix query - For Stage 2.
 		System.out.println("\n:::More tests for processing prefix query:");
 		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,banana)").toString());
 		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
 		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
 		System.out.println(QueryBuilder.parse("and(not(elephant),birdy,NoT(extra))").toString());
-
-		// More tests for processing infix query
+ 
+		// More tests for processing infix query - For Stage 2.
 		System.out.println("\n:::More tests for processing infix query:");
 		System.out.println(QueryBuilder.parseInfixString("Banana and (cat and dog) and bird or not coffee").toString());
 		System.out.println(QueryBuilder.parseInfixString("Banana and ((cat and dog) and bird) or coffee").toString());
