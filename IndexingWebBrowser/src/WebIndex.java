@@ -24,7 +24,7 @@ public class WebIndex {
 	 * It indicates the type of words that the web index is trying to store.
 	 * (keywords or content words)
 	 */
-	private TypeOfWords type;
+	private TypeOfWords typeofWords;
 
 	/**
 	 * The 'keys' are the words (content words or keywords), the 'values' are the
@@ -46,7 +46,7 @@ public class WebIndex {
 	 * Initialise the webDocs. Assign 0 to numOfDocs and numOfWord.
 	 */
 	public WebIndex(TypeOfWords type) {
-		this.type = type;
+		this.typeofWords = type;
 		webDocsMap = new HashMap<>();
 		this.numOfDocs = 0;
 		this.numOfWords = 0;
@@ -59,9 +59,8 @@ public class WebIndex {
 	 * @param doc An object of WebDoc
 	 */
 	public void add(WebDoc doc) {
-
 		Set<String> tempWordSet;
-		if (type == TypeOfWords.CONTENT_WORD) {
+		if (typeofWords == TypeOfWords.CONTENT_WORD) {
 			tempWordSet = doc.getContentWords();
 		} else {
 			tempWordSet = doc.getKeywords();
@@ -73,13 +72,11 @@ public class WebIndex {
 				newSet.add(doc);
 				Set<WebDoc> temp = webDocsMap.putIfAbsent(word, newSet); // return null if the key is already associated
 																			// with a key
-
 				if (temp != null) { // If the key is already associated with a value.
 					temp.add(doc);
 				}
 			}
 		}
-
 		numOfDocs++;
 		numOfWords = webDocsMap.size();
 	}
@@ -103,7 +100,7 @@ public class WebIndex {
 	@Override
 	public String toString() {
 
-		if (type == TypeOfWords.KEYWORD) {
+		if (typeofWords == TypeOfWords.KEYWORD) {
 			return "WebIndex over keywords contains " + numOfWords + " from " + numOfDocs + " documents";
 		} else {
 			return "WebIndex over contents contains " + numOfWords + " from " + numOfDocs + " documents";
