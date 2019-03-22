@@ -98,18 +98,14 @@ public class WebTest {
 		if (keyMatchingResult != null) {
 			System.out.println(keyMatchingResult.toString() + "\n");
 		}
-
 		System.out.println("-------------------------------------------------");
-
-		// Testing Query
-		ArrayList<Set<WebDoc>> queryResult = new ArrayList<>();
 
 //		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").matches(webIndexContent));
 //		System.out.println(QueryBuilder.parse("oR(Peanuts,elephant,not(yikes)").matches(webIndexContent));
 //		System.out.println(QueryBuilder.parse("NoT(asdfasdf)").matches(webIndexContent));
 //		System.out.println((QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").matches(webIndexContent)));
 //
-		System.out.println("\n[1]" + QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").toString());
+//		System.out.println("\n[1]" + QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").toString());
 //		System.out.println("[2]" + QueryBuilder.parse("oR(Peanuts,elephant,not(yikes))").toString());
 //		System.out.println("[3]" + QueryBuilder.parse("NoT(asdfasdf)").toString());
 //		System.out.println("[4]" + QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").toString());
@@ -125,13 +121,33 @@ public class WebTest {
 		Iterator<String> infixIterator = prefixQueryCollection.iterator();
 		while (infixIterator.hasNext()) {
 			String queryStr = infixIterator.next();
-			// (and and) (and or) (or and) (or or) (not and) (not not) (not or)
-			if (queryStr.matches("(.*?and\\s*and.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)")) {
+			// It filters following illegal situations: (and and);(and or);(or and);(or or);(not and);(not not);(not or);and finally,
+			// more than two '(' or')' sticking together.
+			if (queryStr.matches(
+					"(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?[()]{2,}.*)")) {
 				infixIterator.remove();
 			}
 		}
-		
 
+		int queryCount = 0; // Help identifying which query is illegal.
+		try {
+			System.out.println("prefixQuery:\n");
+			for (String queryStr : prefixQueryCollection) {
+				System.out.println("Query::::" + queryStr);
+				System.out.println("Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
+				queryCount++;
+			}
+
+			queryCount = 0;
+			System.out.println("infixQuery:\n");
+			for (String queryStr : infixQueryCollection) {
+				System.out.println("Query::::" + queryStr);
+				System.out.println("Result->" + QueryBuilder.parseInfixString(queryStr));
+				queryCount++;
+			}
+		} catch (StringIndexOutOfBoundsException e) {
+			System.out.println("Query may be illegal:" + queryCount);
+		}
 
 //		try {
 //			System.out.println(QueryBuilder.parse(queryStr).matches(webIndexContent));
