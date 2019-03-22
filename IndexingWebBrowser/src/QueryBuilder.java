@@ -73,7 +73,7 @@ public class QueryBuilder {
 		int endIndex = 0;
 		StringBuilder stringBuilder = new StringBuilder();
 
-		if (query.matches("not\\s+\\(.+\\)")) { // NotQuery
+		if (query.matches("not\\s*\\(.+\\)")) { // NotQuery
 			operator = "not";
 			endIndex = 3;
 		} else if (!query.contains("and") && !query.contains("not") && !query.contains("or")
