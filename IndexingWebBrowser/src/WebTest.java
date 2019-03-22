@@ -64,6 +64,7 @@ public class WebTest {
 		WebIndex webIndexContent = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
 		WebIndex webIndexKey = new WebIndex(WebIndex.TypeOfWords.KEYWORD);
 
+		// Calling the toString() of each WebDoc - For Stage 1.
 		for (WebDoc wd : webDocCollection) {
 			// Only the objects that successfully read their content from the URL or files.
 			if (wd.getFileStatus() == WebDoc.FileStatus.SUCCESSFUL_READING) {
@@ -74,31 +75,31 @@ public class WebTest {
 		}
 		System.out.println();
 
-		// Testing WebIndex .toString()
+		// Testing WebIndex .toString() - For Stage 1.
 		System.out.println(webIndexContent.toString());
 		System.out.println(webIndexKey.toString() + "\n");
 
-		// Testing WebIndex .getMatches()
-		Set<WebDoc> contentMatchingResult = webIndexContent.getMatches("elephant");
-		if (contentMatchingResult != null) {
-			System.out.println(contentMatchingResult.toString() + "\n");
-		}
-
-		contentMatchingResult = webIndexContent.getMatches("document");
-		if (contentMatchingResult != null) {
-			System.out.println(contentMatchingResult.toString() + "\n");
-		}
-
-		contentMatchingResult = webIndexContent.getMatches("zebra");
-		if (contentMatchingResult != null) {
-			System.out.println(contentMatchingResult.toString() + "\n");
-		}
-
-		Set<WebDoc> keyMatchingResult = webIndexKey.getMatches("zebra");
-		if (keyMatchingResult != null) {
-			System.out.println(keyMatchingResult.toString() + "\n");
-		}
-		System.out.println("-------------------------------------------------");
+		// Testing WebIndex .getMatches() - For Stage 1.
+//		Set<WebDoc> contentMatchingResult = webIndexContent.getMatches("elephant");
+//		if (contentMatchingResult != null) {
+//			System.out.println(contentMatchingResult.toString() + "\n");
+//		}
+//
+//		contentMatchingResult = webIndexContent.getMatches("document");
+//		if (contentMatchingResult != null) {
+//			System.out.println(contentMatchingResult.toString() + "\n");
+//		}
+//
+//		contentMatchingResult = webIndexContent.getMatches("zebra");
+//		if (contentMatchingResult != null) {
+//			System.out.println(contentMatchingResult.toString() + "\n");
+//		}
+//
+//		Set<WebDoc> keyMatchingResult = webIndexKey.getMatches("zebra");
+//		if (keyMatchingResult != null) {
+//			System.out.println(keyMatchingResult.toString() + "\n");
+//		}
+//		System.out.println("-------------------------------------------------");
 
 //		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,ffff)").matches(webIndexContent));
 //		System.out.println(QueryBuilder.parse("oR(Peanuts,elephant,not(yikes)").matches(webIndexContent));
@@ -109,6 +110,8 @@ public class WebTest {
 //		System.out.println("[2]" + QueryBuilder.parse("oR(Peanuts,elephant,not(yikes))").toString());
 //		System.out.println("[3]" + QueryBuilder.parse("NoT(asdfasdf)").toString());
 //		System.out.println("[4]" + QueryBuilder.parse("and(not(elephant),ass,NoT(extra))").toString());
+		
+		// Get rid of the illegal prefixQuery - For Stage 2.
 		Iterator<String> prefixIterator = prefixQueryCollection.iterator();
 		while (prefixIterator.hasNext()) {
 			String queryStr = prefixIterator.next();
@@ -117,8 +120,8 @@ public class WebTest {
 				prefixIterator.remove();
 			}
 		}
-
-		Iterator<String> infixIterator = prefixQueryCollection.iterator();
+		// Get rid of the illegal infixQuery  - For Stage 2.
+		Iterator<String> infixIterator = infixQueryCollection.iterator();
 		while (infixIterator.hasNext()) {
 			String queryStr = infixIterator.next();
 			// It filters following illegal situations: (and and);(and or);(or and);(or or);(not and);(not not);(not or);and finally,
@@ -129,24 +132,26 @@ public class WebTest {
 			}
 		}
 
-		int queryCount = 0; // Help identifying which query is illegal.
+		/*
+		 *  Calling the matches() method for each (prefix) Query object.
+		 *  Calling the toString() method of each (infix) Query object.
+		 */
 		try {
 			System.out.println("prefixQuery:\n");
 			for (String queryStr : prefixQueryCollection) {
 				System.out.println("Query::::" + queryStr);
 				System.out.println("Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
-				queryCount++;
+				System.out.println();
 			}
 
-			queryCount = 0;
 			System.out.println("infixQuery:\n");
 			for (String queryStr : infixQueryCollection) {
 				System.out.println("Query::::" + queryStr);
-				System.out.println("Result->" + QueryBuilder.parseInfixString(queryStr));
-				queryCount++;
+				System.out.println("Result->" + QueryBuilder.parseInfixForm(queryStr).toString());
+				System.out.println();
 			}
 		} catch (StringIndexOutOfBoundsException e) {
-			System.out.println("Query may be illegal:" + queryCount);
+			System.out.println("This Query may be illegal.");
 		}
 
 //		try {
