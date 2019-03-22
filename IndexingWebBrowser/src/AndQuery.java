@@ -1,10 +1,8 @@
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javafx.animation.Interpolator;
 
 /**
  * This class is used to handle the prefix AndQuery, e.g., and(banana,apple). It

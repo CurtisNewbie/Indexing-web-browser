@@ -1,9 +1,6 @@
-import java.util.ArrayList;
-import java.util.Iterator;
+
 import java.util.Stack;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * It is a builder class that is responsible for building the objects of Query
