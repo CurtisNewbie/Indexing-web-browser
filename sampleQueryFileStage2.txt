@@ -1,0 +1,5 @@
+and(and(whale,fish),not(elephant))
+elephant
+or(elephant,whale)
+or(elephant,and(whale,fish))
+
