@@ -445,6 +445,13 @@ public class WebDoc implements Comparable<WebDoc> {
 		return numOfContentWords;
 	}
 
+	/**
+	 * It compares the entry of the WebDoc. This method is to enable storing the
+	 * WebDoc into the TreeSet.
+	 * 
+	 * @return a negative integer, zero, or a positive integer as this object is
+	 *         less than, equal to, or greater than the specified object.
+	 */
 	@Override
 	public int compareTo(WebDoc webdoc) {
 		return entry.compareTo(webdoc.getEntry());
