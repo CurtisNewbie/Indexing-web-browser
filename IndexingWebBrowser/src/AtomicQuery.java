@@ -1,11 +1,8 @@
 import java.util.Set;
 
 /**
- * This class is used to handle the prefix AtomicQuery, e.g., banana. It is part
- * of the recursion, however, it will not call the QueryBuilder.parse() method.
- * Instead, it calls the the getMatches() of the WebIndex object to finds the
- * result that match this word. Theoretically, AtomicQuery is the 'end' of the
- * recursion.
+ * This class is used to handle the prefix AtomicQuery, e.g., banana.
+ * Theoretically, AtomicQuery is the 'end' of the recursion.
  * 
  * @author 180139796
  *

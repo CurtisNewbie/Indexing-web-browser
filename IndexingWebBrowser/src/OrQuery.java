@@ -4,10 +4,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * This class is used to handle the prefix OrQuery, e.g.,
- * or(banana,apple). It is part of the recursion that the matches() method will
- * call the QueryBuilder.parse() to parse the sub-query of this OrQuery object,
- * the sub-query can be an OrQuqery object as well.
+ * This class is used to handle the prefix OrQuery, e.g., or(banana,apple). It
+ * is part of the recursion that the matches() method will call the
+ * QueryBuilder.parse() to parse the sub-query of this OrQuery object, and then
+ * calls the matches() of the sub-query. The sub-query can be an OrQuqery object
+ * as well.
  * 
  * @author 180139796
  */
@@ -36,6 +37,10 @@ public class OrQuery implements Query {
 	}
 
 	/**
+	 * It is part of the recursion that the matches() method will call the
+	 * QueryBuilder.parse() to parse the sub-query of this AndQuery object, and then
+	 * calls the matches() of the sub-query.
+	 * 
 	 * This method searches through the given WebIndex based on the query to find
 	 * all the matched results. The OrQuery object finds the matched results of all
 	 * the sub-query and puts them together. As it is OrQuery, the notQuery is

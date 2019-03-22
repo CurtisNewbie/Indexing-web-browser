@@ -8,9 +8,8 @@ import javafx.animation.Interpolator;
 
 /**
  * This class is used to handle the prefix AndQuery, e.g., and(banana,apple). It
- * is part of the recursion that the matches() method will call the
- * QueryBuilder.parse() to parse the sub-query of this AndQuery object, the
- * sub-query can be an AndQuqery object as well.
+ * consist of a number of sub-query. The sub-query can be an AndQuqery object as
+ * well.
  * 
  * @author 180139796
  *
@@ -36,8 +35,8 @@ public class AndQuery implements Query {
 	private ArrayList<Set<WebDoc>> notQueryResult;
 
 	/**
-	 * Constructor of AndQuery that initialises the instance variables(normalQueryResult,
-	 * notQueryResult and subQuery).
+	 * Constructor of AndQuery that initialises the instance
+	 * variables(normalQueryResult, notQueryResult and subQuery).
 	 * 
 	 * @param subQuery a TreeSet<String> of sub-query.
 	 */
@@ -48,10 +47,14 @@ public class AndQuery implements Query {
 	}
 
 	/**
-	 * This method searches through the given WebIndex based on the query to find all
-	 * the matched results. The AndQuery object finds the common parts of each sub-queries
-	 * except the NotQuery, if there is NotQuery, the final result should exclude
-	 * the results of the NotQuery.
+	 * It is part of the recursion that the matches() method will call the
+	 * QueryBuilder.parse() to parse the sub-query of this AndQuery object, and then
+	 * calls the matches() of the sub-query.
+	 * 
+	 * This method searches through the given WebIndex based on the query to find
+	 * all the matched results. The AndQuery object finds the common parts of each
+	 * sub-queries except the NotQuery, if there is NotQuery, the final result
+	 * should exclude the results of the NotQuery.
 	 * 
 	 * @return a Set<WebDoc> that is found based on the query and the given
 	 *         WebIndex.
@@ -102,8 +105,8 @@ public class AndQuery implements Query {
 
 	/**
 	 * This method returns a String indicate the type of the query and the
-	 * sub-query.The sub-query is indicated using '[' and ']'. 
-	 * E.g., and(A,and(C,D) -> AND([A],[and(C,D)])
+	 * sub-query.The sub-query is indicated using '[' and ']'. E.g., and(A,and(C,D)
+	 * -> AND([A],[and(C,D)])
 	 * 
 	 * @return a string that indicates the type of this query as well as the
 	 *         sub-query of this query.
