@@ -14,7 +14,7 @@ public class NotQuery implements Query{
 	}
 	
 	public String toString() {
-		return "NOT:" + query;
+		return "NOT([" + query + "])";
 	}
 
 }

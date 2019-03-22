@@ -56,13 +56,17 @@ public class AndQuery implements Query {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("AND:");
+		StringBuilder stringBuilder = new StringBuilder("AND(");
 		Iterator<String> eachQuery = queryStr.iterator();
 
 		while (eachQuery.hasNext()) {
-			sb.append(eachQuery.next() + ", ");
+			stringBuilder.append("[" + eachQuery.next() + "]");
+			if(eachQuery.hasNext()) {
+				stringBuilder.append(",");
+			}
 		}
-		return sb.toString();
+		stringBuilder.append(")");
+		return stringBuilder.toString();
 	}
 
 }
