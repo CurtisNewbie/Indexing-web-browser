@@ -45,17 +45,19 @@ public class HarshTestWebDoc {
 
 		// More tests for processing prefix query
 		System.out.println("\n:::More tests for processing prefix query:");
-		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,banana)").toString());
+		System.out.println(QueryBuilder.parse("and(aaaaa,bbbbb,ccccc,ddddd,eeeee)").toString());
 		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
 		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
-		System.out.println(QueryBuilder.parse("and(not(elephant),birdy,NoT(extra))").toString());
+		System.out.println(QueryBuilder.parse("and((not(elephant),birdy,NoT(extra)))").toString());
 
 		// More tests for processing infix query
 		System.out.println("\n:::More tests for processing infix query:");
-		System.out.println(QueryBuilder.parseInfixString("Banana and (cat and dog) and bird or not coffee").toString());
+		System.out.println(QueryBuilder.parseInfixString("((aaa or bbb and not ggg) and ddd or not eee)").toString());
 		System.out.println(QueryBuilder.parseInfixString("Banana and ((cat and dog) and bird) or coffee").toString());
 		System.out.println(QueryBuilder.parseInfixString("not Banana").toString());
 		System.out.println(QueryBuilder.parseInfixString("not Banana and not Chocolate").toString());
+		
+		System.out.println(QueryBuilder.parse("and(elephant,NoT   (asdfasdf),number,yikes,banana)").toString());
 
 //	
 //		String wholeQuery = "abc";
