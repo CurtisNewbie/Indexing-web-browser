@@ -7,11 +7,11 @@ import java.util.TreeSet;
 /**
  * This class will be used to read the web documents(entries: files or URLs)
  * indicated in a text file as well as to read the query from another test file.
- * It then calls the method of objects of WebDoc to produce the summary statistics 
- * about these web documents. A WebIndex will then be created to provide additional 
- * functionalities, such as searching and providing a overall summary of the WebDoc 
- * in this WebIndex. The query (infix and prefix) will be used to search for content 
- * words and keywords.
+ * It then calls the method of objects of WebDoc to produce the summary
+ * statistics about these web documents. A WebIndex will then be created to
+ * provide additional functionalities, such as searching and providing a overall
+ * summary of the WebDoc in this WebIndex. The query (infix and prefix) will be
+ * used to search for content words and keywords.
  * 
  * @author 180139796
  * 
@@ -120,16 +120,22 @@ public class WebTest {
 		}
 
 		/*
-		 * For Stage 2.
-		 * Calling the .matches() method of each (prefix) Query object. 
+		 * For Stage 2. Calling the .matches() method of each (prefix) Query object.
 		 * Calling the .toString() method of each (infix) Query object.
 		 */
 		try {
 			System.out.println("prefixQuery:\n");
 			for (String queryStr : prefixQueryCollection) {
 				System.out.println("Query::::" + queryStr);
-				System.out.println("Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
-				System.out.println();
+				if (queryStr.toLowerCase().matches("\\s*not\\s*\\(\\s*[A-Za-z]*\\s*\\)\\s*")) {
+					// It's a pure NotQuery that its sub-query is a atomic query. The result will be
+					// meaningless.
+					System.out.println("Result-> NULL");
+					System.out.println();
+				} else {
+					System.out.println("Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
+					System.out.println();
+				}
 			}
 
 			System.out.println("infixQuery:\n");
@@ -142,10 +148,9 @@ public class WebTest {
 			System.out.println("This Query may be illegal.");
 		}
 
-		/* 
-		 * For Stage 2.
-		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: [each
-		 * element]: e.g., A and B -> and([A],[B])
+		/*
+		 * For Stage 2. Further demonstrating how the QueryBuilder.parseInfixForm()
+		 * works: [each element]: e.g., A and B -> and([A],[B])
 		 */
 		System.out.println(
 				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
@@ -156,11 +161,10 @@ public class WebTest {
 
 		// More tests for processing prefix query - For Stage 2.
 		System.out.println("\n:::More tests for processing prefix query:");
-		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,banana)").toString());
+		System.out.println(QueryBuilder.parse("and(elephant,NoT   (asdfasdf),number,yikes,banana)").toString());
 		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
-		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
 		System.out.println(QueryBuilder.parse("and(not(elephant),birdy,NoT(extra))").toString());
- 
+
 		// More tests for processing infix query - For Stage 2.
 		System.out.println("\n:::More tests for processing infix query:");
 		System.out.println(QueryBuilder.parseInfixString("Banana and (cat and dog) and bird or not coffee").toString());
