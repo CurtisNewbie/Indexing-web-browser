@@ -23,14 +23,41 @@ public class HarshTestWebDoc {
 //			System.out.println("Query format may be incorrect");
 //		}
 //		System.out.println(QueryBuilder.parseInfixString("not this and not that"));
-		
+//		
+//		System.out.println(QueryBuilder.parse("and(a,b))").matches(wind));
+//
+//			String queryStr = "((((()";
+//			// (and and) (and or) (or and) (or or) (not and) (not not) (not or)
+//			if (queryStr.matches("(.*?\\({1,}\\){1,}.*?)")) {
+//				System.out.println("got yo!");
+//			}
+		/*
+		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: 
+		 * [each element]: e.g., A and B -> and([A],[B])
+		 */
+		System.out.println(
+				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
+		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B]):");
+		System.out.println("PrefixForm: and(and(whale,fish),not(elephant))");
+		System.out.println("Manual Transformation to InfixFrom: (whale and fish) and not elephant");
+		System.out.println("Result of QueryBuilder.parseInfixForm() : "
+				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString());
 
-			String queryStr = "and ) ((   (";
-			// (and and) (and or) (or and) (or or) (not and) (not not) (not or)
-			if (queryStr.matches("(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?[()]{2,}.*)")) {
-				System.out.println("got yo!");
-			}
-	
+		// More tests for processing prefix query
+		System.out.println("\n:::More tests for processing prefix query:");
+		System.out.println(QueryBuilder.parse("and(elephant,whale,number,yikes,banana)").toString());
+		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
+		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
+		System.out.println(QueryBuilder.parse("and(not(elephant),birdy,NoT(extra))").toString());
+
+		// More tests for processing infix query
+		System.out.println("\n:::More tests for processing infix query:");
+		System.out.println(QueryBuilder.parseInfixString("Banana and (cat and dog) and bird or not coffee").toString());
+		System.out.println(QueryBuilder.parseInfixString("Banana and ((cat and dog) and bird) or coffee").toString());
+		System.out.println(QueryBuilder.parseInfixString("not Banana").toString());
+		System.out.println(QueryBuilder.parseInfixString("not Banana and not Chocolate").toString());
+
+//	
 //		String wholeQuery = "abc";
 //		if (wholeQuery.startsWith("(") && wholeQuery.endsWith(")")) {
 //			wholeQuery = wholeQuery.substring(1, wholeQuery.length() - 1);
@@ -150,15 +177,15 @@ public class HarshTestWebDoc {
 					}
 				} else { // for whose that has no bracket, but may contains multiple operators.
 					ArrayList<String> tempList = spliteWhiteSpace(splitedQuery.get(x));
-					for(String str: tempList) {
+					for (String str : tempList) {
 						splitedQuery.add(x, str);
 					}
 				}
 			}
-			
+
 			for (int x = 0; x < splitedQuery.size(); x++) {
-				if(countOperators(splitedQuery.get(x)) > 1) {
-					
+				if (countOperators(splitedQuery.get(x)) > 1) {
+
 				}
 			}
 			System.out.println(splitedQuery);
@@ -170,7 +197,7 @@ public class HarshTestWebDoc {
 			} else {
 				return wholeQuery;
 			}
-			
+
 		}
 	}
 
