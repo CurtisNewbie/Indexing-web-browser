@@ -36,7 +36,7 @@ public class AndQuery implements Query {
 	private ArrayList<Set<WebDoc>> notQueryResult;
 
 	/**
-	 * Constructor that initialises the instance variables(normalQueryResult,
+	 * Constructor of AndQuery that initialises the instance variables(normalQueryResult,
 	 * notQueryResult and subQuery).
 	 * 
 	 * @param subQuery a TreeSet<String> of sub-query.
