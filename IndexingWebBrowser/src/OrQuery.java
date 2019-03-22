@@ -28,7 +28,7 @@ public class OrQuery implements Query {
 	}
 
 	/**
-	 * This method search through the given WebIndex based on the query to find all
+	 * This method searches through the given WebIndex based on the query to find all
 	 * the matched results. The OrQuery object finds the matched results of all the
 	 * sub-query and puts them together. As it is OrQuery, the notQuery is ignored,
 	 * as it will not affect the final result.

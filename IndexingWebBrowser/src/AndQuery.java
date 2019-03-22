@@ -48,7 +48,7 @@ public class AndQuery implements Query {
 	}
 
 	/**
-	 * This method search through the given WebIndex based on the query to find all
+	 * This method searches through the given WebIndex based on the query to find all
 	 * the matched results. The AndQuery object finds the common parts of each sub-queries
 	 * except the NotQuery, if there is NotQuery, the final result should exclude
 	 * the results of the NotQuery.
