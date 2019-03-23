@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * This class will be used to read the web documents(entries: files or URLs)
@@ -19,8 +20,8 @@ public class WebTest {
 	public static void main(String[] args) {
 
 		ArrayList<WebDoc> webDocCollection = new ArrayList<>();
-		ArrayList<String> prefixQueryCollection = new ArrayList<>();
-		ArrayList<String> infixQueryCollection = new ArrayList<>();
+		LinkedList<String> prefixQueryCollection = new LinkedList<>();
+		LinkedList<String> infixQueryCollection = new LinkedList<>();
 
 		// Read two txt files from the command args
 		try {
