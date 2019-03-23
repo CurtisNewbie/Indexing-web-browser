@@ -154,7 +154,7 @@ public class WebTest {
 		 * works: [each element]: e.g., A and B -> and([A],[B])
 		 */
 		System.out.println(
-				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
+				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, converting the Infix to Prefix:");
 		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B])");
 		System.out.println("PrefixForm: \"and(and(whale,fish),not(elephant))\"");
 		System.out.println("Manual Transformation to InfixFrom: \"(whale and fish) and not elephant\"");
