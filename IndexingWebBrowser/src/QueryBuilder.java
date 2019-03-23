@@ -33,7 +33,7 @@ public class QueryBuilder {
 			if (wholeQuery.startsWith("and")) {
 				Starting_Index = 4; // "and(" starting from 4
 				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
-				return new AndQuery(parsePrefixSubquery(subQueryInBracket));
+				return new AndQuery(parsePrefixSubQuery(subQueryInBracket));
 			} else if (wholeQuery.startsWith("not")) {
 				Starting_Index = 4;
 				notQuery = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
@@ -41,7 +41,7 @@ public class QueryBuilder {
 			} else { // wholeQuery.startsWith("or");
 				Starting_Index = 3; // "or(" starting from 3
 				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
-				return new OrQuery(parsePrefixSubquery(subQueryInBracket));
+				return new OrQuery(parsePrefixSubQuery(subQueryInBracket));
 			}
 		}
 	}
@@ -59,7 +59,7 @@ public class QueryBuilder {
 	 *          of the AndQuery or OrQuery.
 	 * @return a TreeSet<String> of all the sub-query.
 	 */
-	private static TreeSet<String> parsePrefixSubquery(String q) {
+	private static TreeSet<String> parsePrefixSubQuery(String q) {
 		TreeSet<String> subQuery = new TreeSet<>();
 		Stack<Character> bracket = new Stack<>();
 		int startIndex = 0;
