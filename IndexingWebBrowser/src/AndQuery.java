@@ -14,7 +14,7 @@ import java.util.TreeSet;
 public class AndQuery implements Query {
 
 	/**
-	 * It represents the sub-query of this AndQuery, it can be more than two in case
+	 * It represents the sub-queries of this AndQuery, it can be more than two in case
 	 * of the prefix form.
 	 */
 	private TreeSet<String> subQuery;
