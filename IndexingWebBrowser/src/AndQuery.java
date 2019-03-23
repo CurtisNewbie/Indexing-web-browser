@@ -17,7 +17,7 @@ public class AndQuery implements Query {
 	 * It represents the sub-queries of this AndQuery, it can be more than two in case
 	 * of the prefix form.
 	 */
-	private TreeSet<String> subQuery;
+	private TreeSet<String> subQueryCollection;
 
 	/**
 	 * The normal query refers to the query that is not NotQuery (AndQuery, OrQuery,
@@ -33,12 +33,12 @@ public class AndQuery implements Query {
 
 	/**
 	 * Constructor of AndQuery that initialises the instance
-	 * variables(normalQueryResult, notQueryResult and subQuery).
+	 * variables(normalQueryResult, notQueryResult and subQueryCollection).
 	 * 
 	 * @param subQuery a TreeSet<String> of sub-query.
 	 */
 	public AndQuery(TreeSet<String> subQuery) {
-		this.subQuery = subQuery;
+		this.subQueryCollection = subQuery;
 		normalQueryResult = new ArrayList<>();
 		notQueryResult = new ArrayList<>();
 	}
@@ -60,7 +60,7 @@ public class AndQuery implements Query {
 	 */
 	public Set<WebDoc> matches(WebIndex wind) {
 		// Get the results of all the sub-queries
-		for (String eachQuery : subQuery) {
+		for (String eachQuery : subQueryCollection) {
 			Query subQuery = QueryBuilder.parse(eachQuery);
 			if (subQuery instanceof NotQuery) {
 				notQueryResult.add(subQuery.matches(wind));
@@ -111,7 +111,7 @@ public class AndQuery implements Query {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder("AND(");
-		Iterator<String> eachQuery = subQuery.iterator();
+		Iterator<String> eachQuery = subQueryCollection.iterator();
 
 		while (eachQuery.hasNext()) {
 			stringBuilder.append("[" + eachQuery.next() + "]");

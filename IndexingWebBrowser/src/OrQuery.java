@@ -18,7 +18,7 @@ public class OrQuery implements Query {
 	 * It represents the sub-query of this AndQuery, it can be more than two in case
 	 * of the prefix form.
 	 */
-	private TreeSet<String> subQuery;
+	private TreeSet<String> subQueryCollection;
 
 	/**
 	 * It is a collection of results of the matches() of all the sub-query.
@@ -26,13 +26,13 @@ public class OrQuery implements Query {
 	private ArrayList<Set<WebDoc>> subQueryResult;
 
 	/**
-	 * Constructor of AndQuery that initialises the instance variables(subQuery and
+	 * Constructor of AndQuery that initialises the instance variables(subQueryCollection and
 	 * subQueryResult).
 	 * 
 	 * @param subQuery a TreeSet<String> of sub-query.
 	 */
 	public OrQuery(TreeSet<String> subQuery) {
-		this.subQuery = subQuery;
+		this.subQueryCollection = subQuery;
 		subQueryResult = new ArrayList<>();
 	}
 
@@ -54,7 +54,7 @@ public class OrQuery implements Query {
 	@Override
 	public Set<WebDoc> matches(WebIndex wind) {
 		// Get the results of all the sub-queries
-		for (String eachQuery : subQuery) {
+		for (String eachQuery : subQueryCollection) {
 			Query subQuery = QueryBuilder.parse(eachQuery);
 			if (!(subQuery instanceof NotQuery)) { // In OrQuery, the NotQuery is not important.
 				subQueryResult.add(subQuery.matches(wind));
@@ -80,7 +80,7 @@ public class OrQuery implements Query {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder("OR(");
-		Iterator<String> eachQuery = subQuery.iterator();
+		Iterator<String> eachQuery = subQueryCollection.iterator();
 
 		while (eachQuery.hasNext()) {
 			stringBuilder.append("[" + eachQuery.next() + "]");
