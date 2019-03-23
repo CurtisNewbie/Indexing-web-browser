@@ -93,7 +93,7 @@ public class QueryBuilder {
 	 * @return a Query object
 	 */
 	public static Query parseInfixForm(String q) {
-		String prefixQuery = parseInfixString(q);
+		String prefixQuery = convertInfixString(q);
 		return parse(prefixQuery);
 	}
 
@@ -104,7 +104,7 @@ public class QueryBuilder {
 	 * the input String from left to right. The first operator that is found outside
 	 * the bracket will be used to determine which type of query it is. Once it has
 	 * identified the type of the query, the associated method is called, such as
-	 * .parseAndInfixString(), .parseOrInfixString(), .parseNoInfixString(). The
+	 * .convertAndInfixString(), .convertOrInfixString() and .convertNotInfixString(). The
 	 * atomic query is returned directly.
 	 * 
 	 * Infix query example: "(apple or banana) and cat and dog" - See explanation.
@@ -113,11 +113,11 @@ public class QueryBuilder {
 	 * other types of query.
 	 * 
 	 * @param str a query (that may consist of sub-queries)
-	 * @return a parsed query
+	 * @return a (converted) prefix query
 	 */
-	private static String parseInfixString(String str) {
+	private static String convertInfixString(String str) {
 		String query = str.trim();
-		query = parseCoveringBracket(query); // get rid of all the outside closing bracket.
+		query = removeCoveringBracket(query); // get rid of all the outside closing bracket.
 		Stack<Character> bracket = new Stack<>();
 		String operator = "default";
 		int startIndex = 0;
@@ -159,11 +159,11 @@ public class QueryBuilder {
 		}
 		// check what type of query it is.
 		if (operator.equals("and")) {
-			return parseAndInfixString(query.substring(0, startIndex), query.substring(endIndex));
+			return convertAndInfixString(query.substring(0, startIndex), query.substring(endIndex));
 		} else if (operator.equals("or")) {
-			return parseOrInfixString(query.substring(0, startIndex), query.substring(endIndex));
+			return convertOrInfixString(query.substring(0, startIndex), query.substring(endIndex));
 		} else if (operator.equals("not")) {
-			return parseNotInfixString(query.substring(endIndex));
+			return convertNotInfixString(query.substring(endIndex));
 		} else if (operator.equals("atomic")) {
 			return query;
 		} else { // it is for debugging, in normal situations, it should never occur.
@@ -181,9 +181,9 @@ public class QueryBuilder {
 	 * @param right sub-query on the right
 	 * @return prefix form query
 	 */
-	private static String parseAndInfixString(String left, String right) {
-		String leftQuery = parseInfixString(left);
-		String rightQuery = parseInfixString(right);
+	private static String convertAndInfixString(String left, String right) {
+		String leftQuery = convertInfixString(left);
+		String rightQuery = convertInfixString(right);
 		return "and(" + leftQuery + "," + rightQuery + ")";
 	}
 
@@ -196,9 +196,9 @@ public class QueryBuilder {
 	 * @param right sub-query on the right
 	 * @return prefix form query
 	 */
-	private static String parseOrInfixString(String left, String right) {
-		String leftQuery = parseInfixString(left);
-		String rightQuery = parseInfixString(right);
+	private static String convertOrInfixString(String left, String right) {
+		String leftQuery = convertInfixString(left);
+		String rightQuery = convertInfixString(right);
 		return "or(" + leftQuery + "," + rightQuery + ")";
 	}
 
@@ -210,8 +210,8 @@ public class QueryBuilder {
 	 * @param right sub-query on the right
 	 * @return prefix form query
 	 */
-	private static String parseNotInfixString(String right) {
-		String rightQuery = parseInfixString(right);
+	private static String convertNotInfixString(String right) {
+		String rightQuery = convertInfixString(right);
 		return "not(" + rightQuery + ")";
 	}
 
@@ -222,13 +222,13 @@ public class QueryBuilder {
 	 * @param q a query
 	 * @return a processed query
 	 */
-	private static String parseCoveringBracket(String q) {
+	private static String removeCoveringBracket(String q) {
 		String thisQuery = q;
 		if (thisQuery.length() > 0 && thisQuery.charAt(0) == '(' && thisQuery.charAt(thisQuery.length() - 1) == ')') {
 			thisQuery = thisQuery.substring(1, thisQuery.length() - 1);
 			if (thisQuery.length() > 0 && thisQuery.charAt(0) == '('
 					&& thisQuery.charAt(thisQuery.length() - 1) == ')') {
-				thisQuery = parseCoveringBracket(thisQuery);
+				thisQuery = removeCoveringBracket(thisQuery);
 			}
 		}
 		return thisQuery;
