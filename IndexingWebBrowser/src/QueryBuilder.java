@@ -174,7 +174,7 @@ public class QueryBuilder {
 
 	/**
 	 * This method deals with the andQuery in infix form, it's part of the recursion
-	 * for processing infix query. The QueryBuilder.parseInfixSting() is called for
+	 * for processing infix query. The QueryBuilder.convertInfixString() is called for
 	 * its sub-queries. This forms the recursion.
 	 * 
 	 * @param left  sub-query on the left
@@ -189,7 +189,7 @@ public class QueryBuilder {
 
 	/**
 	 * This method deals with the orQuery in infix form, it's part of the recursion
-	 * for processing infix query. The QueryBuilder.parseInfixSting() is called for
+	 * for processing infix query. The QueryBuilder.convertInfixString() is called for
 	 * its sub-queries. This forms the recursion.
 	 * 
 	 * @param left  sub-query on the left
@@ -204,7 +204,7 @@ public class QueryBuilder {
 
 	/**
 	 * This method deals with the notQuery in infix form, it's part of the recursion
-	 * for processing infix query. The QueryBuilder.parseInfixSting() is called for
+	 * for processing infix query. The QueryBuilder.convertInfixString() is called for
 	 * its sub-queries. This forms the recursion.
 	 * 
 	 * @param right sub-query on the right
