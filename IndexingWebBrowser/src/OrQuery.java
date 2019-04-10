@@ -26,8 +26,8 @@ public class OrQuery implements Query {
 	private ArrayList<Set<WebDoc>> subQueryResult;
 
 	/**
-	 * Constructor of AndQuery that initialises the instance variables(subQueryCollection and
-	 * subQueryResult).
+	 * Constructor of AndQuery that initialises the instance
+	 * variables(subQueryCollection and subQueryResult).
 	 * 
 	 * @param subQuery a TreeSet<String> of sub-query.
 	 */
@@ -43,8 +43,7 @@ public class OrQuery implements Query {
 	 * 
 	 * This method searches through the given WebIndex based on the query to find
 	 * all the matched results. The OrQuery object finds the matched results of all
-	 * the sub-query and puts them together. As it is OrQuery, the notQuery is
-	 * ignored, as it will not affect the final result.
+	 * the sub-query and puts them together.
 	 * 
 	 * @return a Set<WebDoc> that is found based on the query and the given
 	 *         WebIndex.
@@ -56,9 +55,7 @@ public class OrQuery implements Query {
 		// Get the results of all the sub-queries
 		for (String eachQuery : subQueryCollection) {
 			Query subQuery = QueryBuilder.parse(eachQuery);
-			if (!(subQuery instanceof NotQuery)) { // In OrQuery, the NotQuery is not important.
-				subQueryResult.add(subQuery.matches(wind));
-			}
+			subQueryResult.add(subQuery.matches(wind));
 		}
 		Set<WebDoc> finalSubQueryResult = new TreeSet<>();
 		for (Set<WebDoc> eachSet : subQueryResult) {

@@ -1,4 +1,6 @@
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * This class is used to handle the prefix NotQuery, e.g., not(banana).
@@ -27,18 +29,36 @@ public class NotQuery implements Query {
 
 	/**
 	 * This method searches through the given WebIndex based on the query to find
-	 * all the matched results. Although it's a notQuery and it's part of the
-	 * recursion, the matched result will be dealt with in the object of AndQuery or
-	 * the object of OrQuery.
+	 * all the matched results. It returns a set that contains all the results
+	 * excluding the results for the NotQuery.
 	 * 
-	 * @return a Set<WebDoc> that is found based on the query and the given
-	 *         WebIndex.
+	 * @return a Set<WebDoc> contains all the results in the webIndex excluding the
+	 *         results of this NotQuery.
 	 * @param wind the WebIndex that is used to search through based on the query.
 	 * 
 	 */
 	@Override
 	public Set<WebDoc> matches(WebIndex wind) {
-		return wind.getMatches(query);
+		Set<WebDoc> resultOfNotQuery = new TreeSet<>();
+		Map<String, Set<WebDoc>> webDocsMapCopy;
+		webDocsMapCopy = wind.getWebDocsMap();
+
+		Set<String> allKeySet = webDocsMapCopy.keySet();
+		Set<String> keySetWithoutNot = new TreeSet<>();
+		for (String str : allKeySet) {
+			if (!str.equals(query)) {
+				keySetWithoutNot.add(str);
+			}
+		}
+
+		for (String str : keySetWithoutNot) {
+			try {
+				resultOfNotQuery.addAll(wind.getMatches(str));
+			} catch (NullPointerException e) {
+				// If this result is null, skip it.
+			}
+		}
+		return resultOfNotQuery;
 	}
 
 	/**

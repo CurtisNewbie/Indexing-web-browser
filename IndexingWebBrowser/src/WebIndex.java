@@ -99,6 +99,18 @@ public class WebIndex {
 	}
 
 	/**
+	 * This method returns a deep copy of webDocsMap(A HashMap) that contains all
+	 * the keys and values stored in this webIndex.
+	 * 
+	 * @return a Hashmap contains all the keys and values stored in this webIndex.
+	 */
+	public Map<String, Set<WebDoc>> getWebDocsMap() {
+		Map<String, Set<WebDoc>> deepCopySet = new HashMap<>();
+		deepCopySet.putAll(webDocsMap);
+		return deepCopySet;
+	}
+
+	/**
 	 * Get a string that provide the overall statistics summary of this WebIndex
 	 * 
 	 * @return a string of the overall statistics summary of this WebIndex.
