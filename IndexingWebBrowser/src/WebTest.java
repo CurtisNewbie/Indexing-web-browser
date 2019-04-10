@@ -120,8 +120,7 @@ public class WebTest {
 		}
 
 		/*
-		 * For Stage 2. 
-		 * Calling the .matches() method of each (prefix) Query object.
+		 * For Stage 2. Calling the .matches() method of each (prefix) Query object.
 		 * Calling the .toString() method of each (infix) Query object.
 		 */
 		try {
@@ -129,16 +128,10 @@ public class WebTest {
 					"---------------------Searching the web index according to the query:--------------------------");
 			for (String queryStr : prefixQueryCollection) {
 				System.out.println("PrefixQuery->\"" + queryStr + "\"");
-				if (queryStr.toLowerCase().matches("\\s*not\\s*\\(\\s*[A-Za-z]*\\s*\\)\\s*")) {
-					// It's a pure NotQuery that its sub-query is a atomic query. The result will be
-					// meaningless, so just make the result null.
-					System.out.println("Search Result-> NULL");
-					System.out.println();
-				} else {
-					System.out.println("Search Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
-					System.out.println();
-				}
+				System.out.println("Search Result->" + QueryBuilder.parse(queryStr).matches(webIndexContent));
+				System.out.println();
 			}
+
 			System.out.println("---------------------Transforming infix query into prefix query:---------------------");
 			for (String queryStr : infixQueryCollection) {
 				System.out.println("InfixQuery->\"" + queryStr + "\"");
