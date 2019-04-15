@@ -19,7 +19,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.LineBorder;
 
 // This is the top level frame of the GUI
-public class WebBrowserFrame extends JFrame {
+public class WebBrowserGUI {
 
 	// the JMenuBar for navigating the interface
 	JMenuBar menuBar;
@@ -47,9 +47,10 @@ public class WebBrowserFrame extends JFrame {
 	// Default Content Font
 	Font contentFont = new Font("Arial", Font.BOLD, 17);
 
-	public WebBrowserFrame() {
+	public WebBrowserGUI() {
 		browserFrame = new JFrame("WebBrowser :D");
 		browserFrame.setLayout(new BorderLayout());
+		browserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Set properties
 		browserFrame.setVisible(true);
@@ -57,12 +58,15 @@ public class WebBrowserFrame extends JFrame {
 		browserFrame.setSize(pcScreenSize.width, pcScreenSize.height);
 
 		// add the menu bar to this frame 
-		this.addMenuBar();
+		addMenuBar();
 		
 		// set up the contentPane
 		browserContentPane = new JTabbedPane();
 		browserContentPane.setLayout(new BorderLayout());
-		this.setContentPane(browserContentPane);	
+		
+		browserFrame.getContentPane().add(browserContentPane);
+		
+//		addTabToBrowser();
 	}
 
 	private void addMenuBar() {
@@ -95,11 +99,10 @@ public class WebBrowserFrame extends JFrame {
 		panel.setBackground(Color.red);
 		browserContentPane.addTab("Web1", panel);
 		panel.add(new JButton("botton"));
-		
 	}
 
 	public static void main(String[] args) {
-		JFrame brow = new WebBrowserFrame();
-		brow.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		WebBrowserGUI brow = new WebBrowserGUI();
+		
 	}
 }
