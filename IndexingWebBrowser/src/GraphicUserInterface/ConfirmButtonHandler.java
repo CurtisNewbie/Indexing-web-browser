@@ -18,15 +18,17 @@ public class ConfirmButtonHandler implements ActionListener {
 	JTabbedPane tabbedPane;
 	JTextField urlInput;
 	JEditorPane htmlContent;
+	WebBrowserGUI webBrowserObj;
 
 	public ConfirmButtonHandler(JTabbedPane tabbedPane, JTextField urlInput, WebBrowserGUI webBrowserObj) {
 		this.tabbedPane = tabbedPane;
 		this.urlInput = urlInput;
-		this.htmlContent = webBrowserObj.addTabToWebBrowserCard();
+		this.webBrowserObj = webBrowserObj;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		this.htmlContent = webBrowserObj.addTabToWebBrowserCard();
 		String url = urlInput.getText();
 		try {
 			htmlContent.setPage(new URL(url));
