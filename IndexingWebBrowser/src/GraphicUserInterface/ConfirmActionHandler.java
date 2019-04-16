@@ -28,7 +28,7 @@ public class ConfirmActionHandler implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.htmlContent = webBrowserObj.addTabToWebBrowserCard();
+		this.htmlContent = webBrowserObj.addTabToHtmlBrowserCard();
 		String url = urlInput.getText();
 		try {
 			htmlContent.setPage(new URL(url));

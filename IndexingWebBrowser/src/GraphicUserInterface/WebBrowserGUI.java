@@ -113,48 +113,14 @@ public class WebBrowserGUI {
 		// add the menu bar to this frame for navigating between cards
 		addMenuBar();
 
-		// add the box to the webBrowserCard for url inputs and buttons
-		addWebBrowserCardInputBox();
+		// set up the 'card' for HTML browser
+		setUpHtmlBrowserCard();
+		
+		// set up the 'card' for query browser
 
 		// By default show the webBrowserCard first
 		cardLayoutControl.show(cards, WEB_BROWSER_TAG);
 		browserFrame.setVisible(true);
-	}
-
-	private void addWebBrowserCardInputBox() {
-		webBrowserInputOrganiser = Box.createHorizontalBox();
-		webBrowserInputOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
-		webBrowserInputOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-
-		confirmButton = new JButton("Confirm");
-		closeTab = new JButton("Close This Tab");
-
-		urlTextInput = new JTextField("..Type the url here..", 20);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(30));
-		webBrowserInputOrganiser.add(urlTextInput);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
-		webBrowserInputOrganiser.add(confirmButton);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
-		webBrowserInputOrganiser.add(closeTab);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(20));
-		webBrowserInputOrganiser.add(Box.createGlue());
-		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
-
-		confirmButton.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
-		urlTextInput.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
-
-		closeTab.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// remove the selected one.
-				int selectedIndex = webBrowserTabbedPane.getSelectedIndex();
-				if (selectedIndex != -1) {
-					webBrowserTabbedPane.remove(selectedIndex);
-				}
-
-			}
-		});
 	}
 
 	private void addMenuBar() {
@@ -190,8 +156,44 @@ public class WebBrowserGUI {
 			}
 		});
 	}
+	
+	private void setUpHtmlBrowserCard() {
+		webBrowserInputOrganiser = Box.createHorizontalBox();
+		webBrowserInputOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
+		webBrowserInputOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
-	public JEditorPane addTabToWebBrowserCard() {
+		confirmButton = new JButton("Confirm");
+		closeTab = new JButton("Close This Tab");
+
+		urlTextInput = new JTextField("..Type the url here..", 20);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(30));
+		webBrowserInputOrganiser.add(urlTextInput);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
+		webBrowserInputOrganiser.add(confirmButton);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
+		webBrowserInputOrganiser.add(closeTab);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(20));
+		webBrowserInputOrganiser.add(Box.createGlue());
+		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
+
+		confirmButton.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
+		urlTextInput.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
+
+		closeTab.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// remove the selected one.
+				int selectedIndex = webBrowserTabbedPane.getSelectedIndex();
+				if (selectedIndex != -1) {
+					webBrowserTabbedPane.remove(selectedIndex);
+				}
+
+			}
+		});
+	}
+
+	public JEditorPane addTabToHtmlBrowserCard() {
 		JEditorPane jp = new JEditorPane();
 		JScrollPane scrollPane = new JScrollPane(jp);
 		webBrowserTabbedPane.addTab("New tab", scrollPane);
