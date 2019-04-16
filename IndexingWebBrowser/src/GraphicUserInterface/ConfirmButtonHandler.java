@@ -33,10 +33,10 @@ public class ConfirmButtonHandler implements ActionListener {
 		try {
 			htmlContent.setPage(new URL(url));
 		} catch (MalformedURLException e1) {
-			JOptionPane.showMessageDialog(null, "Incorrect Form of URL", "Error", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error", JOptionPane.WARNING_MESSAGE);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "URL not accessible, please check internet connect", "Error",
+					JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
