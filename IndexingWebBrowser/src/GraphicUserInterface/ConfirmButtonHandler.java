@@ -12,12 +12,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 // The listener for confirm button in the webBrowserCard
-public class ConfirmButtonListener implements ActionListener {
+public class ConfirmButtonHandler implements ActionListener {
 
 	JComponent urlInput;
 	JComponent htmlContent;
 
-	public ConfirmButtonListener(JComponent urlInput, JComponent htmlContent) {
+	public ConfirmButtonHandler(JComponent urlInput, JComponent htmlContent) {
 		this.urlInput = urlInput;
 		this.htmlContent = htmlContent;
 	}

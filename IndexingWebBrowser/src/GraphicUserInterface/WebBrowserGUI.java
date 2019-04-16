@@ -139,7 +139,8 @@ public class WebBrowserGUI {
 		webBrowserInputOrganiser.add(Box.createGlue());
 		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
 
-		confirmButton.addActionListener(new ConfirmButtonListener(urlTextInput, addTabToWebBrowserCard()));
+		
+		confirmButton.addActionListener(new ConfirmButtonHandler(urlTextInput, addTabToWebBrowserCard()));
 
 		closeTab.addActionListener(new ActionListener() {
 
@@ -184,7 +185,7 @@ public class WebBrowserGUI {
 		});
 	}
 
-	private JEditorPane addTabToWebBrowserCard() {
+	public JEditorPane addTabToWebBrowserCard() {
 		JEditorPane jp = new JEditorPane();
 		webBrowserContentPane.addTab("New tab", jp);
 		return jp;
