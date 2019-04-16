@@ -13,14 +13,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 // The listener for confirm button in the webBrowserCard
-public class ConfirmButtonHandler implements ActionListener {
+public class ConfirmActionHandler implements ActionListener {
 
 	JTabbedPane tabbedPane;
 	JTextField urlInput;
 	JEditorPane htmlContent;
 	WebBrowserGUI webBrowserObj;
 
-	public ConfirmButtonHandler(JTabbedPane tabbedPane, JTextField urlInput, WebBrowserGUI webBrowserObj) {
+	public ConfirmActionHandler(JTabbedPane tabbedPane, JTextField urlInput, WebBrowserGUI webBrowserObj) {
 		this.tabbedPane = tabbedPane;
 		this.urlInput = urlInput;
 		this.webBrowserObj = webBrowserObj;

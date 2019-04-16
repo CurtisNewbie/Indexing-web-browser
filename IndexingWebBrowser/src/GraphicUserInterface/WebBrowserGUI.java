@@ -140,7 +140,8 @@ public class WebBrowserGUI {
 		webBrowserInputOrganiser.add(Box.createGlue());
 		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
 
-		confirmButton.addActionListener(new ConfirmButtonHandler(webBrowserTabbedPane, urlTextInput, this));
+		confirmButton.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
+		urlTextInput.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
 
 		closeTab.addActionListener(new ActionListener() {
 
@@ -164,7 +165,7 @@ public class WebBrowserGUI {
 		menu.setFont(menuFont);
 
 		// Create menu itme and set up their font
-		htmlBrowser = new JMenuItem("Web Browser");
+		htmlBrowser = new JMenuItem("HTML Browser");
 		htmlBrowser.setFont(menuFont);
 		queryBrowser = new JMenuItem("Query Browser");
 		queryBrowser.setFont(menuFont);
