@@ -4,15 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.smartcardio.ATR;
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -21,7 +27,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import java.awt.Component;
 
 // This is the top level frame of the GUI
 public class WebBrowserGUI {
@@ -56,11 +64,11 @@ public class WebBrowserGUI {
 	JMenuItem webBrowser;
 	JMenuItem queryBrowser;
 
-	// Insets between navigation buttons in the menu bar
-	final int insetsTop = 5;
-	final int insetsBottom = 5;
-	final int insetsLeft = 5;
-	final int insetsRight = 5;
+	// The box for organising the buttons in webBrowser (on the top of the screen)
+	Box webBrowserInputOrganiser;
+
+	// TextField for url input
+	JTextField urlTextInput;
 
 	// Default Menu Font
 	Font menuFont = new Font("Arial", Font.BOLD, 19);
@@ -68,22 +76,28 @@ public class WebBrowserGUI {
 	// Default Content Font
 	Font contentFont = new Font("Arial", Font.BOLD, 17);
 
+	// Confirm Button
+	JButton confirmButton;
+
+	// Refresh Button
+	JButton refreshButton;
+
 	public WebBrowserGUI() {
 		browserFrame = new JFrame("WebBrowser :D");
 		browserFrame.setLayout(new BorderLayout());
 		browserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Set properties
-//		Dimension pcScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		browserFrame.setSize(pcScreenSize.width / 2, pcScreenSize.height / 2);
+		Dimension pcScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		browserFrame.setSize(pcScreenSize.width / 2, pcScreenSize.height / 2);
 
 		// Use a panel (cards) with cardLayout as a way to switch different contents
 		cardLayoutControl = new CardLayout();
 		cards = new JPanel(cardLayoutControl);
 
 		// set up each card
-		webBrowserCard = new JPanel();
-		queryBrowserCard = new JPanel();
+		webBrowserCard = new JPanel(new BorderLayout());
+		queryBrowserCard = new JPanel(new BorderLayout());
 		cards.add(webBrowserCard, WEB_BROWSER_TAG);
 		cards.add(queryBrowserCard, QUERY_BROWSER_TAG);
 
@@ -92,19 +106,66 @@ public class WebBrowserGUI {
 
 		// set up the tabbed pane for the webBrowserCard
 		webBrowserContentPane = new JTabbedPane();
-		webBrowserCard.add(webBrowserContentPane);
-		
+		webBrowserCard.add(webBrowserContentPane, BorderLayout.CENTER);
+
 		// add the menu bar to this frame for navigating between cards
 		addMenuBar();
 
-		browserFrame.pack();
+		// add the box to the webBrowserCard for url inputs and buttons
+		addwebBrowserCardInputBox();
+
+		// By default show the webBrowserCard first
+		cardLayoutControl.show(cards, WEB_BROWSER_TAG);
 		browserFrame.setVisible(true);
+	}
+
+	private void addwebBrowserCardInputBox() {
+		webBrowserInputOrganiser = Box.createHorizontalBox();
+		webBrowserInputOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
+		webBrowserInputOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+		confirmButton = new JButton("Confirm");
+		refreshButton = new JButton("Refresh");
+
+		urlTextInput = new JTextField(20);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(30));
+		webBrowserInputOrganiser.add(urlTextInput);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
+		webBrowserInputOrganiser.add(confirmButton);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
+		webBrowserInputOrganiser.add(refreshButton);
+		webBrowserInputOrganiser.add(Box.createHorizontalStrut(20));
+		webBrowserInputOrganiser.add(Box.createGlue());
+		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
+		
+		urlTextInput.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				System.out.println(e.getKeyChar());
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
 	}
 
 	private void addMenuBar() {
 		menuBar = new JMenuBar();
+		menuBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 0));
 		menu = new JMenu("Menu");
-		menu.setBorder(new LineBorder(Color.BLACK));
+		menu.setBorder(BorderFactory.createRaisedBevelBorder());
 		menu.setFont(menuFont);
 
 		// Create menu itme and set up their font
@@ -136,6 +197,7 @@ public class WebBrowserGUI {
 
 	private void addTabToWebBrowserCard() {
 		JPanel panel = new JPanel();
+
 		webBrowserContentPane.addTab("new tab", panel);
 	}
 
