@@ -63,10 +63,10 @@ public class WebBrowserGUI {
 	JTabbedPane webBrowserTabbedPane;
 
 	// The navigation buttons in the menu bar
-	JMenuItem webBrowser;
+	JMenuItem htmlBrowser;
 	JMenuItem queryBrowser;
 
-	// The box for organising the buttons in webBrowser (on the top of the screen)
+	// The box for organising the buttons in htmlBrowserCard (on the top of the screen)
 	Box webBrowserInputOrganiser;
 
 	// TextField for url input
@@ -164,17 +164,17 @@ public class WebBrowserGUI {
 		menu.setFont(menuFont);
 
 		// Create menu itme and set up their font
-		webBrowser = new JMenuItem("Web Browser");
-		webBrowser.setFont(menuFont);
+		htmlBrowser = new JMenuItem("Web Browser");
+		htmlBrowser.setFont(menuFont);
 		queryBrowser = new JMenuItem("Query Browser");
 		queryBrowser.setFont(menuFont);
 
-		menu.add(webBrowser);
+		menu.add(htmlBrowser);
 		menu.add(queryBrowser);
 		menuBar.add(menu);
 		browserFrame.add(menuBar, BorderLayout.NORTH);
 
-		webBrowser.addActionListener(new ActionListener() {
+		htmlBrowser.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cardLayoutControl.show(cards, WEB_BROWSER_TAG);
