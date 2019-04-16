@@ -27,6 +27,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -146,7 +147,11 @@ public class WebBrowserGUI {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// remove the selected one.
-				webBrowserTabbedPane.remove(webBrowserTabbedPane.getSelectedIndex());
+				int selectedIndex = webBrowserTabbedPane.getSelectedIndex();
+				if (selectedIndex != -1) {
+					webBrowserTabbedPane.remove(selectedIndex);
+				}
+
 			}
 		});
 	}
@@ -187,7 +192,8 @@ public class WebBrowserGUI {
 
 	public JEditorPane addTabToWebBrowserCard() {
 		JEditorPane jp = new JEditorPane();
-		webBrowserTabbedPane.addTab("New tab", jp);
+		JScrollPane scrollPane = new JScrollPane(jp);
+		webBrowserTabbedPane.addTab("New tab", scrollPane);
 		return jp;
 	}
 
