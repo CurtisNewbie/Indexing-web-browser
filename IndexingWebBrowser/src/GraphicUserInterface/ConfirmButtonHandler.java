@@ -9,24 +9,27 @@ import java.net.URL;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 // The listener for confirm button in the webBrowserCard
 public class ConfirmButtonHandler implements ActionListener {
 
-	JComponent urlInput;
-	JComponent htmlContent;
+	JTabbedPane tabbedPane;
+	JTextField urlInput;
+	JEditorPane htmlContent;
 
-	public ConfirmButtonHandler(JComponent urlInput, JComponent htmlContent) {
+	public ConfirmButtonHandler(JTabbedPane tabbedPane, JTextField urlInput, WebBrowserGUI webBrowserObj) {
+		this.tabbedPane = tabbedPane;
 		this.urlInput = urlInput;
-		this.htmlContent = htmlContent;
+		this.htmlContent = webBrowserObj.addTabToWebBrowserCard();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String url = ((JTextField) urlInput).getText();
+		String url = urlInput.getText();
 		try {
-			((JEditorPane) htmlContent).setPage(new URL(url));
+			htmlContent.setPage(new URL(url));
 		} catch (MalformedURLException e1) {
 			JOptionPane.showMessageDialog(null, "Incorrect Form of URL", "Error", JOptionPane.WARNING_MESSAGE);
 		} catch (IOException e1) {

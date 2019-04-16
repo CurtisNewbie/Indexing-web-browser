@@ -59,7 +59,7 @@ public class WebBrowserGUI {
 	final String QUERY_BROWSER_TAG = "QueryBrowserTag";
 
 	// JTabbedPane as a contentPane of the webBrowserCard
-	JTabbedPane webBrowserContentPane;
+	JTabbedPane webBrowserTabbedPane;
 
 	// The navigation buttons in the menu bar
 	JMenuItem webBrowser;
@@ -106,8 +106,8 @@ public class WebBrowserGUI {
 		browserFrame.getContentPane().add(cards);
 
 		// set up the tabbed pane for the webBrowserCard
-		webBrowserContentPane = new JTabbedPane();
-		webBrowserCard.add(webBrowserContentPane, BorderLayout.CENTER);
+		webBrowserTabbedPane = new JTabbedPane();
+		webBrowserCard.add(webBrowserTabbedPane, BorderLayout.CENTER);
 
 		// add the menu bar to this frame for navigating between cards
 		addMenuBar();
@@ -139,14 +139,14 @@ public class WebBrowserGUI {
 		webBrowserInputOrganiser.add(Box.createGlue());
 		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
 
-		
-		confirmButton.addActionListener(new ConfirmButtonHandler(urlTextInput, addTabToWebBrowserCard()));
+		confirmButton.addActionListener(new ConfirmButtonHandler(webBrowserTabbedPane, urlTextInput, this));
 
 		closeTab.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				addTabToWebBrowserCard();
+				// remove the selected one.
+				webBrowserTabbedPane.remove(webBrowserTabbedPane.getSelectedIndex());
 			}
 		});
 	}
@@ -187,7 +187,7 @@ public class WebBrowserGUI {
 
 	public JEditorPane addTabToWebBrowserCard() {
 		JEditorPane jp = new JEditorPane();
-		webBrowserContentPane.addTab("New tab", jp);
+		webBrowserTabbedPane.addTab("New tab", jp);
 		return jp;
 	}
 
