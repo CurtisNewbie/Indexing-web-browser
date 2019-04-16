@@ -21,6 +21,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -79,8 +80,8 @@ public class WebBrowserGUI {
 	// Confirm Button
 	JButton confirmButton;
 
-	// Refresh Button
-	JButton refreshButton;
+	// Close tab Button
+	JButton closeTab;
 
 	public WebBrowserGUI() {
 		browserFrame = new JFrame("WebBrowser :D");
@@ -112,53 +113,41 @@ public class WebBrowserGUI {
 		addMenuBar();
 
 		// add the box to the webBrowserCard for url inputs and buttons
-		addwebBrowserCardInputBox();
+		addWebBrowserCardInputBox();
 
 		// By default show the webBrowserCard first
 		cardLayoutControl.show(cards, WEB_BROWSER_TAG);
 		browserFrame.setVisible(true);
 	}
 
-	private void addwebBrowserCardInputBox() {
+	private void addWebBrowserCardInputBox() {
 		webBrowserInputOrganiser = Box.createHorizontalBox();
 		webBrowserInputOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
 		webBrowserInputOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
 		confirmButton = new JButton("Confirm");
-		refreshButton = new JButton("Refresh");
+		closeTab = new JButton("Close This Tab");
 
-		urlTextInput = new JTextField(20);
+		urlTextInput = new JTextField("..Type the url here..", 20);
 		webBrowserInputOrganiser.add(Box.createHorizontalStrut(30));
 		webBrowserInputOrganiser.add(urlTextInput);
 		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
 		webBrowserInputOrganiser.add(confirmButton);
 		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
-		webBrowserInputOrganiser.add(refreshButton);
+		webBrowserInputOrganiser.add(closeTab);
 		webBrowserInputOrganiser.add(Box.createHorizontalStrut(20));
 		webBrowserInputOrganiser.add(Box.createGlue());
 		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
-		
-		urlTextInput.addKeyListener(new KeyListener() {
-			
+
+		confirmButton.addActionListener(new ConfirmButtonListener(urlTextInput, addTabToWebBrowserCard()));
+
+		closeTab.addActionListener(new ActionListener() {
+
 			@Override
-			public void keyTyped(KeyEvent e) {
-				System.out.println(e.getKeyChar());
-				
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
+			public void actionPerformed(ActionEvent arg0) {
+				addTabToWebBrowserCard();
 			}
 		});
-
 	}
 
 	private void addMenuBar() {
@@ -195,10 +184,10 @@ public class WebBrowserGUI {
 		});
 	}
 
-	private void addTabToWebBrowserCard() {
-		JPanel panel = new JPanel();
-
-		webBrowserContentPane.addTab("new tab", panel);
+	private JEditorPane addTabToWebBrowserCard() {
+		JEditorPane jp = new JEditorPane();
+		webBrowserContentPane.addTab("New tab", jp);
+		return jp;
 	}
 
 	public static void main(String[] args) {
