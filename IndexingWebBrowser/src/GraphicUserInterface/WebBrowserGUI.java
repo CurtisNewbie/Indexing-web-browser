@@ -23,9 +23,11 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -215,11 +217,11 @@ public class WebBrowserGUI {
 		queryBrowserControlPanel = new JPanel();
 
 		// JComponents in the queryBrowserControlPanel (On the right side of the screen)
-		JTextField overallQueryControllerTitle = new JTextField("Query Handling:");
-		JTextField infixControllerTitle = new JTextField("Infix Query:");
-		JTextField infixQuery = new JTextField(10);
-		JTextField prefixControllerTitle = new JTextField("Prefix Query:");
-		JTextField prefixQuery = new JTextField(10);
+		JLabel overallQueryControllerTitle = new JLabel("Query Handling:");
+		JLabel infixControllerTitle = new JLabel("Infix Query:");
+		JLabel prefixControllerTitle = new JLabel("Prefix Query:");
+		JTextField infixQuery = new JTextField(20);
+		JTextField prefixQuery = new JTextField(20);
 		JButton infixSearchButton = new JButton("Search");
 		JButton prefixSearchButton = new JButton("Search");
 
@@ -247,6 +249,11 @@ public class WebBrowserGUI {
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(prefixControllerTitle)
 						.addComponent(prefixQuery).addComponent(prefixSearchButton));
 		groupLayout.setVerticalGroup(verticalGroups);
+
+		// Setup the fonts for all the child components in the queryBrowserControlPanel
+		for (Component com : queryBrowserControlPanel.getComponents()) {
+			com.setFont(contentFont);
+		}
 
 		queryBrowserCard.add(queryBrowserControlPanel, BorderLayout.EAST);
 		queryBrowserCard.add(historyPanel, BorderLayout.SOUTH);
