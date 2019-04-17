@@ -1,4 +1,4 @@
-package GraphicUserInterface;
+package webBrowserGUI;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -31,24 +31,40 @@ import javax.swing.JTextField;
 // This is the top level frame of the GUI
 public class WebBrowserView {
 
-	// The browser as a whole
+	/** The browser as a whole */
 	JFrame browserFrame;
 
-	// the JMenuBar for navigating the interface
+	/** The JMenuBar for navigating the interface */
 	JMenuBar menuBar;
+
+	/** The JMenu as a high-level button in the menu bar */
 	JMenu menu;
 
-	// The navigation buttons in the menu bar
+	/**
+	 * The navigation buttons in the menu bar, it navigates to the html browser
+	 * interface (a card) (cardLayout is used)
+	 */
 	JMenuItem htmlBrowser;
+
+	/**
+	 * The navigation buttons in the menu bar, it navigates to the query browser
+	 * interface (a card) (cardLayout is used)
+	 */
 	JMenuItem queryBrowser;
 
-	// The panel with CardLayout for showing different content
+	/**
+	 * The panel with CardLayout for showing different interfaces (htmlBrowser and
+	 * queryBrowser)
+	 */
 	JPanel cards;
 
-	// CardLayout Manager for controlling the cards switching
+	/**
+	 * CardLayout Manager of the JPanel (cards) for controlling the cards/interfaces
+	 * switching
+	 */
 	CardLayout cardLayoutControl;
 
-	// The card for the html browser and query browser 
+	// The card for the html browser and query browser
 	JPanel htmlBrowserCard;
 	JPanel queryBrowserCard;
 
@@ -73,7 +89,7 @@ public class WebBrowserView {
 	// Confirm Button and Close tab Button in htmlBrowserCard
 	JButton confirmButton;
 
-	// 
+	//
 	JButton closeTab;
 
 	JTextArea historyTextArea;
@@ -198,10 +214,13 @@ public class WebBrowserView {
 	private void setUpQueryBrowserCard() {
 		historyTextArea = new JTextArea(10, 30);
 		historyTextArea.setFont(contentFont);
+		historyTextArea.setEditable(false);
 		queryResultTextArea = new JTextArea();
 		queryResultTextArea.setFont(contentFont);
+		queryResultTextArea.setEditable(false);
 		indexTextArea = new JTextArea();
 		indexTextArea.setFont(contentFont);
+		indexTextArea.setEditable(false);
 		controlPanel = new JPanel();
 
 		// Set up the contorlPanel in this queryBrowserCard
@@ -281,7 +300,7 @@ public class WebBrowserView {
 			com.setFont(contentFont);
 		}
 	}
-	
+
 	public void addSearchActionListener(ActionListener actionListener) {
 		infixQuery.addActionListener(actionListener);
 		prefixQuery.addActionListener(actionListener);
