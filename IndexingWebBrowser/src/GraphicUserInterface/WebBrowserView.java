@@ -17,6 +17,7 @@ import javax.smartcardio.ATR;
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -38,7 +39,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-
 import javafx.scene.layout.Border;
 
 import java.awt.Component;
@@ -99,6 +99,10 @@ public class WebBrowserView {
 	JTextArea queryResultTextArea;
 	JTextArea indexTextArea;
 	JPanel controlPanel;
+	JButton infixSearchButton;
+	JButton prefixSearchButton;
+	JTextField infixQuery;
+	JTextField prefixQuery;
 
 	public WebBrowserView() {
 		browserFrame = new JFrame("WebBrowser :D");
@@ -192,8 +196,6 @@ public class WebBrowserView {
 		webBrowserInputOrganiser.add(Box.createGlue());
 		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
 
-		confirmButton.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
-		urlTextInput.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
 		closeTab.addActionListener(new ActionListener() {
 
 			@Override
@@ -214,8 +216,14 @@ public class WebBrowserView {
 		return jp;
 	}
 
+	public void addConfirmActionListener(ActionListener actionListener) {
+		confirmButton.addActionListener(actionListener);
+		urlTextInput.addActionListener(actionListener);
+	}
+
 	private void setUpQueryBrowserCard() {
-		historyTextArea = new JTextArea(10, 20);
+		historyTextArea = new JTextArea(10, 40);
+		historyTextArea.setFont(contentFont);
 		queryResultTextArea = new JTextArea();
 		indexTextArea = new JTextArea();
 		controlPanel = new JPanel();
@@ -228,8 +236,8 @@ public class WebBrowserView {
 		JPanel historyPanel = new JPanel();
 		historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
 		JLabel historyLabel = new JLabel("History:");
-		historyLabel.setFont(contentFont);
-		historyPanel.add(historyLabel);
+		historyLabel.setFont(menuFont);
+		historyPanel.add(historyLabel);	
 		historyPanel.add(new JScrollPane(historyTextArea));
 		queryBrowserCard.add(historyPanel, BorderLayout.WEST);
 
@@ -237,17 +245,17 @@ public class WebBrowserView {
 		JPanel indexTextPanel = new JPanel();
 		indexTextPanel.setLayout(new BoxLayout(indexTextPanel, BoxLayout.Y_AXIS));
 		JLabel indexLabel = new JLabel("Index:	");
-		indexLabel.setFont(contentFont);
+		indexLabel.setFont(menuFont);
 		indexTextPanel.add(indexLabel);
 		indexTextPanel.add(new JScrollPane(indexTextArea));
 
 		JPanel queryResultPanel = new JPanel();
 		queryResultPanel.setLayout(new BoxLayout(queryResultPanel, BoxLayout.Y_AXIS));
 		JLabel queryResultLabel = new JLabel("Query Result:");
-		queryResultLabel.setFont(contentFont);
+		queryResultLabel.setFont(menuFont);
 		queryResultPanel.add(queryResultLabel);
 		queryResultPanel.add(new JScrollPane(queryResultTextArea));
-		
+
 		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, indexTextPanel, queryResultPanel),
 				BorderLayout.CENTER);
 	}
@@ -258,10 +266,16 @@ public class WebBrowserView {
 		JLabel overallQueryControllerTitle = new JLabel("Query Handling:");
 		JLabel infixControllerTitle = new JLabel("Infix Query:");
 		JLabel prefixControllerTitle = new JLabel("Prefix Query:");
-		JTextField infixQuery = new JTextField(20);
-		JTextField prefixQuery = new JTextField(20);
-		JButton infixSearchButton = new JButton("Search");
-		JButton prefixSearchButton = new JButton("Search");
+		
+		infixQuery = new JTextField(20);
+		prefixQuery = new JTextField(20);
+		infixQuery.setActionCommand("infix");
+		prefixQuery.setActionCommand("prefix");
+		
+		infixSearchButton = new JButton("Search");
+		prefixSearchButton = new JButton("Search");
+		infixSearchButton.setActionCommand("infix");
+		prefixSearchButton.setActionCommand("prefix");
 
 		// set up the control panel on the right side of the screen using group layout
 		GroupLayout groupLayout = new GroupLayout(controlPanel);
@@ -293,8 +307,44 @@ public class WebBrowserView {
 			com.setFont(contentFont);
 		}
 	}
+	
+	public JTabbedPane getWebBrowserTabbedPane() {
+		return webBrowserTabbedPane;
+	}
+	
+	public JTextField getUrlTextField() {
+		return urlTextInput;
+	}
+	
+	public JTextArea getQueryResultTextArea() {
+		return queryResultTextArea;
+	}
+	
+	public JTextField getInfixQuery() {
+		return infixQuery;
+	}
+	
+	public JTextField getPrefixQuery() {
+		return prefixQuery;
+	}
+	
+	public JTextArea getHistoryTextArea() {
+		return historyTextArea;
+	}
+	
+	public JTextArea getIndexTextArea() {
+		return indexTextArea;
+	}
+	
+	public void addSearchAction(ActionListener actionListener) {
+		infixQuery.addActionListener(actionListener);
+		prefixQuery.addActionListener(actionListener);
+		infixSearchButton.addActionListener(actionListener);
+		prefixSearchButton.addActionListener(actionListener);
+	}
 
 	public static void main(String[] args) {
-		WebBrowserView brow = new WebBrowserView();
+		WebBrowserView view = new WebBrowserView();
+		WebBrowserController controller = new WebBrowserController(view);
 	}
 }
