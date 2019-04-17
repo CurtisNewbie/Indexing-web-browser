@@ -34,6 +34,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -93,9 +94,10 @@ public class WebBrowserGUI {
 	// Close tab Button
 	JButton closeTab;
 
-	JPanel historyPanel;
-	JPanel queryResultPanel;
-	JPanel queryBrowserControlPanel;
+	JTextArea historyPanel;
+	JTextArea queryResultPanel;
+	JTextArea indexPanel;
+	JPanel controlPanel;
 
 	public WebBrowserGUI() {
 		browserFrame = new JFrame("WebBrowser :D");
@@ -212,17 +214,18 @@ public class WebBrowserGUI {
 	}
 
 	private void setUpQueryBrowserCard() {
-		historyPanel = new JPanel(new BorderLayout());
-		queryResultPanel = new JPanel(new BorderLayout());
-		queryBrowserControlPanel = new JPanel();
+		historyPanel = new JTextArea();
+		queryResultPanel = new JTextArea();
+		
+		controlPanel = new JPanel();
 
 		setUpControlPanel();
 
-		// Setup the fonts for all the child components in the queryBrowserControlPanel
-		for (Component com : queryBrowserControlPanel.getComponents()) {
+		// Setup the fonts for all the child components in the controlPanel
+		for (Component com : controlPanel.getComponents()) {
 			com.setFont(contentFont);
 		}
-		queryBrowserCard.add(queryBrowserControlPanel, BorderLayout.EAST);
+		queryBrowserCard.add(controlPanel, BorderLayout.EAST);
 		queryBrowserCard.add(historyPanel, BorderLayout.SOUTH);
 		queryBrowserCard.add(queryResultPanel, BorderLayout.CENTER);
 
@@ -230,7 +233,7 @@ public class WebBrowserGUI {
 
 	// See setUpQueryBrowserCard() method
 	private void setUpControlPanel() {
-		// JComponents in the queryBrowserControlPanel (On the right side of the screen)
+		// JComponents in the controlPanel (On the right side of the screen)
 		JLabel overallQueryControllerTitle = new JLabel("Query Handling:");
 		JLabel infixControllerTitle = new JLabel("Infix Query:");
 		JLabel prefixControllerTitle = new JLabel("Prefix Query:");
@@ -240,8 +243,8 @@ public class WebBrowserGUI {
 		JButton prefixSearchButton = new JButton("Search");
 
 		// setup the control panel on the right side of the screen using group layout
-		GroupLayout groupLayout = new GroupLayout(queryBrowserControlPanel);
-		queryBrowserControlPanel.setLayout(groupLayout);
+		GroupLayout groupLayout = new GroupLayout(controlPanel);
+		controlPanel.setLayout(groupLayout);
 		groupLayout.setAutoCreateGaps(true);
 		groupLayout.setAutoCreateContainerGaps(true);
 
@@ -264,6 +267,7 @@ public class WebBrowserGUI {
 						.addComponent(prefixQuery).addComponent(prefixSearchButton));
 		groupLayout.setVerticalGroup(verticalGroups);
 	}
+
 
 	public static void main(String[] args) {
 		WebBrowserGUI brow = new WebBrowserGUI();
