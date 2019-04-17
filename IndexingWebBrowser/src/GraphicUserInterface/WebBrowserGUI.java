@@ -95,9 +95,9 @@ public class WebBrowserGUI {
 	// Close tab Button
 	JButton closeTab;
 
-	JTextArea historyText;
-	JTextArea queryResultPanel;
-	JTextArea indexPanel;
+	JTextArea historyTextArea;
+	JTextArea queryResultTextArea;
+	JTextArea indexTextArea;
 	JPanel controlPanel;
 
 	public WebBrowserGUI() {
@@ -147,7 +147,7 @@ public class WebBrowserGUI {
 		menu.setBorder(BorderFactory.createRaisedBevelBorder());
 		menu.setFont(menuFont);
 
-		// Create menu itme and set up their font
+		// Create menu item and set up their font
 		htmlBrowser = new JMenuItem("HTML Browser");
 		htmlBrowser.setFont(menuFont);
 		queryBrowser = new JMenuItem("Query Browser");
@@ -215,29 +215,41 @@ public class WebBrowserGUI {
 	}
 
 	private void setUpQueryBrowserCard() {
-		historyText = new JTextArea(10, 20);
-		historyText.setText("History");
-		queryResultPanel = new JTextArea();
-		queryResultPanel.setText("Result");
-		indexPanel = new JTextArea();
-		indexPanel.setText("Index");
+		historyTextArea = new JTextArea(10, 20);
+		queryResultTextArea = new JTextArea();
+		indexTextArea = new JTextArea();
 		controlPanel = new JPanel();
 
-		// Set up the contorl panel in this queryBrowserCard
+		// Set up the contorlPanel in this queryBrowserCard
 		setUpControlPanel();
-
-		// set up the historyPanel, queryResultPanel and indexPanel
 		queryBrowserCard.add(controlPanel, BorderLayout.EAST);
-		JPanel 
-		queryBrowserCard.add(new JScrollPane(new JPanel().add(new JLabel("HistoryPanel")).add(historyPanel)), BorderLayout.WEST);
-		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(indexPanel),
-				new JScrollPane(queryResultPanel)), BorderLayout.CENTER);
 
-//		// Setup the fonts for all the child components in the controlPanel
-//		for (Component com : queryBrowserCard.getComponents()) {
-//			com.setFont(contentFont);
-//		}
+		// set up the historyTextArea
+		JPanel historyPanel = new JPanel();
+		historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
+		JLabel historyLabel = new JLabel("History:");
+		historyLabel.setFont(contentFont);
+		historyPanel.add(historyLabel);
+		historyPanel.add(new JScrollPane(historyTextArea));
+		queryBrowserCard.add(historyPanel, BorderLayout.WEST);
 
+		// set up queryResultTextArea and indexTextArea
+		JPanel indexTextPanel = new JPanel();
+		indexTextPanel.setLayout(new BoxLayout(indexTextPanel, BoxLayout.Y_AXIS));
+		JLabel indexLabel = new JLabel("Index:	");
+		indexLabel.setFont(contentFont);
+		indexTextPanel.add(indexLabel);
+		indexTextPanel.add(new JScrollPane(indexTextArea));
+
+		JPanel queryResultPanel = new JPanel();
+		queryResultPanel.setLayout(new BoxLayout(queryResultPanel, BoxLayout.Y_AXIS));
+		JLabel queryResultLabel = new JLabel("Query Result:");
+		queryResultLabel.setFont(contentFont);
+		queryResultPanel.add(queryResultLabel);
+		queryResultPanel.add(new JScrollPane(queryResultTextArea));
+		
+		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, indexTextPanel, queryResultPanel),
+				BorderLayout.CENTER);
 	}
 
 	// See setUpQueryBrowserCard() method
@@ -251,7 +263,7 @@ public class WebBrowserGUI {
 		JButton infixSearchButton = new JButton("Search");
 		JButton prefixSearchButton = new JButton("Search");
 
-		// setup the control panel on the right side of the screen using group layout
+		// set up the control panel on the right side of the screen using group layout
 		GroupLayout groupLayout = new GroupLayout(controlPanel);
 		controlPanel.setLayout(groupLayout);
 		groupLayout.setAutoCreateGaps(true);
@@ -275,6 +287,11 @@ public class WebBrowserGUI {
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(prefixControllerTitle)
 						.addComponent(prefixQuery).addComponent(prefixSearchButton));
 		groupLayout.setVerticalGroup(verticalGroups);
+
+		// Set up the fonts for all the child components in the controlPanel
+		for (Component com : controlPanel.getComponents()) {
+			com.setFont(contentFont);
+		}
 	}
 
 	public static void main(String[] args) {
