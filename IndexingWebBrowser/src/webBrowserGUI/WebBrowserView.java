@@ -96,15 +96,13 @@ public class WebBrowserView {
 	JButton closeTab;
 
 	JTextArea historyTextArea;
-	JTextArea queryResultTextArea;
-	JTextArea indexTextArea;
+	JTextArea keywordQueryResultTextArea;
+	JTextArea contentWordQueryResultTextArea;
 	JPanel controlPanel;
 	JButton infixSearchButton;
 	JButton prefixSearchButton;
 	JTextField infixQuery;
 	JTextField prefixQuery;
-	JRadioButton keywordIndexButton;
-	JRadioButton contentWordIndexButton;
 
 	enum IndexTypeSelected {
 		KEYWORD_SELECTED, CONTENTWORD_SELECTED, BOTH_SELECTED, NONE_SELECTED
@@ -207,12 +205,12 @@ public class WebBrowserView {
 		historyTextArea = new JTextArea(10, 30);
 		historyTextArea.setFont(contentFont);
 		historyTextArea.setEditable(false);
-		queryResultTextArea = new JTextArea();
-		queryResultTextArea.setFont(contentFont);
-		queryResultTextArea.setEditable(false);
-		indexTextArea = new JTextArea();
-		indexTextArea.setFont(contentFont);
-		indexTextArea.setEditable(false);
+		keywordQueryResultTextArea = new JTextArea();
+		keywordQueryResultTextArea.setFont(contentFont);
+		keywordQueryResultTextArea.setEditable(false);
+		contentWordQueryResultTextArea = new JTextArea();
+		contentWordQueryResultTextArea.setFont(contentFont);
+		contentWordQueryResultTextArea.setEditable(false);
 		controlPanel = new JPanel();
 
 		// Set up the contorlPanel in this queryBrowserCard
@@ -228,20 +226,20 @@ public class WebBrowserView {
 		historyPanel.add(new JScrollPane(historyTextArea));
 		queryBrowserCard.add(historyPanel, BorderLayout.WEST);
 
-		// set up queryResultTextArea and indexTextArea
+		// set up keywordQueryResultTextArea and contentWordQueryResultTextArea
 		JPanel indexTextPanel = new JPanel();
 		indexTextPanel.setLayout(new BoxLayout(indexTextPanel, BoxLayout.Y_AXIS));
-		JLabel indexLabel = new JLabel("Index:	");
+		JLabel indexLabel = new JLabel("Content Word Result:");
 		indexLabel.setFont(menuFont);
 		indexTextPanel.add(indexLabel);
-		indexTextPanel.add(new JScrollPane(indexTextArea));
+		indexTextPanel.add(new JScrollPane(contentWordQueryResultTextArea));
 
 		JPanel queryResultPanel = new JPanel();
 		queryResultPanel.setLayout(new BoxLayout(queryResultPanel, BoxLayout.Y_AXIS));
-		JLabel queryResultLabel = new JLabel("Query Result:");
+		JLabel queryResultLabel = new JLabel("Keyword Result:");
 		queryResultLabel.setFont(menuFont);
 		queryResultPanel.add(queryResultLabel);
-		queryResultPanel.add(new JScrollPane(queryResultTextArea));
+		queryResultPanel.add(new JScrollPane(keywordQueryResultTextArea));
 
 		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, indexTextPanel, queryResultPanel),
 				BorderLayout.CENTER);
@@ -261,9 +259,7 @@ public class WebBrowserView {
 		prefixSearchButton = new JButton("Search");
 		infixSearchButton.setActionCommand("infix");
 		prefixSearchButton.setActionCommand("prefix");
-		keywordIndexButton = new JRadioButton("Searching through keywords");
-		contentWordIndexButton = new JRadioButton("Searching through content words");
-
+		
 		// set up the control panel on the right side of the screen using group layout
 		GroupLayout groupLayout = new GroupLayout(controlPanel);
 		controlPanel.setLayout(groupLayout);
@@ -275,8 +271,7 @@ public class WebBrowserView {
 		horizontalGroups
 				.addGroup(groupLayout.createParallelGroup().addComponent(overallQueryControllerTitle)
 						.addComponent(infixControllerTitle).addComponent(prefixControllerTitle))
-				.addGroup(groupLayout.createParallelGroup().addComponent(infixQuery).addComponent(prefixQuery)
-						.addComponent(keywordIndexButton).addComponent(contentWordIndexButton))
+				.addGroup(groupLayout.createParallelGroup().addComponent(infixQuery).addComponent(prefixQuery))
 				.addGroup(groupLayout.createParallelGroup().addComponent(infixSearchButton)
 						.addComponent(prefixSearchButton));
 		groupLayout.setHorizontalGroup(horizontalGroups);
@@ -287,26 +282,12 @@ public class WebBrowserView {
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(infixControllerTitle)
 						.addComponent(infixQuery).addComponent(infixSearchButton))
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(prefixControllerTitle)
-						.addComponent(prefixQuery).addComponent(prefixSearchButton))
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(keywordIndexButton))
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(contentWordIndexButton));
+						.addComponent(prefixQuery).addComponent(prefixSearchButton));
 		groupLayout.setVerticalGroup(verticalGroups);
 
 		// Set up the fonts for all the child components in the controlPanel
 		for (Component com : controlPanel.getComponents()) {
 			com.setFont(contentFont);
-		}
-	}
-
-	public IndexTypeSelected checkIndexRadioButtonSelected() {
-		if (keywordIndexButton.isSelected() && contentWordIndexButton.isSelected()) {
-			return IndexTypeSelected.BOTH_SELECTED;
-		} else if (keywordIndexButton.isSelected() && !contentWordIndexButton.isSelected()) {
-			return IndexTypeSelected.KEYWORD_SELECTED;
-		} else if (!keywordIndexButton.isSelected() && contentWordIndexButton.isSelected()) {
-			return IndexTypeSelected.CONTENTWORD_SELECTED;
-		} else {
-			return IndexTypeSelected.NONE_SELECTED;
 		}
 	}
 	
@@ -335,8 +316,8 @@ public class WebBrowserView {
 		return urlTextInput;
 	}
 
-	public JTextArea getQueryResultTextArea() {
-		return queryResultTextArea;
+	public JTextArea getKeywordQueryResultTextArea() {
+		return keywordQueryResultTextArea;
 	}
 
 	public JTextField getInfixQuery() {
@@ -351,8 +332,8 @@ public class WebBrowserView {
 		return historyTextArea;
 	}
 
-	public JTextArea getIndexTextArea() {
-		return indexTextArea;
+	public JTextArea getContentWordQueryResultTextArea() {
+		return contentWordQueryResultTextArea;
 	}
 
 	public CardLayout getCardLayoutControl() {

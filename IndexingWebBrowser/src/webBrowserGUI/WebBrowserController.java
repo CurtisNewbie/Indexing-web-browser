@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import webBrowserGUI.WebBrowserView.IndexTypeSelected;
 import webBrowserModel.*;
 import webBrowserModel.WebIndex.TypeOfWords;
 
@@ -29,6 +28,7 @@ public class WebBrowserController {
 		this.view = view;
 		webIndex_Keyword = new WebIndex(TypeOfWords.KEYWORD);
 		webIndex_ContentWord = new WebIndex(TypeOfWords.CONTENT_WORD);
+		webDocCollection = new ArrayList<>();
 
 		view.addConfirmActionListener(new ConfirmActionHandler());
 		view.addSearchActionListener(new SearchActionHandler());
@@ -39,12 +39,10 @@ public class WebBrowserController {
 		JTextField urlInput;
 		JEditorPane htmlContent;
 		JTextArea historyTextArea;
-		JTextArea indexTextArea;
 
 		public ConfirmActionHandler() {
 			this.urlInput = view.getUrlTextField();
 			this.historyTextArea = view.getHistoryTextArea();
-			this.indexTextArea = view.getIndexTextArea();
 		}
 
 		@Override
@@ -55,12 +53,9 @@ public class WebBrowserController {
 				htmlContent.setPage(new URL(url));
 				WebDoc wd = new WebDoc(url);
 				historyTextArea.append(wd.getEntry());
-
 				webDocCollection.add(wd);
 				webIndex_Keyword.add(wd);
 				webIndex_ContentWord.add(wd);
-				indexTextArea.append(wd.toString());
-
 			} catch (MalformedURLException e1) {
 				JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error", JOptionPane.WARNING_MESSAGE);
 			} catch (IOException e1) {
@@ -71,43 +66,27 @@ public class WebBrowserController {
 	}
 
 	private class SearchActionHandler implements ActionListener {
-		JTextArea resultTextArea;
+		JTextArea keywordResultTextArea;
+		JTextArea contentWordResultTextArea;
 		JTextField infixQuery;
 		JTextField prefixQuery;
 
 		public SearchActionHandler() {
-			resultTextArea = view.getQueryResultTextArea();
+			keywordResultTextArea = view.getKeywordQueryResultTextArea();
+			contentWordResultTextArea = view.getContentWordQueryResultTextArea();
 			infixQuery = view.getInfixQuery();
 			prefixQuery = view.getPrefixQuery();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			WebBrowserView.IndexTypeSelected indexType = view.checkIndexRadioButtonSelected();
 
-			if (e.getActionCommand().equals("infix")) {
-				if (indexType.equals(IndexTypeSelected.CONTENTWORD_SELECTED)) {
-					System.out.println("Content only");
-				} else if (indexType.equals(IndexTypeSelected.KEYWORD_SELECTED)) {
-					System.out.println("Keywords");
-				} else if (indexType.equals(IndexTypeSelected.BOTH_SELECTED)) {
-					System.out.println("Both");
-				} else {
-					resultTextArea.setText("Please select which type of words you want to search through...");
-				}
-//				resultTextArea.setText(infixQuery.getText());
-			} else if (e.getActionCommand().equals("prefix")) {
-				if (e.getActionCommand().equals("infix")) {
-					if (indexType.equals(IndexTypeSelected.CONTENTWORD_SELECTED)) {
-						System.out.println("Content only");
-					} else if (indexType.equals(IndexTypeSelected.KEYWORD_SELECTED)) {
-						System.out.println("Keywords");
-					} else if (indexType.equals(IndexTypeSelected.BOTH_SELECTED)) {
-						System.out.println("Both");
-					} else {
-						resultTextArea.setText("Please select which type of words you want to search through...");
-					}
-				}
+			if(e.getActionCommand().equals("infix")) {
+				keywordResultTextArea.setText(infixQuery.getText());
+				contentWordResultTextArea.setText(infixQuery.getText());
+			} else {
+				keywordResultTextArea.setText(prefixQuery.getText());
+				contentWordResultTextArea.setText(prefixQuery.getText());
 			}
 		}
 	}
