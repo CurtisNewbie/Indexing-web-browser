@@ -33,6 +33,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -214,20 +215,25 @@ public class WebBrowserGUI {
 	}
 
 	private void setUpQueryBrowserCard() {
-		historyPanel = new JTextArea();
+		historyPanel = new JTextArea(10, 20);
+		historyPanel.setText("History");
 		queryResultPanel = new JTextArea();
-		
+		queryResultPanel.setText("Result");
+		indexPanel = new JTextArea();
+		indexPanel.setText("Index");
 		controlPanel = new JPanel();
 
 		setUpControlPanel();
 
-		// Setup the fonts for all the child components in the controlPanel
-		for (Component com : controlPanel.getComponents()) {
-			com.setFont(contentFont);
-		}
 		queryBrowserCard.add(controlPanel, BorderLayout.EAST);
-		queryBrowserCard.add(historyPanel, BorderLayout.SOUTH);
-		queryBrowserCard.add(queryResultPanel, BorderLayout.CENTER);
+		queryBrowserCard.add(new JScrollPane(historyPanel), BorderLayout.WEST);
+		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(indexPanel), new JScrollPane(queryResultPanel)),
+				BorderLayout.CENTER);
+
+//		// Setup the fonts for all the child components in the controlPanel
+//		for (Component com : queryBrowserCard.getComponents()) {
+//			com.setFont(contentFont);
+//		}
 
 	}
 
@@ -267,7 +273,6 @@ public class WebBrowserGUI {
 						.addComponent(prefixQuery).addComponent(prefixSearchButton));
 		groupLayout.setVerticalGroup(verticalGroups);
 	}
-
 
 	public static void main(String[] args) {
 		WebBrowserGUI brow = new WebBrowserGUI();
