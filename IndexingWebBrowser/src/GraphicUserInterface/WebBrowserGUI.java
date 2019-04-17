@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,8 @@ import javax.smartcardio.CardException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JEditorPane;
@@ -31,6 +34,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+
+import javafx.scene.layout.Border;
+
 import java.awt.Component;
 
 // This is the top level frame of the GUI
@@ -66,7 +72,8 @@ public class WebBrowserGUI {
 	JMenuItem htmlBrowser;
 	JMenuItem queryBrowser;
 
-	// The box for organising the buttons in htmlBrowserCard (on the top of the screen)
+	// The box for organising the buttons in htmlBrowserCard (on the top of the
+	// screen)
 	Box webBrowserInputOrganiser;
 
 	// TextField for url input
@@ -83,6 +90,10 @@ public class WebBrowserGUI {
 
 	// Close tab Button
 	JButton closeTab;
+
+	JPanel historyPanel;
+	JPanel queryResultPanel;
+	JPanel queryBrowserControlPanel;
 
 	public WebBrowserGUI() {
 		browserFrame = new JFrame("WebBrowser :D");
@@ -115,8 +126,9 @@ public class WebBrowserGUI {
 
 		// set up the 'card' for HTML browser
 		setUpHtmlBrowserCard();
-		
+
 		// set up the 'card' for query browser
+		setUpQueryBrowserCard();
 
 		// By default show the webBrowserCard first
 		cardLayoutControl.show(cards, WEB_BROWSER_TAG);
@@ -152,11 +164,10 @@ public class WebBrowserGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cardLayoutControl.show(cards, QUERY_BROWSER_TAG);
-
 			}
 		});
 	}
-	
+
 	private void setUpHtmlBrowserCard() {
 		webBrowserInputOrganiser = Box.createHorizontalBox();
 		webBrowserInputOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -178,7 +189,6 @@ public class WebBrowserGUI {
 
 		confirmButton.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
 		urlTextInput.addActionListener(new ConfirmActionHandler(webBrowserTabbedPane, urlTextInput, this));
-
 		closeTab.addActionListener(new ActionListener() {
 
 			@Override
@@ -188,7 +198,6 @@ public class WebBrowserGUI {
 				if (selectedIndex != -1) {
 					webBrowserTabbedPane.remove(selectedIndex);
 				}
-
 			}
 		});
 	}
@@ -200,8 +209,52 @@ public class WebBrowserGUI {
 		return jp;
 	}
 
+	private void setUpQueryBrowserCard() {
+		historyPanel = new JPanel(new BorderLayout());
+		queryResultPanel = new JPanel(new BorderLayout());
+		queryBrowserControlPanel = new JPanel();
+
+		// JComponents in the queryBrowserControlPanel (On the right side of the screen)
+		JTextField overallQueryControllerTitle = new JTextField("Query Handling:");
+		JTextField infixControllerTitle = new JTextField("Infix Query:");
+		JTextField infixQuery = new JTextField(10);
+		JTextField prefixControllerTitle = new JTextField("Prefix Query:");
+		JTextField prefixQuery = new JTextField(10);
+		JButton infixSearchButton = new JButton("Search");
+		JButton prefixSearchButton = new JButton("Search");
+
+		// setup the control panel on the right side of the screen using group layout
+		GroupLayout groupLayout = new GroupLayout(queryBrowserControlPanel);
+		queryBrowserControlPanel.setLayout(groupLayout);
+		groupLayout.setAutoCreateGaps(true);
+		groupLayout.setAutoCreateContainerGaps(true);
+
+		// create horizontal and vertical groups
+		GroupLayout.SequentialGroup horizontalGroups = groupLayout.createSequentialGroup();
+		horizontalGroups
+				.addGroup(groupLayout.createParallelGroup().addComponent(overallQueryControllerTitle)
+						.addComponent(infixControllerTitle).addComponent(prefixControllerTitle))
+				.addGroup(groupLayout.createParallelGroup().addComponent(infixQuery).addComponent(prefixQuery))
+				.addGroup(groupLayout.createParallelGroup().addComponent(infixSearchButton)
+						.addComponent(prefixSearchButton));
+		groupLayout.setHorizontalGroup(horizontalGroups);
+
+		GroupLayout.SequentialGroup verticalGroups = groupLayout.createSequentialGroup();
+		verticalGroups
+				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(overallQueryControllerTitle))
+				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(infixControllerTitle)
+						.addComponent(infixQuery).addComponent(infixSearchButton))
+				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(prefixControllerTitle)
+						.addComponent(prefixQuery).addComponent(prefixSearchButton));
+		groupLayout.setVerticalGroup(verticalGroups);
+
+		queryBrowserCard.add(queryBrowserControlPanel, BorderLayout.EAST);
+		queryBrowserCard.add(historyPanel, BorderLayout.SOUTH);
+		queryBrowserCard.add(queryResultPanel, BorderLayout.CENTER);
+
+	}
+
 	public static void main(String[] args) {
 		WebBrowserGUI brow = new WebBrowserGUI();
-
 	}
 }
