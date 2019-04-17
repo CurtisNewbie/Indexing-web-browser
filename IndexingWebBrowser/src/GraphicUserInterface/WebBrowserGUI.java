@@ -95,7 +95,7 @@ public class WebBrowserGUI {
 	// Close tab Button
 	JButton closeTab;
 
-	JTextArea historyPanel;
+	JTextArea historyText;
 	JTextArea queryResultPanel;
 	JTextArea indexPanel;
 	JPanel controlPanel;
@@ -215,20 +215,23 @@ public class WebBrowserGUI {
 	}
 
 	private void setUpQueryBrowserCard() {
-		historyPanel = new JTextArea(10, 20);
-		historyPanel.setText("History");
+		historyText = new JTextArea(10, 20);
+		historyText.setText("History");
 		queryResultPanel = new JTextArea();
 		queryResultPanel.setText("Result");
 		indexPanel = new JTextArea();
 		indexPanel.setText("Index");
 		controlPanel = new JPanel();
 
+		// Set up the contorl panel in this queryBrowserCard
 		setUpControlPanel();
 
+		// set up the historyPanel, queryResultPanel and indexPanel
 		queryBrowserCard.add(controlPanel, BorderLayout.EAST);
-		queryBrowserCard.add(new JScrollPane(historyPanel), BorderLayout.WEST);
-		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(indexPanel), new JScrollPane(queryResultPanel)),
-				BorderLayout.CENTER);
+		JPanel 
+		queryBrowserCard.add(new JScrollPane(new JPanel().add(new JLabel("HistoryPanel")).add(historyPanel)), BorderLayout.WEST);
+		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(indexPanel),
+				new JScrollPane(queryResultPanel)), BorderLayout.CENTER);
 
 //		// Setup the fonts for all the child components in the controlPanel
 //		for (Component com : queryBrowserCard.getComponents()) {
