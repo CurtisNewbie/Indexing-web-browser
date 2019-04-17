@@ -216,6 +216,20 @@ public class WebBrowserGUI {
 		queryResultPanel = new JPanel(new BorderLayout());
 		queryBrowserControlPanel = new JPanel();
 
+		setUpControlPanel();
+
+		// Setup the fonts for all the child components in the queryBrowserControlPanel
+		for (Component com : queryBrowserControlPanel.getComponents()) {
+			com.setFont(contentFont);
+		}
+		queryBrowserCard.add(queryBrowserControlPanel, BorderLayout.EAST);
+		queryBrowserCard.add(historyPanel, BorderLayout.SOUTH);
+		queryBrowserCard.add(queryResultPanel, BorderLayout.CENTER);
+
+	}
+
+	// See setUpQueryBrowserCard() method
+	private void setUpControlPanel() {
 		// JComponents in the queryBrowserControlPanel (On the right side of the screen)
 		JLabel overallQueryControllerTitle = new JLabel("Query Handling:");
 		JLabel infixControllerTitle = new JLabel("Infix Query:");
@@ -249,16 +263,6 @@ public class WebBrowserGUI {
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(prefixControllerTitle)
 						.addComponent(prefixQuery).addComponent(prefixSearchButton));
 		groupLayout.setVerticalGroup(verticalGroups);
-
-		// Setup the fonts for all the child components in the queryBrowserControlPanel
-		for (Component com : queryBrowserControlPanel.getComponents()) {
-			com.setFont(contentFont);
-		}
-
-		queryBrowserCard.add(queryBrowserControlPanel, BorderLayout.EAST);
-		queryBrowserCard.add(historyPanel, BorderLayout.SOUTH);
-		queryBrowserCard.add(queryResultPanel, BorderLayout.CENTER);
-
 	}
 
 	public static void main(String[] args) {
