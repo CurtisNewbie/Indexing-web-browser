@@ -106,32 +106,25 @@ public class WebBrowserView {
 	JRadioButton keywordIndexButton;
 	JRadioButton contentWordIndexButton;
 
+	enum IndexTypeSelected {
+		KEYWORD_SELECTED, CONTENTWORD_SELECTED, BOTH_SELECTED, NONE_SELECTED
+	}
+
 	public WebBrowserView() {
 		browserFrame = new JFrame("WebBrowser :D");
 		browserFrame.setLayout(new BorderLayout());
 		browserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// Set properties
-		Dimension pcScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		browserFrame.setSize(pcScreenSize.width / 2, pcScreenSize.height / 2);
-
 		// Use a panel (cards) with cardLayout as a way to switch different contents
 		cardLayoutControl = new CardLayout();
 		cards = new JPanel(cardLayoutControl);
 
-		// set up each card
 		htmlBrowserCard = new JPanel(new BorderLayout());
 		queryBrowserCard = new JPanel(new BorderLayout());
 		cards.add(htmlBrowserCard, WEB_BROWSER_TAG);
 		cards.add(queryBrowserCard, QUERY_BROWSER_TAG);
-
-		// add the panel (with card layout) to the contentPane of the frame.
 		browserFrame.getContentPane().add(cards);
-
-		// set up the tabbed pane for the htmlBrowserCard
-		webBrowserTabbedPane = new JTabbedPane();
-		htmlBrowserCard.add(webBrowserTabbedPane, BorderLayout.CENTER);
-
+		
 		// add the menu bar to this frame for navigating between cards
 		addMenuBar();
 
@@ -143,6 +136,7 @@ public class WebBrowserView {
 
 		// By default show the htmlBrowserCard first
 		cardLayoutControl.show(cards, WEB_BROWSER_TAG);
+		browserFrame.pack();
 		browserFrame.setVisible(true);
 	}
 
@@ -167,12 +161,10 @@ public class WebBrowserView {
 		browserFrame.add(menuBar, BorderLayout.NORTH);
 	}
 
-	public void addMenuItemActionListener(ActionListener actionListener) {
-		htmlBrowser.addActionListener(actionListener);
-		queryBrowser.addActionListener(actionListener);
-	}
-
 	private void setUpHtmlBrowserCard() {
+		webBrowserTabbedPane = new JTabbedPane();
+		htmlBrowserCard.add(webBrowserTabbedPane, BorderLayout.CENTER);
+		
 		webBrowserInputOrganiser = Box.createHorizontalBox();
 		webBrowserInputOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
 		webBrowserInputOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
@@ -210,12 +202,7 @@ public class WebBrowserView {
 		webBrowserTabbedPane.addTab("New tab", scrollPane);
 		return jp;
 	}
-
-	public void addConfirmActionListener(ActionListener actionListener) {
-		confirmButton.addActionListener(actionListener);
-		urlTextInput.addActionListener(actionListener);
-	}
-
+	
 	private void setUpQueryBrowserCard() {
 		historyTextArea = new JTextArea(10, 30);
 		historyTextArea.setFont(contentFont);
@@ -311,11 +298,33 @@ public class WebBrowserView {
 		}
 	}
 
+	public IndexTypeSelected checkIndexRadioButtonSelected() {
+		if (keywordIndexButton.isSelected() && contentWordIndexButton.isSelected()) {
+			return IndexTypeSelected.BOTH_SELECTED;
+		} else if (keywordIndexButton.isSelected() && !contentWordIndexButton.isSelected()) {
+			return IndexTypeSelected.KEYWORD_SELECTED;
+		} else if (!keywordIndexButton.isSelected() && contentWordIndexButton.isSelected()) {
+			return IndexTypeSelected.CONTENTWORD_SELECTED;
+		} else {
+			return IndexTypeSelected.NONE_SELECTED;
+		}
+	}
+	
+	public void addConfirmActionListener(ActionListener actionListener) {
+		confirmButton.addActionListener(actionListener);
+		urlTextInput.addActionListener(actionListener);
+	}
+	
 	public void addSearchActionListener(ActionListener actionListener) {
 		infixQuery.addActionListener(actionListener);
 		prefixQuery.addActionListener(actionListener);
 		infixSearchButton.addActionListener(actionListener);
 		prefixSearchButton.addActionListener(actionListener);
+	}
+	
+	public void addMenuItemActionListener(ActionListener actionListener) {
+		htmlBrowser.addActionListener(actionListener);
+		queryBrowser.addActionListener(actionListener);
 	}
 
 	public JTabbedPane getWebBrowserTabbedPane() {
