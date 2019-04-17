@@ -22,11 +22,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import sun.security.pkcs.ContentInfo;
 
 // This is the top level frame of the GUI
 public class WebBrowserView {
@@ -100,6 +103,8 @@ public class WebBrowserView {
 	JButton prefixSearchButton;
 	JTextField infixQuery;
 	JTextField prefixQuery;
+	JRadioButton keywordIndexButton;
+	JRadioButton contentWordIndexButton;
 
 	public WebBrowserView() {
 		browserFrame = new JFrame("WebBrowser :D");
@@ -269,6 +274,8 @@ public class WebBrowserView {
 		prefixSearchButton = new JButton("Search");
 		infixSearchButton.setActionCommand("infix");
 		prefixSearchButton.setActionCommand("prefix");
+		keywordIndexButton = new JRadioButton("Searching through keywords");
+		contentWordIndexButton = new JRadioButton("Searching through content words");
 
 		// set up the control panel on the right side of the screen using group layout
 		GroupLayout groupLayout = new GroupLayout(controlPanel);
@@ -281,7 +288,8 @@ public class WebBrowserView {
 		horizontalGroups
 				.addGroup(groupLayout.createParallelGroup().addComponent(overallQueryControllerTitle)
 						.addComponent(infixControllerTitle).addComponent(prefixControllerTitle))
-				.addGroup(groupLayout.createParallelGroup().addComponent(infixQuery).addComponent(prefixQuery))
+				.addGroup(groupLayout.createParallelGroup().addComponent(infixQuery).addComponent(prefixQuery)
+						.addComponent(keywordIndexButton).addComponent(contentWordIndexButton))
 				.addGroup(groupLayout.createParallelGroup().addComponent(infixSearchButton)
 						.addComponent(prefixSearchButton));
 		groupLayout.setHorizontalGroup(horizontalGroups);
@@ -292,7 +300,9 @@ public class WebBrowserView {
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(infixControllerTitle)
 						.addComponent(infixQuery).addComponent(infixSearchButton))
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(prefixControllerTitle)
-						.addComponent(prefixQuery).addComponent(prefixSearchButton));
+						.addComponent(prefixQuery).addComponent(prefixSearchButton))
+				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(keywordIndexButton))
+				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(contentWordIndexButton));
 		groupLayout.setVerticalGroup(verticalGroups);
 
 		// Set up the fonts for all the child components in the controlPanel
