@@ -44,7 +44,7 @@ import javafx.scene.layout.Border;
 import java.awt.Component;
 
 // This is the top level frame of the GUI
-public class WebBrowserGUI {
+public class WebBrowserView {
 
 	// the JMenuBar for navigating the interface
 	JMenuBar menuBar;
@@ -100,7 +100,7 @@ public class WebBrowserGUI {
 	JTextArea indexTextArea;
 	JPanel controlPanel;
 
-	public WebBrowserGUI() {
+	public WebBrowserView() {
 		browserFrame = new JFrame("WebBrowser :D");
 		browserFrame.setLayout(new BorderLayout());
 		browserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -295,6 +295,6 @@ public class WebBrowserGUI {
 	}
 
 	public static void main(String[] args) {
-		WebBrowserGUI brow = new WebBrowserGUI();
+		WebBrowserView brow = new WebBrowserView();
 	}
 }

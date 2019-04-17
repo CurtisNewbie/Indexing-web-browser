@@ -18,9 +18,9 @@ public class ConfirmActionHandler implements ActionListener {
 	JTabbedPane tabbedPane;
 	JTextField urlInput;
 	JEditorPane htmlContent;
-	WebBrowserGUI webBrowserObj;
+	WebBrowserView webBrowserObj;
 
-	public ConfirmActionHandler(JTabbedPane tabbedPane, JTextField urlInput, WebBrowserGUI webBrowserObj) {
+	public ConfirmActionHandler(JTabbedPane tabbedPane, JTextField urlInput, WebBrowserView webBrowserObj) {
 		this.tabbedPane = tabbedPane;
 		this.urlInput = urlInput;
 		this.webBrowserObj = webBrowserObj;
