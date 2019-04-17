@@ -2,30 +2,19 @@ package GraphicUserInterface;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-import javax.smartcardio.ATR;
-import javax.smartcardio.Card;
-import javax.smartcardio.CardChannel;
-import javax.smartcardio.CardException;
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,20 +27,20 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
-import javafx.scene.layout.Border;
-
-import java.awt.Component;
 
 // This is the top level frame of the GUI
 public class WebBrowserView {
+
+	// The browser as a whole
+	JFrame browserFrame;
 
 	// the JMenuBar for navigating the interface
 	JMenuBar menuBar;
 	JMenu menu;
 
-	// The browser as a whole
-	JFrame browserFrame;
+	// The navigation buttons in the menu bar
+	JMenuItem htmlBrowser;
+	JMenuItem queryBrowser;
 
 	// The panel with CardLayout for showing different content
 	JPanel cards;
@@ -59,22 +48,16 @@ public class WebBrowserView {
 	// CardLayout Manager for controlling the cards switching
 	CardLayout cardLayoutControl;
 
-	// The card for the web browser
-	JPanel webBrowserCard;
-
-	// The card for the query browser
+	// The card for the html browser and query browser 
+	JPanel htmlBrowserCard;
 	JPanel queryBrowserCard;
 
 	// Tags for the two cards
-	final String WEB_BROWSER_TAG = "WebBrowserTag";
-	final String QUERY_BROWSER_TAG = "QueryBrowserTag";
+	public final String WEB_BROWSER_TAG = "WebBrowserTag";
+	public final String QUERY_BROWSER_TAG = "QueryBrowserTag";
 
-	// JTabbedPane as a contentPane of the webBrowserCard
+	// JTabbedPane as a contentPane of the htmlBrowserCard
 	JTabbedPane webBrowserTabbedPane;
-
-	// The navigation buttons in the menu bar
-	JMenuItem htmlBrowser;
-	JMenuItem queryBrowser;
 
 	// The box for organising the buttons in htmlBrowserCard (on the top of the
 	// screen)
@@ -83,16 +66,14 @@ public class WebBrowserView {
 	// TextField for url input
 	JTextField urlTextInput;
 
-	// Default Menu Font
+	// Default Menu Font and default content font
 	Font menuFont = new Font("Arial", Font.BOLD, 19);
-
-	// Default Content Font
 	Font contentFont = new Font("Arial", Font.BOLD, 17);
 
-	// Confirm Button
+	// Confirm Button and Close tab Button in htmlBrowserCard
 	JButton confirmButton;
 
-	// Close tab Button
+	// 
 	JButton closeTab;
 
 	JTextArea historyTextArea;
@@ -118,17 +99,17 @@ public class WebBrowserView {
 		cards = new JPanel(cardLayoutControl);
 
 		// set up each card
-		webBrowserCard = new JPanel(new BorderLayout());
+		htmlBrowserCard = new JPanel(new BorderLayout());
 		queryBrowserCard = new JPanel(new BorderLayout());
-		cards.add(webBrowserCard, WEB_BROWSER_TAG);
+		cards.add(htmlBrowserCard, WEB_BROWSER_TAG);
 		cards.add(queryBrowserCard, QUERY_BROWSER_TAG);
 
 		// add the panel (with card layout) to the contentPane of the frame.
 		browserFrame.getContentPane().add(cards);
 
-		// set up the tabbed pane for the webBrowserCard
+		// set up the tabbed pane for the htmlBrowserCard
 		webBrowserTabbedPane = new JTabbedPane();
-		webBrowserCard.add(webBrowserTabbedPane, BorderLayout.CENTER);
+		htmlBrowserCard.add(webBrowserTabbedPane, BorderLayout.CENTER);
 
 		// add the menu bar to this frame for navigating between cards
 		addMenuBar();
@@ -139,7 +120,7 @@ public class WebBrowserView {
 		// set up the 'card' for query browser
 		setUpQueryBrowserCard();
 
-		// By default show the webBrowserCard first
+		// By default show the htmlBrowserCard first
 		cardLayoutControl.show(cards, WEB_BROWSER_TAG);
 		browserFrame.setVisible(true);
 	}
@@ -154,27 +135,20 @@ public class WebBrowserView {
 		// Create menu item and set up their font
 		htmlBrowser = new JMenuItem("HTML Browser");
 		htmlBrowser.setFont(menuFont);
+		htmlBrowser.setActionCommand(WEB_BROWSER_TAG);
 		queryBrowser = new JMenuItem("Query Browser");
 		queryBrowser.setFont(menuFont);
+		queryBrowser.setActionCommand(QUERY_BROWSER_TAG);
 
 		menu.add(htmlBrowser);
 		menu.add(queryBrowser);
 		menuBar.add(menu);
 		browserFrame.add(menuBar, BorderLayout.NORTH);
+	}
 
-		htmlBrowser.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cardLayoutControl.show(cards, WEB_BROWSER_TAG);
-			}
-		});
-
-		queryBrowser.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cardLayoutControl.show(cards, QUERY_BROWSER_TAG);
-			}
-		});
+	public void addMenuItemActionListener(ActionListener actionListener) {
+		htmlBrowser.addActionListener(actionListener);
+		queryBrowser.addActionListener(actionListener);
 	}
 
 	private void setUpHtmlBrowserCard() {
@@ -194,7 +168,7 @@ public class WebBrowserView {
 		webBrowserInputOrganiser.add(closeTab);
 		webBrowserInputOrganiser.add(Box.createHorizontalStrut(20));
 		webBrowserInputOrganiser.add(Box.createGlue());
-		webBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
+		htmlBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
 
 		closeTab.addActionListener(new ActionListener() {
 
@@ -222,10 +196,12 @@ public class WebBrowserView {
 	}
 
 	private void setUpQueryBrowserCard() {
-		historyTextArea = new JTextArea(10, 40);
+		historyTextArea = new JTextArea(10, 30);
 		historyTextArea.setFont(contentFont);
 		queryResultTextArea = new JTextArea();
+		queryResultTextArea.setFont(contentFont);
 		indexTextArea = new JTextArea();
+		indexTextArea.setFont(contentFont);
 		controlPanel = new JPanel();
 
 		// Set up the contorlPanel in this queryBrowserCard
@@ -237,7 +213,7 @@ public class WebBrowserView {
 		historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
 		JLabel historyLabel = new JLabel("History:");
 		historyLabel.setFont(menuFont);
-		historyPanel.add(historyLabel);	
+		historyPanel.add(historyLabel);
 		historyPanel.add(new JScrollPane(historyTextArea));
 		queryBrowserCard.add(historyPanel, BorderLayout.WEST);
 
@@ -266,12 +242,10 @@ public class WebBrowserView {
 		JLabel overallQueryControllerTitle = new JLabel("Query Handling:");
 		JLabel infixControllerTitle = new JLabel("Infix Query:");
 		JLabel prefixControllerTitle = new JLabel("Prefix Query:");
-		
 		infixQuery = new JTextField(20);
 		prefixQuery = new JTextField(20);
 		infixQuery.setActionCommand("infix");
 		prefixQuery.setActionCommand("prefix");
-		
 		infixSearchButton = new JButton("Search");
 		prefixSearchButton = new JButton("Search");
 		infixSearchButton.setActionCommand("infix");
@@ -308,39 +282,47 @@ public class WebBrowserView {
 		}
 	}
 	
-	public JTabbedPane getWebBrowserTabbedPane() {
-		return webBrowserTabbedPane;
-	}
-	
-	public JTextField getUrlTextField() {
-		return urlTextInput;
-	}
-	
-	public JTextArea getQueryResultTextArea() {
-		return queryResultTextArea;
-	}
-	
-	public JTextField getInfixQuery() {
-		return infixQuery;
-	}
-	
-	public JTextField getPrefixQuery() {
-		return prefixQuery;
-	}
-	
-	public JTextArea getHistoryTextArea() {
-		return historyTextArea;
-	}
-	
-	public JTextArea getIndexTextArea() {
-		return indexTextArea;
-	}
-	
-	public void addSearchAction(ActionListener actionListener) {
+	public void addSearchActionListener(ActionListener actionListener) {
 		infixQuery.addActionListener(actionListener);
 		prefixQuery.addActionListener(actionListener);
 		infixSearchButton.addActionListener(actionListener);
 		prefixSearchButton.addActionListener(actionListener);
+	}
+
+	public JTabbedPane getWebBrowserTabbedPane() {
+		return webBrowserTabbedPane;
+	}
+
+	public JTextField getUrlTextField() {
+		return urlTextInput;
+	}
+
+	public JTextArea getQueryResultTextArea() {
+		return queryResultTextArea;
+	}
+
+	public JTextField getInfixQuery() {
+		return infixQuery;
+	}
+
+	public JTextField getPrefixQuery() {
+		return prefixQuery;
+	}
+
+	public JTextArea getHistoryTextArea() {
+		return historyTextArea;
+	}
+
+	public JTextArea getIndexTextArea() {
+		return indexTextArea;
+	}
+
+	public CardLayout getCardLayoutControl() {
+		return cardLayoutControl;
+	}
+
+	public JPanel getCards() {
+		return cards;
 	}
 
 	public static void main(String[] args) {
