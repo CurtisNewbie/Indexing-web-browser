@@ -169,9 +169,12 @@ public class WebBrowserView {
 		panelOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
 		confirmButton = new JButton("Confirm");
+		confirmButton.setFont(menuFont);
 		closeTab = new JButton("Close This Tab");
+		closeTab.setFont(menuFont);
 
 		urlTextInput = new JTextField("..Type the url here..", 20);
+		urlTextInput.setFont(contentFont);
 		panelOrganiser.add(Box.createHorizontalStrut(30));
 		panelOrganiser.add(urlTextInput);
 		panelOrganiser.add(Box.createHorizontalStrut(10));
