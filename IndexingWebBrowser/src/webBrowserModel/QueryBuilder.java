@@ -39,7 +39,7 @@ public class QueryBuilder {
 				Starting_Index = 4; // "not(" starting from 4
 				notQuery = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
 				return new NotQuery(notQuery);
-			} else if (wholeQuery.startsWith("or")) { 
+			} else if (wholeQuery.startsWith("or")) {
 				Starting_Index = 3; // "or(" starting from 3
 				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
 				return new OrQuery(parsePrefixSubQuery(subQueryInBracket));
@@ -97,7 +97,11 @@ public class QueryBuilder {
 	 */
 	public static Query parseInfixForm(String q) {
 		String prefixQuery = convertInfixString(q);
-		return parse(prefixQuery);
+		if (prefixQuery == null) {
+			return null;
+		} else {
+			return parse(prefixQuery);
+		}
 	}
 
 	/**
@@ -107,8 +111,8 @@ public class QueryBuilder {
 	 * the input String from left to right. The first operator that is found outside
 	 * the bracket will be used to determine which type of query it is. Once it has
 	 * identified the type of the query, the associated method is called, such as
-	 * .convertAndInfixString(), .convertOrInfixString() and .convertNotInfixString(). The
-	 * atomic query is returned directly.
+	 * .convertAndInfixString(), .convertOrInfixString() and
+	 * .convertNotInfixString(). The atomic query is returned directly.
 	 * 
 	 * Infix query example: "(apple or banana) and cat and dog" - See explanation.
 	 * The first operator is "and" and it is not covered by the bracket, so it is
@@ -170,15 +174,15 @@ public class QueryBuilder {
 		} else if (operator.equals("atomic")) {
 			return query;
 		} else { // it is for debugging, in normal situations, it should never occur.
-			System.out.println("parseInfixString(String q) -> Incorrect Format! Query:[" + query + "]");
+//			System.out.println("parseInfixString(String q) -> Incorrect Format! Query:[" + query + "]");
 			return null;
 		}
 	}
 
 	/**
 	 * This method deals with the andQuery in infix form, it's part of the recursion
-	 * for processing infix query. The QueryBuilder.convertInfixString() is called for
-	 * its sub-queries. This forms the recursion.
+	 * for processing infix query. The QueryBuilder.convertInfixString() is called
+	 * for its sub-queries. This forms the recursion.
 	 * 
 	 * @param left  sub-query on the left
 	 * @param right sub-query on the right
@@ -192,8 +196,8 @@ public class QueryBuilder {
 
 	/**
 	 * This method deals with the orQuery in infix form, it's part of the recursion
-	 * for processing infix query. The QueryBuilder.convertInfixString() is called for
-	 * its sub-queries. This forms the recursion.
+	 * for processing infix query. The QueryBuilder.convertInfixString() is called
+	 * for its sub-queries. This forms the recursion.
 	 * 
 	 * @param left  sub-query on the left
 	 * @param right sub-query on the right
@@ -207,8 +211,8 @@ public class QueryBuilder {
 
 	/**
 	 * This method deals with the notQuery in infix form, it's part of the recursion
-	 * for processing infix query. The QueryBuilder.convertInfixString() is called for
-	 * its sub-queries. This forms the recursion.
+	 * for processing infix query. The QueryBuilder.convertInfixString() is called
+	 * for its sub-queries. This forms the recursion.
 	 * 
 	 * @param right sub-query on the right
 	 * @return prefix form query
