@@ -1,4 +1,6 @@
 package webBrowserModel;
+
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -40,26 +42,30 @@ public class NotQuery implements Query {
 	 */
 	@Override
 	public Set<WebDoc> matches(WebIndex wind) {
-		Set<WebDoc> resultOfNotQuery = new TreeSet<>();
+		Set<WebDoc> resultOfNotQuery;
 		Map<String, Set<WebDoc>> webDocsMapCopy;
 		webDocsMapCopy = wind.getWebDocsMap();
 
 		Set<String> allKeySet = webDocsMapCopy.keySet();
-		Set<String> keySetWithoutNot = new TreeSet<>();
-		for (String str : allKeySet) {
-			if (!str.equals(query)) {
-				keySetWithoutNot.add(str);
+		Collection<Set<WebDoc>> allValues = webDocsMapCopy.values();
+		Set<WebDoc> allWebDoc = new TreeSet<>();
+
+		// get all the webdocs
+		for (Set<WebDoc> set : allValues) {
+			for (WebDoc doc : set) {
+				allWebDoc.add(doc);
 			}
 		}
 
-		for (String str : keySetWithoutNot) {
-			try {
-				resultOfNotQuery.addAll(wind.getMatches(str));
-			} catch (NullPointerException e) {
-				// If this result is null, skip it.
-			}
+		// get the webdocs of not query
+		resultOfNotQuery = webDocsMapCopy.get(query);
+		
+		if (resultOfNotQuery == null) {
+			return allWebDoc;
+		} else {
+			allWebDoc.removeAll(resultOfNotQuery);
+			return allWebDoc;
 		}
-		return resultOfNotQuery;
 	}
 
 	/**
