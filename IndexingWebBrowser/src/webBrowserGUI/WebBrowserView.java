@@ -3,6 +3,7 @@ package webBrowserGUI;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -94,11 +95,11 @@ public class WebBrowserView {
 	/** TextArea in queryBrowserCard for displaying the html browsing history */
 	JTextArea historyTextArea;
 
-	/** TextArea in queryBrowserCard for showing keyword result of query */
-	JTextArea keywordQueryResultTextArea;
-
-	/** TextArea in queryBrowserCard for showing content word result of query */
-	JTextArea contentWordQueryResultTextArea;
+//	/** TextArea in queryBrowserCard for showing keyword result of query */
+//	JTextArea keywordQueryResultTextArea;
+//
+//	/** TextArea in queryBrowserCard for showing content word result of query */
+//	JTextArea contentWordQueryResultTextArea;
 
 	/** Button in queryBrowserCard that initiates the infix query searching */
 	JButton infixSearchButton;
@@ -111,6 +112,9 @@ public class WebBrowserView {
 
 	/** TextField in queryBrowserCard for entering prefix query */
 	JTextField prefixQuery;
+
+	JPanel keywordResultPanel;
+	JPanel contentWordResultPanel;
 
 	public WebBrowserView() {
 		browserFrame = new JFrame("WebBrowser :D");
@@ -234,14 +238,20 @@ public class WebBrowserView {
 		JLabel indexLabel = new JLabel("Content Word Result:");
 		indexLabel.setFont(menuFont);
 		indexTextPanel.add(indexLabel);
-		indexTextPanel.add(new JScrollPane(contentWordQueryResultTextArea));
+//		indexTextPanel.add(new JScrollPane(contentWordQueryResultTextArea));
+		contentWordResultPanel = new JPanel();
+		contentWordResultPanel.setLayout(new BoxLayout(contentWordResultPanel, BoxLayout.Y_AXIS));
+		indexTextPanel.add(new JScrollPane(contentWordResultPanel));
 
 		JPanel queryResultPanel = new JPanel();
 		queryResultPanel.setLayout(new BoxLayout(queryResultPanel, BoxLayout.Y_AXIS));
 		JLabel queryResultLabel = new JLabel("Keyword Result:");
 		queryResultLabel.setFont(menuFont);
 		queryResultPanel.add(queryResultLabel);
-		queryResultPanel.add(new JScrollPane(keywordQueryResultTextArea));
+//		queryResultPanel.add(new JScrollPane(keywordQueryResultTextArea));
+		keywordResultPanel = new JPanel();
+		keywordResultPanel.setLayout(new BoxLayout(keywordResultPanel, BoxLayout.Y_AXIS));
+		queryResultPanel.add(new JScrollPane(keywordResultPanel));
 
 		queryBrowserCard.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, indexTextPanel, queryResultPanel),
 				BorderLayout.CENTER);
@@ -315,6 +325,14 @@ public class WebBrowserView {
 		queryBrowser.addActionListener(actionListener);
 	}
 
+	public JPanel getKeywordResultPanel() {
+		return keywordResultPanel;
+	}
+
+	public JPanel getContentWordResultPanel() {
+		return contentWordResultPanel;
+	}
+
 	public JTabbedPane getWebBrowserTabbedPane() {
 		return webBrowserTabbedPane;
 	}
@@ -327,6 +345,10 @@ public class WebBrowserView {
 		return keywordQueryResultTextArea;
 	}
 
+	public JTextArea getContentWordQueryResultTextArea() {
+		return contentWordQueryResultTextArea;
+	}
+
 	public JTextField getInfixQuery() {
 		return infixQuery;
 	}
@@ -337,10 +359,6 @@ public class WebBrowserView {
 
 	public JTextArea getHistoryTextArea() {
 		return historyTextArea;
-	}
-
-	public JTextArea getContentWordQueryResultTextArea() {
-		return contentWordQueryResultTextArea;
 	}
 
 	public CardLayout getCardLayoutControl() {

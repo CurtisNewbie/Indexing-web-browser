@@ -1,6 +1,7 @@
 package webBrowserGUI;
 
 import java.awt.CardLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,12 +13,16 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import webBrowserModel.Query;
 import webBrowserModel.QueryBuilder;
 import webBrowserModel.WebDoc;
 import webBrowserModel.WebIndex;
@@ -53,12 +58,12 @@ public class WebBrowserController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.htmlContent = view.addTabToHtmlBrowserCard();
+			htmlContent = view.addTabToHtmlBrowserCard();
 			String url = urlInput.getText();
-			
 			File localFileEntry;
-			Pattern entryPattern = Pattern.compile("(file:)(.++)");
+			Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
 			Matcher entryMatcher = entryPattern.matcher(url);
+
 			if (entryMatcher.find()) { // it is a local file
 				localFileEntry = new File(entryMatcher.group(2)); // extract the true file path.
 				try {
@@ -107,14 +112,10 @@ public class WebBrowserController {
 	}
 
 	private class SearchActionHandler implements ActionListener {
-		JTextArea keywordResultTextArea;
-		JTextArea contentWordResultTextArea;
 		JTextField infixQuery;
 		JTextField prefixQuery;
 
 		public SearchActionHandler() {
-			keywordResultTextArea = view.getKeywordQueryResultTextArea();
-			contentWordResultTextArea = view.getContentWordQueryResultTextArea();
 			infixQuery = view.getInfixQuery();
 			prefixQuery = view.getPrefixQuery();
 		}
@@ -124,42 +125,44 @@ public class WebBrowserController {
 			String query;
 			boolean isValid;
 			String queryType;
+			Set<WebDoc> keywordResult;
+			Set<WebDoc> contentWordResult;
+			JPanel keywordPanel = view.getKeywordResultPanel();
+			JPanel contentWordPanel = view.getContentWordResultPanel();
 			if (e.getActionCommand().equals("infix")) {
 				query = infixQuery.getText().trim().toLowerCase();
 				isValid = validateInfixQuery(query);
 				queryType = "infix query";
+
+				if (isValid) {
+					Query infixQuery = QueryBuilder.parseInfixForm(query);
+					if (infixQuery != null) {
+						keywordResult = infixQuery.matches(webIndex_Keyword);
+						contentWordResult = infixQuery.matches(webIndex_ContentWord);
+						addResults(keywordPanel, keywordResult);
+						addResults(contentWordPanel, contentWordResult);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Unfortunately" + queryType + " you entered is invalid",
+							"Content Word Result", JOptionPane.WARNING_MESSAGE);
+				}
 			} else { // (e.getActionCommand().equals("prefix"))
 				query = prefixQuery.getText().trim().toLowerCase();
 				isValid = validatePrefixQuery(query);
 				queryType = "prefix query";
-			}
 
-			if (isValid) {
-				Set<WebDoc> keywordResult = QueryBuilder.parseInfixForm(query).matches(webIndex_Keyword);
-				StringBuilder queryResult;
-				if (keywordResult == null) {
-					keywordResultTextArea.setText("Unfortunatelly, nothing found.");
-				} else {
-					queryResult = new StringBuilder();
-					for (WebDoc doc : keywordResult) {
-						queryResult.append(doc.toString() + "\n");
+				if (isValid) {
+					Query prefixQuery = QueryBuilder.parse(query);
+					if (prefixQuery != null) {
+						keywordResult = prefixQuery.matches(webIndex_Keyword);
+						contentWordResult = prefixQuery.matches(webIndex_ContentWord);
+						addResults(keywordPanel, keywordResult);
+						addResults(contentWordPanel, contentWordResult);
+					} else {
+						JOptionPane.showMessageDialog(null, "Unfortunately" + queryType + " you entered is invalid",
+								"Content Word Result", JOptionPane.WARNING_MESSAGE);
 					}
-					keywordResultTextArea.setText(queryResult.toString());
 				}
-
-				Set<WebDoc> contentWordResult = QueryBuilder.parseInfixForm(query).matches(webIndex_ContentWord);
-				if (contentWordResult == null) {
-					contentWordResultTextArea.setText("Unfortunatelly, nothing found.");
-				} else {
-					queryResult = new StringBuilder();
-					for (WebDoc doc : contentWordResult) {
-						queryResult.append(doc.toString() + "\n");
-					}
-					contentWordResultTextArea.setText(queryResult.toString());
-				}
-			} else {
-				JOptionPane.showMessageDialog(null, "The " + queryType + " you entered is invalid",
-						"Infix query invalid", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 
@@ -194,6 +197,51 @@ public class WebBrowserController {
 				return false;
 			} else {
 				return true;
+			}
+		}
+
+		private void addResults(JPanel resultPanel, Set<WebDoc> resultOfWebDocs) {
+			JButton eachResult;
+			resultPanel.removeAll();
+			if (resultOfWebDocs != null) {
+				for (WebDoc doc : resultOfWebDocs) {
+					String urlEntry = doc.getEntry();
+					eachResult = new JButton(urlEntry);
+					eachResult.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+					eachResult.setFont(new Font("Arial", Font.BOLD, 17));
+					resultPanel.add(eachResult);
+					eachResult.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							JEditorPane htmlContent = view.addTabToHtmlBrowserCard();
+							if (urlEntry.matches("([Ff][Ii][Ll][Ee]:)(.++)")) { // local html file
+								String fileEntry = urlEntry.substring(5, urlEntry.length());
+								System.out.println(fileEntry);
+								try {
+									htmlContent.setPage(new File(fileEntry).toURI().toURL());
+								} catch (MalformedURLException e1) {
+									JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
+											JOptionPane.WARNING_MESSAGE);
+								} catch (IOException e1) {
+									JOptionPane.showMessageDialog(null, "File path not accessible", "Error",
+											JOptionPane.WARNING_MESSAGE);
+								}
+							} else { // url link
+								try {
+									htmlContent.setPage(urlEntry);
+								} catch (MalformedURLException e1) {
+									JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error",
+											JOptionPane.WARNING_MESSAGE);
+								} catch (IOException e1) {
+									JOptionPane.showMessageDialog(null,
+											"URL not accessible, please check internet connect", "Error",
+											JOptionPane.WARNING_MESSAGE);
+								}
+							}
+						}
+					});
+				}
 			}
 		}
 	}
