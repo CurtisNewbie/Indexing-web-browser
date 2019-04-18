@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
@@ -15,7 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import webBrowserModel.*;
+import webBrowserModel.QueryBuilder;
+import webBrowserModel.WebDoc;
+import webBrowserModel.WebIndex;
 import webBrowserModel.WebIndex.TypeOfWords;
 
 public class WebBrowserController {
@@ -23,13 +25,13 @@ public class WebBrowserController {
 	private WebBrowserView view;
 	private WebIndex webIndex_Keyword;
 	private WebIndex webIndex_ContentWord;
-	private ArrayList<WebDoc> webDocCollection;
+	private Set<String> browsingHistory;
 
 	public WebBrowserController(WebBrowserView view) {
 		this.view = view;
 		webIndex_Keyword = new WebIndex(TypeOfWords.KEYWORD);
 		webIndex_ContentWord = new WebIndex(TypeOfWords.CONTENT_WORD);
-		webDocCollection = new ArrayList<>();
+		browsingHistory = new TreeSet<String>();
 
 		view.addConfirmActionListener(new ConfirmActionHandler());
 		view.addSearchActionListener(new SearchActionHandler());
@@ -52,11 +54,17 @@ public class WebBrowserController {
 			String url = urlInput.getText();
 			try {
 				htmlContent.setPage(new URL(url));
-				WebDoc wd = new WebDoc(url);
-				historyTextArea.append(wd.getEntry());
-				webDocCollection.add(wd);
-				webIndex_Keyword.add(wd);
-				webIndex_ContentWord.add(wd);
+				if (!browsingHistory.contains(url)) {
+					WebDoc wd = new WebDoc(url);
+					browsingHistory.add(url);
+					webIndex_Keyword.add(wd);
+					webIndex_ContentWord.add(wd);
+				}
+				StringBuilder history = new StringBuilder();
+				for (String u : browsingHistory) {
+					history.append(u + "\n");
+				}
+				historyTextArea.setText(history.toString());
 			} catch (MalformedURLException e1) {
 				JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error", JOptionPane.WARNING_MESSAGE);
 			} catch (IOException e1) {
@@ -85,28 +93,37 @@ public class WebBrowserController {
 			boolean isValid;
 			String queryType;
 			if (e.getActionCommand().equals("infix")) {
-				query = infixQuery.getText();
+				query = infixQuery.getText().trim().toLowerCase();
 				isValid = validateInfixQuery(query);
 				queryType = "infix query";
 			} else { // (e.getActionCommand().equals("prefix"))
-				query = prefixQuery.getText();
+				query = prefixQuery.getText().trim().toLowerCase();
 				isValid = validatePrefixQuery(query);
 				queryType = "prefix query";
 			}
 
 			if (isValid) {
 				Set<WebDoc> keywordResult = QueryBuilder.parseInfixForm(query).matches(webIndex_Keyword);
+				StringBuilder queryResult;
 				if (keywordResult == null) {
 					keywordResultTextArea.setText("Unfortunatelly, nothing found.");
 				} else {
-					keywordResultTextArea.setText(keywordResult.toString());
+					queryResult = new StringBuilder();
+					for (WebDoc doc : keywordResult) {
+						queryResult.append(doc.toString() + "\n");
+					}
+					keywordResultTextArea.setText(queryResult.toString());
 				}
 
 				Set<WebDoc> contentWordResult = QueryBuilder.parseInfixForm(query).matches(webIndex_ContentWord);
 				if (contentWordResult == null) {
 					contentWordResultTextArea.setText("Unfortunatelly, nothing found.");
 				} else {
-					contentWordResultTextArea.setText(contentWordResult.toString());
+					queryResult = new StringBuilder();
+					for (WebDoc doc : contentWordResult) {
+						queryResult.append(doc.toString() + "\n");
+					}
+					contentWordResultTextArea.setText(queryResult.toString());
 				}
 			} else {
 				JOptionPane.showMessageDialog(null, "The " + queryType + " you entered is invalid",
@@ -150,16 +167,17 @@ public class WebBrowserController {
 	}
 
 	private class MenuItemActionHandler implements ActionListener {
+		CardLayout layoutControl;
+		JPanel cards;
 
 		public MenuItemActionHandler() {
-			// TODO Auto-generated constructor stub
+			layoutControl = view.getCardLayoutControl();
+			cards = view.getCards();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String command = e.getActionCommand();
-			CardLayout layoutControl = view.getCardLayoutControl();
-			JPanel cards = view.getCards();
 			if (command.equals(view.WEB_BROWSER_TAG)) {
 				layoutControl.show(cards, view.WEB_BROWSER_TAG);
 			} else if (command.equals(view.QUERY_BROWSER_TAG))
