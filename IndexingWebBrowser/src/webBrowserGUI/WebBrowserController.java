@@ -3,11 +3,14 @@ package webBrowserGUI;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
@@ -52,24 +55,53 @@ public class WebBrowserController {
 		public void actionPerformed(ActionEvent e) {
 			this.htmlContent = view.addTabToHtmlBrowserCard();
 			String url = urlInput.getText();
-			try {
-				htmlContent.setPage(new URL(url));
-				if (!browsingHistory.contains(url)) {
-					WebDoc wd = new WebDoc(url);
-					browsingHistory.add(url);
-					webIndex_Keyword.add(wd);
-					webIndex_ContentWord.add(wd);
+			
+			File localFileEntry;
+			Pattern entryPattern = Pattern.compile("(file:)(.++)");
+			Matcher entryMatcher = entryPattern.matcher(url);
+			if (entryMatcher.find()) { // it is a local file
+				localFileEntry = new File(entryMatcher.group(2)); // extract the true file path.
+				try {
+					htmlContent.setPage(localFileEntry.toURI().toURL());
+					if (!browsingHistory.contains(url)) {
+						WebDoc wd = new WebDoc(url);
+						browsingHistory.add(url);
+						webIndex_Keyword.add(wd);
+						webIndex_ContentWord.add(wd);
+					}
+					StringBuilder history = new StringBuilder();
+					for (String u : browsingHistory) {
+						history.append(u + "\n");
+					}
+					historyTextArea.setText(history.toString());
+				} catch (MalformedURLException e1) {
+					JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
+							JOptionPane.WARNING_MESSAGE);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "File path not accessible", "Error",
+							JOptionPane.WARNING_MESSAGE);
 				}
-				StringBuilder history = new StringBuilder();
-				for (String u : browsingHistory) {
-					history.append(u + "\n");
+			} else {// it's a url
+				try {
+					url = url.toLowerCase();
+					htmlContent.setPage(new URL(url));
+					if (!browsingHistory.contains(url)) {
+						WebDoc wd = new WebDoc(url);
+						browsingHistory.add(url);
+						webIndex_Keyword.add(wd);
+						webIndex_ContentWord.add(wd);
+					}
+					StringBuilder history = new StringBuilder();
+					for (String u : browsingHistory) {
+						history.append(u + "\n");
+					}
+					historyTextArea.setText(history.toString());
+				} catch (MalformedURLException e1) {
+					JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error", JOptionPane.WARNING_MESSAGE);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "URL not accessible, please check internet connect", "Error",
+							JOptionPane.WARNING_MESSAGE);
 				}
-				historyTextArea.setText(history.toString());
-			} catch (MalformedURLException e1) {
-				JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error", JOptionPane.WARNING_MESSAGE);
-			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, "URL not accessible, please check internet connect", "Error",
-						JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
