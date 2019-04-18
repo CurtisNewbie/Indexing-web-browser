@@ -36,30 +36,31 @@ public class HarshTestWebDoc {
 		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: 
 		 * [each element]: e.g., A and B -> and([A],[B])
 		 */
-		System.out.println(
-				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
-		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B]):");
-		System.out.println("PrefixForm: and(and(whale,fish),not(elephant))");
-		System.out.println("Manual Transformation to InfixFrom: (whale and fish) and not elephant");
-		System.out.println("Result of QueryBuilder.parseInfixForm() : "
-				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString());
+//		System.out.println(
+//				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
+//		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B]):");
+//		System.out.println("PrefixForm: and(and(whale,fish),not(elephant))");
+//		System.out.println("Manual Transformation to InfixFrom: (whale and fish) and not elephant");
+//		System.out.println("Result of QueryBuilder.parseInfixForm() : "
+//				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString());
+//
+//		// More tests for processing prefix query
+//		System.out.println("\n:::More tests for processing prefix query:");
+//		System.out.println(QueryBuilder.parse("and(aaaaa,bbbbb,ccccc,ddddd,eeeee)").toString());
+//		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
+//		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
+//		System.out.println(QueryBuilder.parse("and((not(elephant),birdy,NoT(extra)))").toString());
+//
+//		// More tests for processing infix query
+//		System.out.println("\n:::More tests for processing infix query:");
+//		System.out.println(QueryBuilder.parseInfixForm("((aaa or bbb and not ggg) and ddd or not eee)").toString());
+//		System.out.println(QueryBuilder.parseInfixForm("Banana and ((cat and dog) and bird) or coffee").toString());
+//		System.out.println(QueryBuilder.parseInfixForm("not Banana").toString());
+//		System.out.println(QueryBuilder.parseInfixForm("not Banana and not Chocolate").toString());
+//		
+//		System.out.println(QueryBuilder.parse("and(elephant,NoT   (asdfasdf),number,yikes,banana)").toString());
 
-		// More tests for processing prefix query
-		System.out.println("\n:::More tests for processing prefix query:");
-		System.out.println(QueryBuilder.parse("and(aaaaa,bbbbb,ccccc,ddddd,eeeee)").toString());
-		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
-		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
-		System.out.println(QueryBuilder.parse("and((not(elephant),birdy,NoT(extra)))").toString());
-
-		// More tests for processing infix query
-		System.out.println("\n:::More tests for processing infix query:");
-		System.out.println(QueryBuilder.parseInfixForm("((aaa or bbb and not ggg) and ddd or not eee)").toString());
-		System.out.println(QueryBuilder.parseInfixForm("Banana and ((cat and dog) and bird) or coffee").toString());
-		System.out.println(QueryBuilder.parseInfixForm("not Banana").toString());
-		System.out.println(QueryBuilder.parseInfixForm("not Banana and not Chocolate").toString());
-		
-		System.out.println(QueryBuilder.parse("and(elephant,NoT   (asdfasdf),number,yikes,banana)").toString());
-
+		System.out.println(QueryBuilder.parseInfixForm("not apple").toString());
 //	
 //		String wholeQuery = "abc";
 //		if (wholeQuery.startsWith("(") && wholeQuery.endsWith(")")) {
