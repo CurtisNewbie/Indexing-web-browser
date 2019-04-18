@@ -36,13 +36,15 @@ public class QueryBuilder {
 				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
 				return new AndQuery(parsePrefixSubQuery(subQueryInBracket));
 			} else if (wholeQuery.startsWith("not")) {
-				Starting_Index = 4;
+				Starting_Index = 4; // "not(" starting from 4
 				notQuery = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
 				return new NotQuery(notQuery);
-			} else { // wholeQuery.startsWith("or");
+			} else if (wholeQuery.startsWith("or")) { 
 				Starting_Index = 3; // "or(" starting from 3
 				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
 				return new OrQuery(parsePrefixSubQuery(subQueryInBracket));
+			} else {
+				return new AtomicQuery(wholeQuery); // (a query may be atomic query but contain or/and/not)
 			}
 		}
 	}
