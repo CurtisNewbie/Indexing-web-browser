@@ -3,9 +3,7 @@ package webBrowserGUI;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -22,16 +20,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import sun.security.pkcs.ContentInfo;
-
-// This is the top level frame of the GUI
 public class WebBrowserView {
 
 	/** The browser as a whole */
@@ -67,46 +61,56 @@ public class WebBrowserView {
 	 */
 	CardLayout cardLayoutControl;
 
-	// The card for the html browser and query browser
+	/** The card (controlled by cardLayout) for the html browser interface */
 	JPanel htmlBrowserCard;
+
+	/** The card (controlled by cardLayout) for the query browser interface */
 	JPanel queryBrowserCard;
 
-	// Tags for the two cards
+	/** Tags that represents htmlBrowserCard */
 	public final String WEB_BROWSER_TAG = "WebBrowserTag";
+
+	/** Tags that represents queryBrowserCard */
 	public final String QUERY_BROWSER_TAG = "QueryBrowserTag";
 
-	// JTabbedPane as a contentPane of the htmlBrowserCard
+	/** JTabbedPane as a contentPane of the htmlBrowserCard */
 	JTabbedPane webBrowserTabbedPane;
 
-	// The box for organising the buttons in htmlBrowserCard (on the top of the
-	// screen)
-	Box webBrowserInputOrganiser;
-
-	// TextField for url input
+	/** TextField for url input */
 	JTextField urlTextInput;
 
-	// Default Menu Font and default content font
+	/** Default Menu Font */
 	Font menuFont = new Font("Arial", Font.BOLD, 19);
+
+	/** Default content font */
 	Font contentFont = new Font("Arial", Font.BOLD, 17);
 
-	// Confirm Button and Close tab Button in htmlBrowserCard
+	/** Confirm button in htmlBrowserCard */
 	JButton confirmButton;
 
-	//
+	/** Button in htmlBrowserCard for closing the current selected tab */
 	JButton closeTab;
 
+	/** TextArea in queryBrowserCard for displaying the html browsing history */
 	JTextArea historyTextArea;
-	JTextArea keywordQueryResultTextArea;
-	JTextArea contentWordQueryResultTextArea;
-	JPanel controlPanel;
-	JButton infixSearchButton;
-	JButton prefixSearchButton;
-	JTextField infixQuery;
-	JTextField prefixQuery;
 
-	enum IndexTypeSelected {
-		KEYWORD_SELECTED, CONTENTWORD_SELECTED, BOTH_SELECTED, NONE_SELECTED
-	}
+	/** TextArea in queryBrowserCard for showing keyword result of query */
+	JTextArea keywordQueryResultTextArea;
+
+	/** TextArea in queryBrowserCard for showing content word result of query */
+	JTextArea contentWordQueryResultTextArea;
+
+	/** Button in queryBrowserCard that initiates the infix query searching */
+	JButton infixSearchButton;
+
+	/** Button in queryBrowserCard that initiates the prefix query searching */
+	JButton prefixSearchButton;
+
+	/** TextField in queryBrowserCard for entering infix query */
+	JTextField infixQuery;
+
+	/** TextField in queryBrowserCard for entering prefix query */
+	JTextField prefixQuery;
 
 	public WebBrowserView() {
 		browserFrame = new JFrame("WebBrowser :D");
@@ -122,14 +126,9 @@ public class WebBrowserView {
 		cards.add(htmlBrowserCard, WEB_BROWSER_TAG);
 		cards.add(queryBrowserCard, QUERY_BROWSER_TAG);
 		browserFrame.getContentPane().add(cards);
-		
-		// add the menu bar to this frame for navigating between cards
+
 		addMenuBar();
-
-		// set up the 'card' for HTML browser
 		setUpHtmlBrowserCard();
-
-		// set up the 'card' for query browser
 		setUpQueryBrowserCard();
 
 		// By default show the htmlBrowserCard first
@@ -162,24 +161,26 @@ public class WebBrowserView {
 	private void setUpHtmlBrowserCard() {
 		webBrowserTabbedPane = new JTabbedPane();
 		htmlBrowserCard.add(webBrowserTabbedPane, BorderLayout.CENTER);
-		
-		webBrowserInputOrganiser = Box.createHorizontalBox();
-		webBrowserInputOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
-		webBrowserInputOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+		// The box for organising the buttons in htmlBrowserCard (on the top of the
+		// screen)
+		Box panelOrganiser = Box.createHorizontalBox();
+		panelOrganiser.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panelOrganiser.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
 		confirmButton = new JButton("Confirm");
 		closeTab = new JButton("Close This Tab");
 
 		urlTextInput = new JTextField("..Type the url here..", 20);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(30));
-		webBrowserInputOrganiser.add(urlTextInput);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
-		webBrowserInputOrganiser.add(confirmButton);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(10));
-		webBrowserInputOrganiser.add(closeTab);
-		webBrowserInputOrganiser.add(Box.createHorizontalStrut(20));
-		webBrowserInputOrganiser.add(Box.createGlue());
-		htmlBrowserCard.add(webBrowserInputOrganiser, BorderLayout.NORTH);
+		panelOrganiser.add(Box.createHorizontalStrut(30));
+		panelOrganiser.add(urlTextInput);
+		panelOrganiser.add(Box.createHorizontalStrut(10));
+		panelOrganiser.add(confirmButton);
+		panelOrganiser.add(Box.createHorizontalStrut(10));
+		panelOrganiser.add(closeTab);
+		panelOrganiser.add(Box.createHorizontalStrut(20));
+		panelOrganiser.add(Box.createGlue());
+		htmlBrowserCard.add(panelOrganiser, BorderLayout.NORTH);
 
 		closeTab.addActionListener(new ActionListener() {
 
@@ -200,7 +201,7 @@ public class WebBrowserView {
 		webBrowserTabbedPane.addTab("New tab", scrollPane);
 		return jp;
 	}
-	
+
 	private void setUpQueryBrowserCard() {
 		historyTextArea = new JTextArea(10, 30);
 		historyTextArea.setFont(contentFont);
@@ -211,11 +212,9 @@ public class WebBrowserView {
 		contentWordQueryResultTextArea = new JTextArea();
 		contentWordQueryResultTextArea.setFont(contentFont);
 		contentWordQueryResultTextArea.setEditable(false);
-		controlPanel = new JPanel();
 
 		// Set up the contorlPanel in this queryBrowserCard
 		setUpControlPanel();
-		queryBrowserCard.add(controlPanel, BorderLayout.EAST);
 
 		// set up the historyTextArea
 		JPanel historyPanel = new JPanel();
@@ -247,6 +246,10 @@ public class WebBrowserView {
 
 	// See setUpQueryBrowserCard() method
 	private void setUpControlPanel() {
+		// The panel in queryBrowserCard that consists of buttons and textfield for
+		// handling the query
+		JPanel controlPanel = new JPanel();
+
 		// JComponents in the controlPanel (On the right side of the screen)
 		JLabel overallQueryControllerTitle = new JLabel("Query Handling:");
 		JLabel infixControllerTitle = new JLabel("Infix Query:");
@@ -259,7 +262,7 @@ public class WebBrowserView {
 		prefixSearchButton = new JButton("Search");
 		infixSearchButton.setActionCommand("infix");
 		prefixSearchButton.setActionCommand("prefix");
-		
+
 		// set up the control panel on the right side of the screen using group layout
 		GroupLayout groupLayout = new GroupLayout(controlPanel);
 		controlPanel.setLayout(groupLayout);
@@ -289,20 +292,21 @@ public class WebBrowserView {
 		for (Component com : controlPanel.getComponents()) {
 			com.setFont(contentFont);
 		}
+		queryBrowserCard.add(controlPanel, BorderLayout.EAST);
 	}
-	
+
 	public void addConfirmActionListener(ActionListener actionListener) {
 		confirmButton.addActionListener(actionListener);
 		urlTextInput.addActionListener(actionListener);
 	}
-	
+
 	public void addSearchActionListener(ActionListener actionListener) {
 		infixQuery.addActionListener(actionListener);
 		prefixQuery.addActionListener(actionListener);
 		infixSearchButton.addActionListener(actionListener);
 		prefixSearchButton.addActionListener(actionListener);
 	}
-	
+
 	public void addMenuItemActionListener(ActionListener actionListener) {
 		htmlBrowser.addActionListener(actionListener);
 		queryBrowser.addActionListener(actionListener);
