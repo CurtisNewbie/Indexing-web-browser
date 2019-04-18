@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
@@ -80,13 +81,70 @@ public class WebBrowserController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			String query;
+			boolean isValid;
+			String queryType;
+			if (e.getActionCommand().equals("infix")) {
+				query = infixQuery.getText();
+				isValid = validateInfixQuery(query);
+				queryType = "infix query";
+			} else { // (e.getActionCommand().equals("prefix"))
+				query = prefixQuery.getText();
+				isValid = validatePrefixQuery(query);
+				queryType = "prefix query";
+			}
 
-			if(e.getActionCommand().equals("infix")) {
-				keywordResultTextArea.setText(infixQuery.getText());
-				contentWordResultTextArea.setText(infixQuery.getText());
+			if (isValid) {
+				Set<WebDoc> keywordResult = QueryBuilder.parseInfixForm(query).matches(webIndex_Keyword);
+				if (keywordResult == null) {
+					keywordResultTextArea.setText("Unfortunatelly, nothing found.");
+				} else {
+					keywordResultTextArea.setText(keywordResult.toString());
+				}
+
+				Set<WebDoc> contentWordResult = QueryBuilder.parseInfixForm(query).matches(webIndex_ContentWord);
+				if (contentWordResult == null) {
+					contentWordResultTextArea.setText("Unfortunatelly, nothing found.");
+				} else {
+					contentWordResultTextArea.setText(contentWordResult.toString());
+				}
 			} else {
-				keywordResultTextArea.setText(prefixQuery.getText());
-				contentWordResultTextArea.setText(prefixQuery.getText());
+				JOptionPane.showMessageDialog(null, "The " + queryType + " you entered is invalid",
+						"Infix query invalid", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+
+		/**
+		 * It validates the prefix query. It filters following illegal situations. (and
+		 * or); (and , or); (and and); (and , and); (or and); (or , and); and finally,
+		 * more than two '(' or')' sticking together.
+		 * 
+		 * @param q prefix query
+		 * @return a boolean value represents whether the query is valid.
+		 */
+		private boolean validatePrefixQuery(String q) {
+			if (q.matches(
+					"(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)|(.*?\\({1,}\\){1,}.*?)")) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		/**
+		 * It validates the infix query. It filters following illegal situations: (and
+		 * and); (and or); (or and); (or or); (not and); (not not); (not or); and
+		 * finally more than two '(' or')' sticking together.
+		 * 
+		 * @param q infix query
+		 * @return a boolean value represents whether the query is valid.
+		 */
+		private boolean validateInfixQuery(String q) {
+			if (q.matches(
+					"(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?\\({1,}\\){1,}.*?)")) {
+				return false;
+			} else {
+				return true;
 			}
 		}
 	}
