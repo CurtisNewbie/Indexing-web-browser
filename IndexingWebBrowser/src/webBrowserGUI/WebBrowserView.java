@@ -74,9 +74,6 @@ public class WebBrowserView {
 	/** Tags that represents queryBrowserCard */
 	public final String QUERY_BROWSER_TAG = "QueryBrowserTag";
 
-	/** JTabbedPane as a contentPane of the htmlBrowserCard */
-	JTabbedPane webBrowserTabbedPane;
-
 	/** TextField for url input */
 	JTextField urlTextInput;
 
@@ -85,6 +82,9 @@ public class WebBrowserView {
 
 	/** Default content font */
 	Font contentFont = new Font("Arial", Font.BOLD, 17);
+
+	/** JTabbedPane as a contentPane of the htmlBrowserCard */
+	JTabbedPane webBrowserTabbedPane;
 
 	/** Confirm button in htmlBrowserCard */
 	JButton confirmButton;
@@ -107,7 +107,10 @@ public class WebBrowserView {
 	/** TextField in queryBrowserCard for entering prefix query */
 	JTextField prefixQuery;
 
+	/** JPanel used for storing the keyword result of query */
 	JPanel keywordResultPanel;
+
+	/** JPanel used for storing the content word result of query */
 	JPanel contentWordResultPanel;
 
 	public WebBrowserView() {
@@ -115,7 +118,8 @@ public class WebBrowserView {
 		browserFrame.setLayout(new BorderLayout());
 		browserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// Use a panel (cards) with cardLayout as a way to switch different contents
+		// Use a panel (cards) with cardLayout as a way to switch different interfaces/
+		// cards
 		cardLayoutControl = new CardLayout();
 		cards = new JPanel(cardLayoutControl);
 
@@ -196,10 +200,10 @@ public class WebBrowserView {
 		});
 	}
 
-	public JEditorPane addTabToHtmlBrowserCard() {
+	public JEditorPane addTabToHtmlBrowserCard(String title) {
 		JEditorPane jp = new JEditorPane();
 		JScrollPane scrollPane = new JScrollPane(jp);
-		webBrowserTabbedPane.addTab("New tab", scrollPane);
+		webBrowserTabbedPane.addTab(title, scrollPane);
 		return jp;
 	}
 

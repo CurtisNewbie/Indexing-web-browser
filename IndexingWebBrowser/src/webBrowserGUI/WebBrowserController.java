@@ -19,6 +19,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -50,15 +51,20 @@ public class WebBrowserController {
 		JTextField urlInput;
 		JEditorPane htmlContent;
 		JTextArea historyTextArea;
+		JTabbedPane tabbedPane;
 
 		public ConfirmActionHandler() {
 			this.urlInput = view.getUrlTextField();
 			this.historyTextArea = view.getHistoryTextArea();
+			this.tabbedPane = view.getWebBrowserTabbedPane();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			htmlContent = view.addTabToHtmlBrowserCard();
+			int index = tabbedPane.getTabCount();
+			String title = "Tab " + (index + 1);
+			htmlContent = view.addTabToHtmlBrowserCard(title);
+
 			String url = urlInput.getText();
 			File localFileEntry;
 			Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
@@ -68,6 +74,7 @@ public class WebBrowserController {
 				localFileEntry = new File(entryMatcher.group(2)); // extract the true file path.
 				try {
 					htmlContent.setPage(localFileEntry.toURI().toURL());
+
 					if (!browsingHistory.contains(url)) {
 						WebDoc wd = new WebDoc(url);
 						browsingHistory.add(url);
@@ -89,6 +96,7 @@ public class WebBrowserController {
 			} else {// it's a url
 				try {
 					htmlContent.setPage(new URL(url));
+
 					if (!browsingHistory.contains(url)) {
 						WebDoc wd = new WebDoc(url);
 						browsingHistory.add(url);
@@ -107,6 +115,7 @@ public class WebBrowserController {
 							JOptionPane.WARNING_MESSAGE);
 				}
 			}
+			tabbedPane.setSelectedIndex(index);
 		}
 	}
 
@@ -217,8 +226,11 @@ public class WebBrowserController {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							JEditorPane htmlContent = view.addTabToHtmlBrowserCard();
-							
+							String title = "Tab " + (view.getWebBrowserTabbedPane().getTabCount() + 1);
+							JEditorPane htmlContent = view.addTabToHtmlBrowserCard(title);
+							JTabbedPane tabbedPane = view.getWebBrowserTabbedPane();
+							tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+
 							if (urlEntry.matches("([Ff][Ii][Ll][Ee]:)(.++)")) { // local html file
 								String fileEntry = urlEntry.substring(5, urlEntry.length());
 								try {
@@ -246,7 +258,7 @@ public class WebBrowserController {
 							}
 						}
 					});
-					
+
 					resultPanel.repaint();
 					resultPanel.revalidate();
 				}
