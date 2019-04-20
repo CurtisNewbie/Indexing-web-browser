@@ -114,10 +114,14 @@ public class WebBrowserController {
 	private class SearchActionHandler implements ActionListener {
 		JTextField infixQuery;
 		JTextField prefixQuery;
+		CardLayout layoutControl;
+		JPanel cards;
 
 		public SearchActionHandler() {
 			infixQuery = view.getInfixQuery();
 			prefixQuery = view.getPrefixQuery();
+			layoutControl = view.getCardLayoutControl();
+			cards = view.getCards();
 		}
 
 		@Override
@@ -215,11 +219,13 @@ public class WebBrowserController {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							JEditorPane htmlContent = view.addTabToHtmlBrowserCard();
+							
 							if (urlEntry.matches("([Ff][Ii][Ll][Ee]:)(.++)")) { // local html file
 								String fileEntry = urlEntry.substring(5, urlEntry.length());
 								System.out.println(fileEntry);
 								try {
 									htmlContent.setPage(new File(fileEntry).toURI().toURL());
+									layoutControl.show(cards, view.HTML_BROWSER_TAG);
 								} catch (MalformedURLException e1) {
 									JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
 											JOptionPane.WARNING_MESSAGE);
@@ -230,6 +236,7 @@ public class WebBrowserController {
 							} else { // url link
 								try {
 									htmlContent.setPage(urlEntry);
+									layoutControl.show(cards, view.HTML_BROWSER_TAG);
 								} catch (MalformedURLException e1) {
 									JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error",
 											JOptionPane.WARNING_MESSAGE);
@@ -258,8 +265,8 @@ public class WebBrowserController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String command = e.getActionCommand();
-			if (command.equals(view.WEB_BROWSER_TAG)) {
-				layoutControl.show(cards, view.WEB_BROWSER_TAG);
+			if (command.equals(view.HTML_BROWSER_TAG)) {
+				layoutControl.show(cards, view.HTML_BROWSER_TAG);
 			} else if (command.equals(view.QUERY_BROWSER_TAG))
 				layoutControl.show(cards, view.QUERY_BROWSER_TAG);
 		}

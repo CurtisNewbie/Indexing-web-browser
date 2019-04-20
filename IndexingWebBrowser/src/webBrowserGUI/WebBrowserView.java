@@ -69,7 +69,7 @@ public class WebBrowserView {
 	JPanel queryBrowserCard;
 
 	/** Tags that represents htmlBrowserCard */
-	public final String WEB_BROWSER_TAG = "WebBrowserTag";
+	public final String HTML_BROWSER_TAG = "htmlBrowserTag";
 
 	/** Tags that represents queryBrowserCard */
 	public final String QUERY_BROWSER_TAG = "QueryBrowserTag";
@@ -121,7 +121,7 @@ public class WebBrowserView {
 
 		htmlBrowserCard = new JPanel(new BorderLayout());
 		queryBrowserCard = new JPanel(new BorderLayout());
-		cards.add(htmlBrowserCard, WEB_BROWSER_TAG);
+		cards.add(htmlBrowserCard, HTML_BROWSER_TAG);
 		cards.add(queryBrowserCard, QUERY_BROWSER_TAG);
 		browserFrame.getContentPane().add(cards);
 
@@ -130,7 +130,7 @@ public class WebBrowserView {
 		setUpQueryBrowserCard();
 
 		// By default show the htmlBrowserCard first
-		cardLayoutControl.show(cards, WEB_BROWSER_TAG);
+		cardLayoutControl.show(cards, HTML_BROWSER_TAG);
 		browserFrame.pack();
 		browserFrame.setVisible(true);
 	}
@@ -145,7 +145,7 @@ public class WebBrowserView {
 		// Create menu item and set up their font
 		htmlBrowser = new JMenuItem("HTML Browser");
 		htmlBrowser.setFont(menuFont);
-		htmlBrowser.setActionCommand(WEB_BROWSER_TAG);
+		htmlBrowser.setActionCommand(HTML_BROWSER_TAG);
 		queryBrowser = new JMenuItem("Query Browser");
 		queryBrowser.setFont(menuFont);
 		queryBrowser.setActionCommand(QUERY_BROWSER_TAG);
