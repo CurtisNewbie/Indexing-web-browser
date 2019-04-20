@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -162,6 +163,7 @@ public class WebBrowserView {
 
 	private void setUpHtmlBrowserCard() {
 		webBrowserTabbedPane = new JTabbedPane();
+		webBrowserTabbedPane.setFont(menuFont);
 		htmlBrowserCard.add(webBrowserTabbedPane, BorderLayout.CENTER);
 
 		// The box for organising the buttons in htmlBrowserCard (on the top of the

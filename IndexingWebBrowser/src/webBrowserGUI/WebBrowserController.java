@@ -65,7 +65,7 @@ public class WebBrowserController {
 			String title = "Tab " + (index + 1);
 			htmlContent = view.addTabToHtmlBrowserCard(title);
 
-			String url = urlInput.getText();
+			String url = urlInput.getText().trim();
 			File localFileEntry;
 			Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
 			Matcher entryMatcher = entryPattern.matcher(url);
