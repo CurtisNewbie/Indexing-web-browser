@@ -316,6 +316,10 @@ public class WebBrowserView {
 		htmlBrowser.addActionListener(actionListener);
 		queryBrowser.addActionListener(actionListener);
 	}
+	
+	public void addFrameWindowListener(WindowListener windowListener) {
+		browserFrame.addWindowListener(windowListener);
+	}
 
 	public JPanel getKeywordResultPanel() {
 		return keywordResultPanel;

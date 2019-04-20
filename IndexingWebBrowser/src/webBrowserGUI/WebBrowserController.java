@@ -4,7 +4,13 @@ import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +22,7 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,13 +42,17 @@ public class WebBrowserController {
 	private WebIndex webIndex_Keyword;
 	private WebIndex webIndex_ContentWord;
 	private Set<String> browsingHistory;
+	private final String LOG_FILE_PATH = "log.txt";
+	private final String INDEX_LOG_START = "[INDEX_LOG_START]";
+	private final String INDEX_LOG_END = "[INDEX_LOG_END]";
 
 	public WebBrowserController(WebBrowserView view) {
 		this.view = view;
 		webIndex_Keyword = new WebIndex(TypeOfWords.KEYWORD);
 		webIndex_ContentWord = new WebIndex(TypeOfWords.CONTENT_WORD);
-		browsingHistory = new TreeSet<String>();
+		browsingHistory = new TreeSet<>();
 
+		view.addFrameWindowListener(new WindowEventHandler());
 		view.addConfirmActionListener(new ConfirmActionHandler());
 		view.addSearchActionListener(new SearchActionHandler());
 		view.addMenuItemActionListener(new MenuItemActionHandler());
@@ -74,7 +85,6 @@ public class WebBrowserController {
 				localFileEntry = new File(entryMatcher.group(2)); // extract the true file path.
 				try {
 					htmlContent.setPage(localFileEntry.toURI().toURL());
-
 					if (!browsingHistory.contains(url)) {
 						WebDoc wd = new WebDoc(url);
 						browsingHistory.add(url);
@@ -96,7 +106,6 @@ public class WebBrowserController {
 			} else {// it's a url
 				try {
 					htmlContent.setPage(new URL(url));
-
 					if (!browsingHistory.contains(url)) {
 						WebDoc wd = new WebDoc(url);
 						browsingHistory.add(url);
@@ -282,6 +291,72 @@ public class WebBrowserController {
 				layoutControl.show(cards, view.HTML_BROWSER_TAG);
 			} else if (command.equals(view.QUERY_BROWSER_TAG))
 				layoutControl.show(cards, view.QUERY_BROWSER_TAG);
+		}
+	}
+
+	private class WindowEventHandler extends WindowAdapter {
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			super.windowOpened(e);
+
+			int answer = JOptionPane.showConfirmDialog(null, "Do you want to read the previous log and index?",
+					"Reading History", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (answer == 0) {// yes
+				try {
+					BufferedReader fileReader = new BufferedReader(new FileReader(new File(LOG_FILE_PATH)));
+					boolean started = false;
+					boolean ended = false;
+
+					// reading the saved index:
+					String thisLine = "";
+					while ((thisLine = fileReader.readLine()) != null && !ended) {
+						if (thisLine.startsWith(INDEX_LOG_START)) {
+							started = true;
+						} else if (thisLine.startsWith(INDEX_LOG_END)) {
+							ended = true;
+						} else if (started) {
+							browsingHistory.add(thisLine);
+						}
+					}
+					fileReader.close();
+
+					StringBuilder history = new StringBuilder();
+					for (String s : browsingHistory) {
+						WebDoc thisDoc = new WebDoc(s);
+						webIndex_ContentWord.add(thisDoc);
+						webIndex_Keyword.add(thisDoc);
+						history.append(s + "\n");
+					}
+					view.getHistoryTextArea().setText(history.toString());
+					view.getHistoryTextArea().revalidate();
+				} catch (IOException e2) {
+					JOptionPane.showMessageDialog(null, "Failed to read the previous log and index.", "Failed",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			super.windowClosing(e);
+
+			try {
+				BufferedWriter fileWriter = new BufferedWriter(new FileWriter(new File(LOG_FILE_PATH)));
+
+				// saving index:
+				fileWriter.write(INDEX_LOG_START);
+				fileWriter.newLine();
+				for (String s : browsingHistory) {
+					fileWriter.write(s);
+					fileWriter.newLine();
+				}
+				fileWriter.write(INDEX_LOG_END);
+				fileWriter.close();
+
+			} catch (IOException e1) {
+				// failed to save the log.
+			}
 		}
 	}
 }
