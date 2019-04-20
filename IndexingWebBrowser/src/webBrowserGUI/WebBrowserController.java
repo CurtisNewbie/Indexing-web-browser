@@ -222,7 +222,6 @@ public class WebBrowserController {
 							
 							if (urlEntry.matches("([Ff][Ii][Ll][Ee]:)(.++)")) { // local html file
 								String fileEntry = urlEntry.substring(5, urlEntry.length());
-								System.out.println(fileEntry);
 								try {
 									htmlContent.setPage(new File(fileEntry).toURI().toURL());
 									layoutControl.show(cards, view.HTML_BROWSER_TAG);
@@ -248,6 +247,9 @@ public class WebBrowserController {
 							}
 						}
 					});
+					
+					resultPanel.repaint();
+					resultPanel.revalidate();
 				}
 			}
 		}
