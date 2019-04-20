@@ -88,7 +88,6 @@ public class WebBrowserController {
 				}
 			} else {// it's a url
 				try {
-					url = url.toLowerCase();
 					htmlContent.setPage(new URL(url));
 					if (!browsingHistory.contains(url)) {
 						WebDoc wd = new WebDoc(url);
