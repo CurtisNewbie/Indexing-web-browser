@@ -1,0 +1,8 @@
+[INDEX_LOG_START]
+http://staffwww.dcs.shef.ac.uk/people/M.Villa-Uriol/COM6102/test/empty.htm
+http://staffwww.dcs.shef.ac.uk/people/M.Villa-Uriol/COM6102/test/test3.htm
+http://staffwww.dcs.shef.ac.uk/people/M.Villa-Uriol/COM6102/test/test5.htm
+http://staffwww.dcs.shef.ac.uk/people/M.Villa-Uriol/COM6102/test/test8.htm
+https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#split-java.lang.String-
+https://stackoverflow.com/questions/28692596/bufferedwriter-is-not-writing-a-new-line-in-a-file-for-a-string-having-n-adde
+[INDEX_LOG_END]
