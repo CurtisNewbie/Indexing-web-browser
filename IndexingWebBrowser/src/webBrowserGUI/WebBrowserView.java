@@ -95,12 +95,6 @@ public class WebBrowserView {
 	/** TextArea in queryBrowserCard for displaying the html browsing history */
 	JTextArea historyTextArea;
 
-//	/** TextArea in queryBrowserCard for showing keyword result of query */
-//	JTextArea keywordQueryResultTextArea;
-//
-//	/** TextArea in queryBrowserCard for showing content word result of query */
-//	JTextArea contentWordQueryResultTextArea;
-
 	/** Button in queryBrowserCard that initiates the infix query searching */
 	JButton infixSearchButton;
 
@@ -213,12 +207,6 @@ public class WebBrowserView {
 		historyTextArea = new JTextArea(10, 30);
 		historyTextArea.setFont(contentFont);
 		historyTextArea.setEditable(false);
-		keywordQueryResultTextArea = new JTextArea();
-		keywordQueryResultTextArea.setFont(contentFont);
-		keywordQueryResultTextArea.setEditable(false);
-		contentWordQueryResultTextArea = new JTextArea();
-		contentWordQueryResultTextArea.setFont(contentFont);
-		contentWordQueryResultTextArea.setEditable(false);
 
 		// Set up the contorlPanel in this queryBrowserCard
 		setUpControlPanel();
@@ -238,7 +226,6 @@ public class WebBrowserView {
 		JLabel indexLabel = new JLabel("Content Word Result:");
 		indexLabel.setFont(menuFont);
 		indexTextPanel.add(indexLabel);
-//		indexTextPanel.add(new JScrollPane(contentWordQueryResultTextArea));
 		contentWordResultPanel = new JPanel();
 		contentWordResultPanel.setLayout(new BoxLayout(contentWordResultPanel, BoxLayout.Y_AXIS));
 		indexTextPanel.add(new JScrollPane(contentWordResultPanel));
@@ -248,7 +235,6 @@ public class WebBrowserView {
 		JLabel queryResultLabel = new JLabel("Keyword Result:");
 		queryResultLabel.setFont(menuFont);
 		queryResultPanel.add(queryResultLabel);
-//		queryResultPanel.add(new JScrollPane(keywordQueryResultTextArea));
 		keywordResultPanel = new JPanel();
 		keywordResultPanel.setLayout(new BoxLayout(keywordResultPanel, BoxLayout.Y_AXIS));
 		queryResultPanel.add(new JScrollPane(keywordResultPanel));
@@ -339,14 +325,6 @@ public class WebBrowserView {
 
 	public JTextField getUrlTextField() {
 		return urlTextInput;
-	}
-
-	public JTextArea getKeywordQueryResultTextArea() {
-		return keywordQueryResultTextArea;
-	}
-
-	public JTextArea getContentWordQueryResultTextArea() {
-		return contentWordQueryResultTextArea;
 	}
 
 	public JTextField getInfixQuery() {
