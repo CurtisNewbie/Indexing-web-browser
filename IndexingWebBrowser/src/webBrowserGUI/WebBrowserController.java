@@ -1,6 +1,7 @@
 package webBrowserGUI;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,12 +23,9 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import webBrowserModel.Query;
@@ -36,21 +34,72 @@ import webBrowserModel.WebDoc;
 import webBrowserModel.WebIndex;
 import webBrowserModel.WebIndex.TypeOfWords;
 
+/**
+ * This is the controller class in the MVC architecture. It deals with the
+ * interaction between the view (WebBrowserView class) and the model
+ * (webBrowserModel package). In other words, it deals with the listeners for
+ * the view.
+ * 
+ * @author 180139796
+ *
+ */
 public class WebBrowserController {
 
+	/**
+	 * The WebBrowserView object as the view in (MVC architecture)
+	 */
 	private WebBrowserView view;
+
+	/**
+	 * The index for keyword, that is used for query searching.
+	 */
 	private WebIndex webIndex_Keyword;
+
+	/**
+	 * The index for content word, that is used for query searching.
+	 */
 	private WebIndex webIndex_ContentWord;
+
+	/**
+	 * The collection of WebDoc, which are the URLs that are successfully accessed.
+	 */
+	private Set<WebDoc> webdocCollection;
+
+	/**
+	 * The collection of URLs as String, which are successfully accessed.
+	 */
 	private Set<String> browsingHistory;
+
+	/**
+	 * The path of the file that is used to save the index and browsing history.
+	 */
 	private final String LOG_FILE_PATH = "log.txt";
+
+	/**
+	 * It represents when the log starts. It is used for reading browsing history.
+	 */
 	private final String INDEX_LOG_START = "[INDEX_LOG_START]";
+
+	/**
+	 * It represents when the log ends. It is used for reading browsing history.
+	 */
 	private final String INDEX_LOG_END = "[INDEX_LOG_END]";
 
+	/**
+	 * It initiates the indexes for keywords and content words, the TreeSet for
+	 * browsing history and the collection of WebDoc. The addFrameWindowListener
+	 * method, addConfirmActionListener method, addSearchActionListener method and
+	 * the addMenuItemActionListener method of the WebBrowserView object are called
+	 * to assign the listeners.
+	 * 
+	 * @param view The WebBrowserView object
+	 */
 	public WebBrowserController(WebBrowserView view) {
 		this.view = view;
 		webIndex_Keyword = new WebIndex(TypeOfWords.KEYWORD);
 		webIndex_ContentWord = new WebIndex(TypeOfWords.CONTENT_WORD);
 		browsingHistory = new TreeSet<>();
+		webdocCollection = new TreeSet<>();
 
 		view.addFrameWindowListener(new WindowEventHandler());
 		view.addConfirmActionListener(new ConfirmActionHandler());
@@ -58,44 +107,50 @@ public class WebBrowserController {
 		view.addMenuItemActionListener(new MenuItemActionHandler());
 	}
 
+	/**
+	 * This inner class is used to handle the 'Confirm Action'. The reason why it's
+	 * named the Confirm Action is that, when the user has entered the URL entry and
+	 * press the confirm button or the 'Enter', it accepts the URL entries and
+	 * displays the content in a new tab.
+	 * 
+	 *
+	 */
 	private class ConfirmActionHandler implements ActionListener {
 		JTextField urlInput;
 		JEditorPane htmlContent;
-		JTextArea historyTextArea;
+		JPanel historyRecordPanel;
 		JTabbedPane tabbedPane;
 
 		public ConfirmActionHandler() {
 			this.urlInput = view.getUrlTextField();
-			this.historyTextArea = view.getHistoryTextArea();
+			this.historyRecordPanel = view.getHistoryRecordPanel();
 			this.tabbedPane = view.getWebBrowserTabbedPane();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// index of the new tab
 			int index = tabbedPane.getTabCount();
 			String title = "Tab " + (index + 1);
 			htmlContent = view.addTabToHtmlBrowserCard(title);
 
-			String url = urlInput.getText().trim();
+			String urlEntry = urlInput.getText().trim();
 			File localFileEntry;
 			Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
-			Matcher entryMatcher = entryPattern.matcher(url);
+			Matcher entryMatcher = entryPattern.matcher(urlEntry);
 
-			if (entryMatcher.find()) { // it is a local file
+			if (entryMatcher.find()) { // if it is a local file
 				localFileEntry = new File(entryMatcher.group(2)); // extract the true file path.
 				try {
 					htmlContent.setPage(localFileEntry.toURI().toURL());
-					if (!browsingHistory.contains(url)) {
-						WebDoc wd = new WebDoc(url);
-						browsingHistory.add(url);
+					if (!browsingHistory.contains(urlEntry)) {
+						WebDoc wd = new WebDoc(urlEntry);
+						browsingHistory.add(urlEntry);
 						webIndex_Keyword.add(wd);
 						webIndex_ContentWord.add(wd);
+						webdocCollection.add(wd);
 					}
-					StringBuilder history = new StringBuilder();
-					for (String u : browsingHistory) {
-						history.append(u + "\n");
-					}
-					historyTextArea.setText(history.toString());
+					addClickableLinksToPanel(historyRecordPanel, webdocCollection);
 				} catch (MalformedURLException e1) {
 					JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
 							JOptionPane.WARNING_MESSAGE);
@@ -103,20 +158,17 @@ public class WebBrowserController {
 					JOptionPane.showMessageDialog(null, "File path not accessible", "Error",
 							JOptionPane.WARNING_MESSAGE);
 				}
-			} else {// it's a url
+			} else {// if it's a URL entry
 				try {
-					htmlContent.setPage(new URL(url));
-					if (!browsingHistory.contains(url)) {
-						WebDoc wd = new WebDoc(url);
-						browsingHistory.add(url);
+					htmlContent.setPage(new URL(urlEntry));
+					if (!browsingHistory.contains(urlEntry)) {
+						WebDoc wd = new WebDoc(urlEntry);
+						browsingHistory.add(urlEntry);
 						webIndex_Keyword.add(wd);
 						webIndex_ContentWord.add(wd);
+						webdocCollection.add(wd);
 					}
-					StringBuilder history = new StringBuilder();
-					for (String u : browsingHistory) {
-						history.append(u + "\n");
-					}
-					historyTextArea.setText(history.toString());
+					addClickableLinksToPanel(historyRecordPanel, webdocCollection);
 				} catch (MalformedURLException e1) {
 					JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error", JOptionPane.WARNING_MESSAGE);
 				} catch (IOException e1) {
@@ -128,60 +180,66 @@ public class WebBrowserController {
 		}
 	}
 
+	/**
+	 * This inner class is used to handle the 'Search Action'. The reason why it's
+	 * named the Search Action Listener is that the action listener will initiate
+	 * the infix query and prefix query searching. The result of query will be added
+	 * to the relevant panels in forms of buttons, which will be clickable. When the
+	 * user clicks on the URL links, this software navigates to the htmlBrowserCard
+	 * and shows the new tab created for this link.
+	 * 
+	 */
 	private class SearchActionHandler implements ActionListener {
 		JTextField infixQuery;
 		JTextField prefixQuery;
-		CardLayout layoutControl;
-		JPanel cards;
+		JPanel keywordPanel;
+		JPanel contentWordPanel;
 
 		public SearchActionHandler() {
 			infixQuery = view.getInfixQuery();
 			prefixQuery = view.getPrefixQuery();
-			layoutControl = view.getCardLayoutControl();
-			cards = view.getCards();
+			keywordPanel = view.getKeywordResult();
+			contentWordPanel = view.getContentWordResult();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String query;
 			boolean isValid;
-			String queryType;
 			Set<WebDoc> keywordResult;
 			Set<WebDoc> contentWordResult;
-			JPanel keywordPanel = view.getKeywordResultPanel();
-			JPanel contentWordPanel = view.getContentWordResultPanel();
+
 			if (e.getActionCommand().equals("infix")) {
 				query = infixQuery.getText().trim().toLowerCase();
-				isValid = validateInfixQuery(query);
-				queryType = "infix query";
+				isValid = validateInfixQuery(query); // validate the infix query before handling.
 
 				if (isValid) {
 					Query infixQuery = QueryBuilder.parseInfixForm(query);
 					if (infixQuery != null) {
 						keywordResult = infixQuery.matches(webIndex_Keyword);
 						contentWordResult = infixQuery.matches(webIndex_ContentWord);
-						addResults(keywordPanel, keywordResult);
-						addResults(contentWordPanel, contentWordResult);
+						addClickableLinksToPanel(keywordPanel, keywordResult);
+						addClickableLinksToPanel(contentWordPanel, contentWordResult);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Unfortunately" + queryType + " you entered is invalid",
+					JOptionPane.showMessageDialog(null, "Unfortunately" + "infix query" + " you entered is invalid",
 							"Content Word Result", JOptionPane.WARNING_MESSAGE);
 				}
 			} else { // (e.getActionCommand().equals("prefix"))
 				query = prefixQuery.getText().trim().toLowerCase();
-				isValid = validatePrefixQuery(query);
-				queryType = "prefix query";
+				isValid = validatePrefixQuery(query); // validate the prefix query before handling.
 
 				if (isValid) {
 					Query prefixQuery = QueryBuilder.parse(query);
 					if (prefixQuery != null) {
 						keywordResult = prefixQuery.matches(webIndex_Keyword);
 						contentWordResult = prefixQuery.matches(webIndex_ContentWord);
-						addResults(keywordPanel, keywordResult);
-						addResults(contentWordPanel, contentWordResult);
+						addClickableLinksToPanel(keywordPanel, keywordResult);
+						addClickableLinksToPanel(contentWordPanel, contentWordResult);
 					} else {
-						JOptionPane.showMessageDialog(null, "Unfortunately" + queryType + " you entered is invalid",
-								"Content Word Result", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,
+								"Unfortunately" + "prefix query" + " you entered is invalid", "Content Word Result",
+								JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			}
@@ -197,7 +255,7 @@ public class WebBrowserController {
 		 */
 		private boolean validatePrefixQuery(String q) {
 			if (q.matches(
-					"(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)|(.*?\\({1,}\\){1,}.*?)")) {
+					"(.*?and\\s*,*\\s*or.*?)|(.*?and\\s*,*\\s*and.*?)|(.*?or\\s*,*\\s*and.*?)|(.*?\\({1,}\\){1,}.*?)|(\\s*)")) {
 				return false;
 			} else {
 				return true;
@@ -214,67 +272,21 @@ public class WebBrowserController {
 		 */
 		private boolean validateInfixQuery(String q) {
 			if (q.matches(
-					"(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?\\({1,}\\){1,}.*?)")) {
+					"(.*?and\\s*and.*?)|(.*?and\\s*or.*?)|(.*?or\\s*and.*?)|(.*?or\\s*or.*?)|(.*?not\\s*and.*?)|(.*?not\\s*not.*?)|(.*?not\\s*or.*?)|(.*?\\({1,}\\){1,}.*?)|(\\s*)")) {
 				return false;
 			} else {
 				return true;
 			}
 		}
 
-		private void addResults(JPanel resultPanel, Set<WebDoc> resultOfWebDocs) {
-			JButton eachResult;
-			resultPanel.removeAll();
-			if (resultOfWebDocs != null) {
-				for (WebDoc doc : resultOfWebDocs) {
-					String urlEntry = doc.getEntry();
-					eachResult = new JButton(urlEntry);
-					eachResult.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-					eachResult.setFont(new Font("Arial", Font.BOLD, 17));
-					resultPanel.add(eachResult);
-					eachResult.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							String title = "Tab " + (view.getWebBrowserTabbedPane().getTabCount() + 1);
-							JEditorPane htmlContent = view.addTabToHtmlBrowserCard(title);
-							JTabbedPane tabbedPane = view.getWebBrowserTabbedPane();
-							tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
-
-							if (urlEntry.matches("([Ff][Ii][Ll][Ee]:)(.++)")) { // local html file
-								String fileEntry = urlEntry.substring(5, urlEntry.length());
-								try {
-									htmlContent.setPage(new File(fileEntry).toURI().toURL());
-									layoutControl.show(cards, view.HTML_BROWSER_TAG);
-								} catch (MalformedURLException e1) {
-									JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
-											JOptionPane.WARNING_MESSAGE);
-								} catch (IOException e1) {
-									JOptionPane.showMessageDialog(null, "File path not accessible", "Error",
-											JOptionPane.WARNING_MESSAGE);
-								}
-							} else { // url link
-								try {
-									htmlContent.setPage(urlEntry);
-									layoutControl.show(cards, view.HTML_BROWSER_TAG);
-								} catch (MalformedURLException e1) {
-									JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error",
-											JOptionPane.WARNING_MESSAGE);
-								} catch (IOException e1) {
-									JOptionPane.showMessageDialog(null,
-											"URL not accessible, please check internet connect", "Error",
-											JOptionPane.WARNING_MESSAGE);
-								}
-							}
-						}
-					});
-
-					resultPanel.repaint();
-					resultPanel.revalidate();
-				}
-			}
-		}
 	}
 
+	/**
+	 * This inner class is used to handle the action for menu items in the menu bar.
+	 * In order words, when the menu item is pressed by the user, it navigates to
+	 * the relevant 'card'/interface.
+	 * 
+	 */
 	private class MenuItemActionHandler implements ActionListener {
 		CardLayout layoutControl;
 		JPanel cards;
@@ -291,14 +303,27 @@ public class WebBrowserController {
 				layoutControl.show(cards, view.HTML_BROWSER_TAG);
 			} else if (command.equals(view.QUERY_BROWSER_TAG))
 				layoutControl.show(cards, view.QUERY_BROWSER_TAG);
+
 		}
 	}
 
+	/**
+	 * This inner class is used to handle the window events. When the user closes
+	 * the GUI, it saves the browsing history and index in the a local file. When
+	 * the software is launched, a dialog is shown asking whether the user wants to
+	 * read the previous browsing history and index. If so, the software loads the
+	 * index and history.
+	 *
+	 */
 	private class WindowEventHandler extends WindowAdapter {
 
 		@Override
 		public void windowOpened(WindowEvent e) {
 			super.windowOpened(e);
+
+			JOptionPane.showMessageDialog(null,
+					"Wellcome using this software, the links in the query result (keyword and content word) and the history are clickable. When the application closes, the browsing history and the index will be saved.",
+					"Instruction", JOptionPane.INFORMATION_MESSAGE);
 
 			int answer = JOptionPane.showConfirmDialog(null, "Do you want to read the previous log and index?",
 					"Reading History", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -321,15 +346,14 @@ public class WebBrowserController {
 					}
 					fileReader.close();
 
-					StringBuilder history = new StringBuilder();
 					for (String s : browsingHistory) {
 						WebDoc thisDoc = new WebDoc(s);
 						webIndex_ContentWord.add(thisDoc);
 						webIndex_Keyword.add(thisDoc);
-						history.append(s + "\n");
+						webdocCollection.add(thisDoc);
 					}
-					view.getHistoryTextArea().setText(history.toString());
-					view.getHistoryTextArea().revalidate();
+					// add the clickable links (previous browsing history) to the historyRecordPane.
+					addClickableLinksToPanel(view.getHistoryRecordPanel(), webdocCollection);
 				} catch (IOException e2) {
 					JOptionPane.showMessageDialog(null, "Failed to read the previous log and index.", "Failed",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -358,5 +382,74 @@ public class WebBrowserController {
 				// failed to save the log.
 			}
 		}
+	}
+
+	/**
+	 * This method creates the buttons for the URL links that the user has
+	 * previously browsed, it then adds the buttons to the panel that is passed to
+	 * this method. It is used for the history and query results. Each button/URL
+	 * link is added an action listener. When the user clicks on the link, the
+	 * action listener navigates to the htmlBrowserCard and creates a new tab for
+	 * this link.
+	 * 
+	 * @param panel        The panel that will contain the list of clickable URLs
+	 *                     links.
+	 * @param setOfWebDocs The set of WebDoc objects.
+	 */
+	private void addClickableLinksToPanel(JPanel panel, Set<WebDoc> setOfWebDocs) {
+		CardLayout layoutControl = view.getCardLayoutControl();
+		JPanel cards = view.getCards();
+		panel.removeAll();
+
+		if (setOfWebDocs != null) {
+			for (WebDoc doc : setOfWebDocs) {
+				JButton eachResult = new JButton();
+				String urlEntry = doc.getEntry();
+				eachResult.setText(urlEntry);
+				eachResult.setBackground(Color.WHITE);
+				eachResult.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+				eachResult.setFont(new Font("Arial", Font.BOLD, 17));
+				panel.add(eachResult);
+
+				eachResult.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String title = "Tab " + (view.getWebBrowserTabbedPane().getTabCount() + 1);
+						JEditorPane htmlContent = view.addTabToHtmlBrowserCard(title);
+						JTabbedPane tabbedPane = view.getWebBrowserTabbedPane();
+						tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+
+						if (urlEntry.matches("([Ff][Ii][Ll][Ee]:)(.++)")) { // it's a local HTML file
+							String fileEntry = urlEntry.substring(5, urlEntry.length()); // Remove "file:"
+							try {
+								htmlContent.setPage(new File(fileEntry).toURI().toURL());
+								layoutControl.show(cards, view.HTML_BROWSER_TAG); // show the htmlBrowser interface
+							} catch (MalformedURLException e1) {
+								JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
+										JOptionPane.WARNING_MESSAGE);
+							} catch (IOException e1) {
+								JOptionPane.showMessageDialog(null, "File path not accessible", "Error",
+										JOptionPane.WARNING_MESSAGE);
+							}
+						} else { // it's a web URL link
+							try {
+								htmlContent.setPage(urlEntry);
+								layoutControl.show(cards, view.HTML_BROWSER_TAG); // show the htmlBrowser interface
+							} catch (MalformedURLException e1) {
+								JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error",
+										JOptionPane.WARNING_MESSAGE);
+							} catch (IOException e1) {
+								JOptionPane.showMessageDialog(null, "URL not accessible, please check internet connect",
+										"Error", JOptionPane.WARNING_MESSAGE);
+							}
+						}
+					}
+				});
+			}
+		}
+		// show the new components added to the panel
+		panel.revalidate();
+		panel.repaint();
 	}
 }
