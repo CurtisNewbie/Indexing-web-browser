@@ -165,7 +165,7 @@ public class WebBrowserView {
 	 * card/interface.
 	 */
 	public WebBrowserView() {
-		browserFrame = new JFrame("WebBrowser :D");
+		browserFrame = new JFrame("A Simple WebBrowser :D");
 		browserFrame.setLayout(new BorderLayout());
 		browserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
