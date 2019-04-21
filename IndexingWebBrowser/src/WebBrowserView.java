@@ -363,6 +363,7 @@ public class WebBrowserView {
 
 		// contentWordResult is the JPanel used to directly contain the results
 		contentWordResult = new JPanel();
+		contentWordResult.setLayout(new BoxLayout(contentWordResult, BoxLayout.Y_AXIS));
 		contentWordPane.add(contentResultLabel);
 		contentWordPane.add(new JScrollPane(contentWordResult));
 
