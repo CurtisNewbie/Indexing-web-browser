@@ -1,5 +1,4 @@
 
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -29,7 +28,12 @@ import javax.swing.JTextField;
 
 /**
  * This class is used for creating the graphical user interface. It also
- * represents the view in the MVC architecture. 
+ * represents the 'view' in the MVC architecture. From the GUI perspective, it
+ * consists of two interfaces, one for the HTML browsing, and one for query
+ * handling. As CardLayout is used for the navigation between them,
+ * htmlBrowserCard and the queryBrowserCard is mentioned through out this class.
+ * Listeners are added using separate methods, which are handled by the
+ * 'controller' (of MVC) - the WebBrowserController class.
  * 
  * @author 180139796
  *
@@ -623,10 +627,5 @@ public class WebBrowserView {
 	 */
 	public JPanel getCards() {
 		return cards;
-	}
-
-	public static void main(String[] args) {
-		WebBrowserView view = new WebBrowserView();
-		WebBrowserController controller = new WebBrowserController(view);
 	}
 }

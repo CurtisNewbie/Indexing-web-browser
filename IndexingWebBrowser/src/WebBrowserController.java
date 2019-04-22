@@ -1,5 +1,4 @@
 
-
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -37,8 +36,9 @@ import webBrowserModel.WebIndex.TypeOfWords;
 /**
  * This is the controller class in the MVC architecture. It deals with the
  * interaction between the view (WebBrowserView class) and the model
- * (webBrowserModel package). In other words, it deals with the listeners for
- * the view.
+ * (webBrowserModel package). In other words, it registers the listeners for the
+ * view; uses the model to calculate and handle the requests; and updates the
+ * view for showing the results.
  * 
  * @author 180139796
  *
@@ -183,10 +183,11 @@ public class WebBrowserController {
 	/**
 	 * This inner class is used to handle the 'Search Action'. The reason why it's
 	 * named the Search Action Listener is that the action listener will initiate
-	 * the infix query and prefix query searching. The result of query will be added
-	 * to the relevant panels in forms of buttons, which will be clickable. When the
-	 * user clicks on the URL links, this software navigates to the htmlBrowserCard
-	 * and shows the new tab created for this link.
+	 * the infix query and prefix query searching.
+	 * <p>
+	 * The result of query will be added to the relevant panels in forms of buttons,
+	 * which will be clickable. When the user clicks on the URL links, this software
+	 * navigates to the htmlBrowserCard and shows the new tab created for this link.
 	 * 
 	 */
 	private class SearchActionHandler implements ActionListener {
@@ -312,7 +313,7 @@ public class WebBrowserController {
 	 * the GUI, it saves the browsing history and index in the a local file. When
 	 * the software is launched, a dialog is shown asking whether the user wants to
 	 * read the previous browsing history and index. If so, the software loads the
-	 * index and history.
+	 * previously saved index and history.
 	 *
 	 */
 	private class WindowEventHandler extends WindowAdapter {
@@ -421,10 +422,10 @@ public class WebBrowserController {
 						tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
 
 						if (urlEntry.matches("([Ff][Ii][Ll][Ee]:)(.++)")) { // it's a local HTML file
-							String fileEntry = urlEntry.substring(5, urlEntry.length()); // Remove "file:"
+							String fileEntry = urlEntry.substring(5, urlEntry.length());// get the correct path
 							try {
-								htmlContent.setPage(new File(fileEntry).toURI().toURL());
-								layoutControl.show(cards, view.HTML_BROWSER_TAG); // show the htmlBrowser interface
+								htmlContent.setPage(new File(fileEntry).toURI().toURL()); // convert to URL object
+								layoutControl.show(cards, view.HTML_BROWSER_TAG); // show the htmlBrowser interface/card
 							} catch (MalformedURLException e1) {
 								JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
 										JOptionPane.WARNING_MESSAGE);
@@ -435,7 +436,7 @@ public class WebBrowserController {
 						} else { // it's a web URL link
 							try {
 								htmlContent.setPage(urlEntry);
-								layoutControl.show(cards, view.HTML_BROWSER_TAG); // show the htmlBrowser interface
+								layoutControl.show(cards, view.HTML_BROWSER_TAG); // show the htmlBrowser interface/card
 							} catch (MalformedURLException e1) {
 								JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error",
 										JOptionPane.WARNING_MESSAGE);
