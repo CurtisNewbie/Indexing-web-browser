@@ -226,7 +226,7 @@ public class WebBrowserController {
 					JOptionPane.showMessageDialog(null, "Unfortunately" + "infix query" + " you entered is invalid",
 							"Content Word Result", JOptionPane.WARNING_MESSAGE);
 				}
-			} else { // (e.getActionCommand().equals("prefix"))
+			} else if (e.getActionCommand().equals("prefix")) {
 				query = prefixQuery.getText().trim().toLowerCase();
 				isValid = validatePrefixQuery(query); // validate the prefix query before handling.
 
@@ -237,11 +237,10 @@ public class WebBrowserController {
 						contentWordResult = prefixQuery.matches(webIndex_ContentWord);
 						addClickableLinksToPanel(keywordPanel, keywordResult);
 						addClickableLinksToPanel(contentWordPanel, contentWordResult);
-					} else {
-						JOptionPane.showMessageDialog(null,
-								"Unfortunately" + "prefix query" + " you entered is invalid", "Content Word Result",
-								JOptionPane.WARNING_MESSAGE);
 					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Unfortunately" + "prefix query" + " you entered is invalid",
+							"Content Word Result", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -323,10 +322,14 @@ public class WebBrowserController {
 			super.windowOpened(e);
 
 			JOptionPane.showMessageDialog(null,
-					"Wellcome using this software, the links in the query result (keyword and content word) and the history are clickable. When the application closes, the browsing history and the index will be saved.",
+					"Wellcome using this software, the links in the query result (keyword and content word) and the history are clickable.\n"
+							+ "When the application closes, the browsing history and the index will be saved."
+							+ "\nWhen reading the previous browsing history, it takes time to load the index depending on the length of the history."
+							+ "\nPlease be patient when the program is not responding.",
 					"Instruction", JOptionPane.INFORMATION_MESSAGE);
 
-			int answer = JOptionPane.showConfirmDialog(null, "Do you want to read the previous log and index?",
+			int answer = JOptionPane.showConfirmDialog(null,
+					"Do you want to read the previous log and index?\n[Note:If yes, please wait until the program notifies successful reading.]",
 					"Reading History", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (answer == 0) {// yes
 				try {
@@ -355,6 +358,8 @@ public class WebBrowserController {
 					}
 					// add the clickable links (previous browsing history) to the historyRecordPane.
 					addClickableLinksToPanel(view.getHistoryRecordPanel(), webdocCollection);
+					JOptionPane.showMessageDialog(null, "Successfully read the previous history and index", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
 				} catch (IOException e2) {
 					JOptionPane.showMessageDialog(null, "Failed to read the previous log and index.", "Failed",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -378,7 +383,6 @@ public class WebBrowserController {
 				}
 				fileWriter.write(INDEX_LOG_END);
 				fileWriter.close();
-
 			} catch (IOException e1) {
 				// failed to save the log.
 			}
