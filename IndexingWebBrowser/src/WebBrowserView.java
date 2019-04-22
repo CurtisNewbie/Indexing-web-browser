@@ -41,45 +41,45 @@ import javax.swing.JTextField;
 public class WebBrowserView {
 
 	/** The browser (top level container) as a whole */
-	JFrame browserFrame;
+	private JFrame browserFrame;
 
 	/** The JMenuBar for navigating between the interfaces/cards */
-	JMenuBar menuBar;
+	private JMenuBar menuBar;
 
 	/** The JMenu as a high-level button in the menu bar */
-	JMenu menu;
+	private JMenu menu;
 
 	/**
 	 * The navigation buttons in the menu bar, it switches to the HTML browser
 	 * interface/card (cardLayout is used)
 	 */
-	JMenuItem htmlBrowser;
+	private JMenuItem htmlBrowser;
 
 	/**
 	 * The navigation buttons in the menu bar, it switches to the query browser
 	 * interface/card (cardLayout is used)
 	 */
-	JMenuItem queryBrowser;
+	private JMenuItem queryBrowser;
 
 	/**
 	 * The JPanel with CardLayout for showing different interfaces (htmlBrowserCard
 	 * and queryBrowserCard)
 	 */
-	JPanel cards;
+	private JPanel cards;
 
 	/**
 	 * CardLayout Manager of the cards (JPanel with cardLayout) for controlling the
 	 * cards/interfaces switching
 	 */
-	CardLayout cardLayoutControl;
+	private CardLayout cardLayoutControl;
 
 	/** The card (controlled by cardLayoutControl) for the HTML browser interface */
-	JPanel htmlBrowserCard;
+	private JPanel htmlBrowserCard;
 
 	/**
 	 * The card (controlled by cardLayoutControl) for the query browser interface
 	 */
-	JPanel queryBrowserCard;
+	private JPanel queryBrowserCard;
 
 	/** Tags that represents htmlBrowserCard */
 	public final String HTML_BROWSER_TAG = "htmlBrowserTag";
@@ -88,80 +88,80 @@ public class WebBrowserView {
 	public final String QUERY_BROWSER_TAG = "QueryBrowserTag";
 
 	/** TextField for URL input entry */
-	JTextField urlTextInput;
+	private JTextField urlTextInput;
 
 	/** Default menu font */
-	Font menuFont = new Font("Arial", Font.BOLD, 19);
+	private Font menuFont = new Font("Arial", Font.BOLD, 19);
 
 	/** Default content font */
-	Font contentFont = new Font("Arial", Font.BOLD, 17);
+	private Font contentFont = new Font("Arial", Font.BOLD, 17);
 
 	/** JTabbedPane as a contentPane of the htmlBrowserCard */
-	JTabbedPane webBrowserTabbedPane;
+	private JTabbedPane webBrowserTabbedPane;
 
 	/** Confirm button in htmlBrowserCard */
-	JButton confirmButton;
+	private JButton confirmButton;
 
 	/** Button in htmlBrowserCard for closing the current selected tab */
-	JButton closeTabButton;
+	private JButton closeTabButton;
 
 	/**
 	 * JPanel in queryBrowserCard, it's the container that comprises the following
 	 * components: historyRecordPanel and the historyTitleLabel in setUpHistoryPane
 	 * method.
 	 */
-	JPanel historyPane;
+	private JPanel historyPane;
 
 	/**
 	 * JPanel in queryBrowserCard for displaying the HTML browsing history, each
 	 * record/link is the button that is clickable.
 	 */
-	JPanel historyRecordPanel;
+	private JPanel historyRecordPanel;
 
 	/**
 	 * JPanel in queryBrowserCard, it's the container that comprises the following
 	 * components: contentWordResult and the contentResultlabel in
 	 * setUpQueryResultPane method.
 	 */
-	JPanel contentWordPane;
+	private JPanel contentWordPane;
 
 	/**
 	 * JPanel in queryBrowserCard, it's the container that comprises the following
 	 * components: keywordResult and the contentResultlabel in setUpQueryResultPane
 	 * method.
 	 */
-	JPanel keywordPane;
+	private JPanel keywordPane;
 
 	/**
 	 * The JPanel in queryBrowserCard for displaying the keyword query result, each
 	 * result/link is the button that is clickable.
 	 */
-	JPanel keywordResult;
+	private JPanel keywordResult;
 
 	/**
 	 * The JPanel in queryBrowserCard for displaying the content word query result,
 	 * each result/link is the button that is clickable.
 	 */
-	JPanel contentWordResult;
+	private JPanel contentWordResult;
 
 	/**
 	 * The JPanel in queryBrowserCard, it's the container that comprises a number of
 	 * components such as infixSearchButton, prefixSearchButton, infixQuery and
 	 * prefixQuery. (See setUpControlPane method)
 	 */
-	JPanel controlPane;
+	private JPanel controlPane;
 
 	/** Button in queryBrowserCard that initiates the infix query searching */
-	JButton infixSearchButton;
+	private JButton infixSearchButton;
 
 	/** Button in queryBrowserCard that initiates the prefix query searching */
-	JButton prefixSearchButton;
+	private JButton prefixSearchButton;
 
 	/** TextField in queryBrowserCard for entering infix query */
-	JTextField infixQuery;
+	private JTextField infixQuery;
 
 	/** TextField in queryBrowserCard for entering prefix query */
-	JTextField prefixQuery;
+	private JTextField prefixQuery;
 
 	/**
 	 * Initiates the GUI of the browser, the major tasks include: setting up the
