@@ -1,8 +1,12 @@
-package webBrowserModel;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import webBrowserModel.QueryBuilder;
+import webBrowserModel.WebDoc;
+import webBrowserModel.WebIndex;
 
 /**
  * This class will be used to read the web documents(entries: files or URLs)
