@@ -146,8 +146,8 @@ public class WebBrowserView {
 
 	/**
 	 * The JPanel in queryBrowserCard, it's the container that comprises a number of
-	 * components such as infixSearchButton, prefixSearchButton, infixQuery and
-	 * prefixQuery. (See setUpControlPane method)
+	 * components such as infixSearchButton, prefixSearchButton, infixQueryEntry and
+	 * prefixQueryEntry. (See setUpControlPane method)
 	 */
 	private JPanel controlPane;
 
@@ -158,10 +158,10 @@ public class WebBrowserView {
 	private JButton prefixSearchButton;
 
 	/** TextField in queryBrowserCard for entering infix query */
-	private JTextField infixQuery;
+	private JTextField infixQueryEntry;
 
 	/** TextField in queryBrowserCard for entering prefix query */
-	private JTextField prefixQuery;
+	private JTextField prefixQueryEntry;
 
 	/**
 	 * Initiates the GUI of the browser, the major tasks include: setting up the
@@ -425,8 +425,8 @@ public class WebBrowserView {
 	 * is set up, it is added to the queryBrowserCard.
 	 * <p>
 	 * The controlPane is the outer container, it consists of the buttons and
-	 * testFields for initiating the query searching. For example, the infixQuery
-	 * and prefixQuery are the JTextField used to gain the query entries.
+	 * testFields for initiating the query searching. For example, the infixQueryEntry
+	 * and prefixQueryEntry are the JTextField used to gain the query entries.
 	 * <p>
 	 * To understand what it means by 'card' or queryBrowserCard, see the
 	 * constructor, setUpHtmlBrowserCard method and the setUpQueryBrowserCard
@@ -442,10 +442,10 @@ public class WebBrowserView {
 		JLabel overallQueryControllerTitle = new JLabel("Query Handling:");
 		JLabel infixControllerTitle = new JLabel("Infix Query:");
 		JLabel prefixControllerTitle = new JLabel("Prefix Query:");
-		infixQuery = new JTextField(15);
-		prefixQuery = new JTextField(15);
-		infixQuery.setActionCommand("infix");
-		prefixQuery.setActionCommand("prefix");
+		infixQueryEntry = new JTextField(15);
+		prefixQueryEntry = new JTextField(15);
+		infixQueryEntry.setActionCommand("infix");
+		prefixQueryEntry.setActionCommand("prefix");
 		infixSearchButton = new JButton("Search");
 		prefixSearchButton = new JButton("Search");
 		infixSearchButton.setActionCommand("infix");
@@ -459,7 +459,7 @@ public class WebBrowserView {
 		horizontalGroups
 				.addGroup(groupLayout.createParallelGroup().addComponent(overallQueryControllerTitle)
 						.addComponent(infixControllerTitle).addComponent(prefixControllerTitle))
-				.addGroup(groupLayout.createParallelGroup().addComponent(infixQuery).addComponent(prefixQuery))
+				.addGroup(groupLayout.createParallelGroup().addComponent(infixQueryEntry).addComponent(prefixQueryEntry))
 				.addGroup(groupLayout.createParallelGroup().addComponent(infixSearchButton)
 						.addComponent(prefixSearchButton));
 		groupLayout.setHorizontalGroup(horizontalGroups);
@@ -468,9 +468,9 @@ public class WebBrowserView {
 		verticalGroups
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(overallQueryControllerTitle))
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(infixControllerTitle)
-						.addComponent(infixQuery).addComponent(infixSearchButton))
+						.addComponent(infixQueryEntry).addComponent(infixSearchButton))
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(prefixControllerTitle)
-						.addComponent(prefixQuery).addComponent(prefixSearchButton));
+						.addComponent(prefixQueryEntry).addComponent(prefixSearchButton));
 		groupLayout.setVerticalGroup(verticalGroups);
 
 		// Set the fonts for all the child components in the controlPanel
@@ -497,9 +497,9 @@ public class WebBrowserView {
 	}
 
 	/**
-	 * This method adds the ActionListener to the infixQuery, prefixQuery,
+	 * This method adds the ActionListener to the infixQueryEntry, prefixQueryEntry,
 	 * infixSearchButton and prefixSearchButton. Similar to the
-	 * addConfirmActionListener method, the JTextField infixQuery and prefixQuery
+	 * addConfirmActionListener method, the JTextField infixQueryEntry and prefixQueryEntry
 	 * also generate the same event as the buttons when the user press the 'Enter'.
 	 * <p>
 	 * The reason why it's named the Search Action Listener is that the action
@@ -510,8 +510,8 @@ public class WebBrowserView {
 	 * @param actionListener An object of ActionLisener
 	 */
 	public void addSearchActionListener(ActionListener actionListener) {
-		infixQuery.addActionListener(actionListener);
-		prefixQuery.addActionListener(actionListener);
+		infixQueryEntry.addActionListener(actionListener);
+		prefixQueryEntry.addActionListener(actionListener);
 		infixSearchButton.addActionListener(actionListener);
 		prefixSearchButton.addActionListener(actionListener);
 	}
@@ -585,21 +585,21 @@ public class WebBrowserView {
 	}
 
 	/**
-	 * Getter for the infixQuery
+	 * Getter for the infixQueryEntry
 	 * 
-	 * @return infixQuery
+	 * @return infixQueryEntry
 	 */
-	public JTextField getInfixQuery() {
-		return infixQuery;
+	public JTextField getInfixQueryEntry() {
+		return infixQueryEntry;
 	}
 
 	/**
-	 * Getter for the prefixQuery
+	 * Getter for the prefixQueryEntry
 	 * 
-	 * @return prefixQuery
+	 * @return prefixQueryEntry
 	 */
-	public JTextField getPrefixQuery() {
-		return prefixQuery;
+	public JTextField getPrefixQueryEntry() {
+		return prefixQueryEntry;
 	}
 
 	/**

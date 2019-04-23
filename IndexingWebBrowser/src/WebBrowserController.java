@@ -63,7 +63,7 @@ public class WebBrowserController {
 	/**
 	 * The collection of WebDoc, which are the URLs that are successfully accessed.
 	 */
-	private Set<WebDoc> webdocCollection;
+	private Set<WebDoc> webDocCollection;
 
 	/**
 	 * The collection of URLs as String, which are successfully accessed.
@@ -99,7 +99,7 @@ public class WebBrowserController {
 		webIndex_Keyword = new WebIndex(TypeOfWords.KEYWORD);
 		webIndex_ContentWord = new WebIndex(TypeOfWords.CONTENT_WORD);
 		browsingHistory = new TreeSet<>();
-		webdocCollection = new TreeSet<>();
+		webDocCollection = new TreeSet<>();
 
 		view.addFrameWindowListener(new WindowEventHandler());
 		view.addConfirmActionListener(new ConfirmActionHandler());
@@ -116,10 +116,10 @@ public class WebBrowserController {
 	 *
 	 */
 	private class ConfirmActionHandler implements ActionListener {
-		JTextField urlInput;
-		JEditorPane htmlContent;
-		JPanel historyRecordPanel;
-		JTabbedPane tabbedPane;
+		private JTextField urlInput;
+		private JEditorPane htmlContent;
+		private JPanel historyRecordPanel;
+		private JTabbedPane tabbedPane;
 
 		public ConfirmActionHandler() {
 			this.urlInput = view.getUrlTextField();
@@ -148,9 +148,9 @@ public class WebBrowserController {
 						browsingHistory.add(urlEntry);
 						webIndex_Keyword.add(wd);
 						webIndex_ContentWord.add(wd);
-						webdocCollection.add(wd);
+						webDocCollection.add(wd);
 					}
-					addClickableLinksToPanel(historyRecordPanel, webdocCollection);
+					addClickableLinksToPanel(historyRecordPanel, webDocCollection);
 				} catch (MalformedURLException e1) {
 					JOptionPane.showMessageDialog(null, "Incorrect form of file path", "Error",
 							JOptionPane.WARNING_MESSAGE);
@@ -166,9 +166,9 @@ public class WebBrowserController {
 						browsingHistory.add(urlEntry);
 						webIndex_Keyword.add(wd);
 						webIndex_ContentWord.add(wd);
-						webdocCollection.add(wd);
+						webDocCollection.add(wd);
 					}
-					addClickableLinksToPanel(historyRecordPanel, webdocCollection);
+					addClickableLinksToPanel(historyRecordPanel, webDocCollection);
 				} catch (MalformedURLException e1) {
 					JOptionPane.showMessageDialog(null, "Incorrect form of URL", "Error", JOptionPane.WARNING_MESSAGE);
 				} catch (IOException e1) {
@@ -191,14 +191,14 @@ public class WebBrowserController {
 	 * 
 	 */
 	private class SearchActionHandler implements ActionListener {
-		JTextField infixQuery;
-		JTextField prefixQuery;
-		JPanel keywordPanel;
-		JPanel contentWordPanel;
+		private JTextField infixQueryEntry;
+		private JTextField prefixQueryEntry;
+		private JPanel keywordPanel;
+		private JPanel contentWordPanel;
 
 		public SearchActionHandler() {
-			infixQuery = view.getInfixQuery();
-			prefixQuery = view.getPrefixQuery();
+			infixQueryEntry = view.getInfixQueryEntry();
+			prefixQueryEntry = view.getPrefixQueryEntry();
 			keywordPanel = view.getKeywordResult();
 			contentWordPanel = view.getContentWordResult();
 		}
@@ -211,7 +211,7 @@ public class WebBrowserController {
 			Set<WebDoc> contentWordResult;
 
 			if (e.getActionCommand().equals("infix")) {
-				query = infixQuery.getText().trim().toLowerCase();
+				query = infixQueryEntry.getText().trim().toLowerCase();
 				isValid = validateInfixQuery(query); // validate the infix query before handling.
 
 				if (isValid) {
@@ -227,7 +227,7 @@ public class WebBrowserController {
 							"Content Word Result", JOptionPane.WARNING_MESSAGE);
 				}
 			} else if (e.getActionCommand().equals("prefix")) {
-				query = prefixQuery.getText().trim().toLowerCase();
+				query = prefixQueryEntry.getText().trim().toLowerCase();
 				isValid = validatePrefixQuery(query); // validate the prefix query before handling.
 
 				if (isValid) {
@@ -288,8 +288,8 @@ public class WebBrowserController {
 	 * 
 	 */
 	private class MenuItemActionHandler implements ActionListener {
-		CardLayout layoutControl;
-		JPanel cards;
+		private CardLayout layoutControl;
+		private JPanel cards;
 
 		public MenuItemActionHandler() {
 			layoutControl = view.getCardLayoutControl();
@@ -354,10 +354,10 @@ public class WebBrowserController {
 						WebDoc thisDoc = new WebDoc(s);
 						webIndex_ContentWord.add(thisDoc);
 						webIndex_Keyword.add(thisDoc);
-						webdocCollection.add(thisDoc);
+						webDocCollection.add(thisDoc);
 					}
 					// add the clickable links (previous browsing history) to the historyRecordPane.
-					addClickableLinksToPanel(view.getHistoryRecordPanel(), webdocCollection);
+					addClickableLinksToPanel(view.getHistoryRecordPanel(), webDocCollection);
 					JOptionPane.showMessageDialog(null, "Successfully read the previous history and index", "Success",
 							JOptionPane.INFORMATION_MESSAGE);
 				} catch (IOException e2) {
