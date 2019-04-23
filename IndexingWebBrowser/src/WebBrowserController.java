@@ -210,7 +210,7 @@ public class WebBrowserController {
 			Set<WebDoc> keywordResult;
 			Set<WebDoc> contentWordResult;
 
-			if (e.getActionCommand().equals("infix")) {
+			if (e.getActionCommand().equals(view.INFIX_COMMAND)) {
 				query = infixQueryEntry.getText().trim().toLowerCase();
 				isValid = validateInfixQuery(query); // validate the infix query before handling.
 
@@ -226,7 +226,7 @@ public class WebBrowserController {
 					JOptionPane.showMessageDialog(null, "Unfortunately" + "infix query" + " you entered is invalid",
 							"Content Word Result", JOptionPane.WARNING_MESSAGE);
 				}
-			} else if (e.getActionCommand().equals("prefix")) {
+			} else if (e.getActionCommand().equals(view.PREFIX_COMMAND)) {
 				query = prefixQueryEntry.getText().trim().toLowerCase();
 				isValid = validatePrefixQuery(query); // validate the prefix query before handling.
 
