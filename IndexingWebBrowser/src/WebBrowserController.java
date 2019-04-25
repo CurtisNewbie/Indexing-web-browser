@@ -223,7 +223,7 @@ public class WebBrowserController {
 						addClickableLinksToPanel(contentWordPanel, contentWordResult);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Unfortunately" + "infix query" + " you entered is invalid",
+					JOptionPane.showMessageDialog(null, "Unfortunately" + " infix query" + " you entered is invalid",
 							"Content Word Result", JOptionPane.WARNING_MESSAGE);
 				}
 			} else if (e.getActionCommand().equals(view.PREFIX_COMMAND)) {
@@ -239,7 +239,7 @@ public class WebBrowserController {
 						addClickableLinksToPanel(contentWordPanel, contentWordResult);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Unfortunately" + "prefix query" + " you entered is invalid",
+					JOptionPane.showMessageDialog(null, "Unfortunately" + " prefix query" + " you entered is invalid",
 							"Content Word Result", JOptionPane.WARNING_MESSAGE);
 				}
 			}
