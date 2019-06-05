@@ -14,7 +14,8 @@ To browse local html/htm pages, please use this syntax:
 
 [Note: The code are well documented using Java doc, however, the Java doc html files are not generated. You may want to generate the Java doc if necessary.]
 
-// Searching Functionality:
+<h1>Searching Functionality:</h1>
+  
 For searching the content word and key word in the web pages, three types of quries can be used:
 1) AndQuery, 2) OrQuery, and 3) NoQuery. The explanation of them is provided below. Each query will return a set of the URLs (results).
 
