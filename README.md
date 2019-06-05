@@ -19,3 +19,5 @@ Example of Infix query:
 Example of Prefix query:
 "and(and(whale,fish),not(elephant))"
 
+More Explanation of Functionalities please go to the Wiki page.
+
