@@ -20,4 +20,8 @@ Example of Prefix query:
 "and(and(whale,fish),not(elephant))"
 
 More Explanation of Functionalities please go to the Wiki page.
+Screenshot of the program:
+[Screenshot of the web browser](https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG)
+
+
 
