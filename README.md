@@ -30,8 +30,8 @@ Example of Infix query:
 Example of Prefix query:
 "and(and(whale,fish),not(elephant))"
 
-<img src:"https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG" width="900", height="600">
-<img src:"https://user-images.githubusercontent.com/45169791/58970136-b8724080-87b0-11e9-9b60-38b4c643c001.PNG" width="900", height="600">
+<img src="https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG" width="900", height="600">
+<img src="https://user-images.githubusercontent.com/45169791/58970136-b8724080-87b0-11e9-9b60-38b4c643c001.PNG" width="900", height="600">
 
 
 
