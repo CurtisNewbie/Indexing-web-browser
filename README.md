@@ -26,14 +26,17 @@ For searching the content word and key word in the web pages, three types of qur
 
 Example of Infix query: 
 "(whale and fish) and not elephant"
-
 Example of Prefix query:
 "and(and(whale,fish),not(elephant))"
 
-<img src="https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG" width="900", height="600">
-<img src="https://user-images.githubusercontent.com/45169791/58970136-b8724080-87b0-11e9-9b60-38b4c643c001.PNG" width="900", height="600">
 
+<h1> Explanation of the GUI </h1>
 
+![Screenshot of the web browser1](https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG)
+
+![Screenshot of the web browser2](https://user-images.githubusercontent.com/45169791/58970136-b8724080-87b0-11e9-9b60-38b4c643c001.PNG)
+
+Note: The links/URLs/Results in the history pane and query result panes (content word result and keyword result) are clickable, that allow you to browse the content of these URLs.
 
 
 
