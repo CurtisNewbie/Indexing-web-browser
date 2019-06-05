@@ -1,5 +1,16 @@
 # A-simple-indexing-web-browser
-This is a very simple indexing web browser. It is different from the normal browsers in that it builds a searchable index of web page contents dynamically as the user browses. The users can then search through pages that they have visited and have the list of results displayed as a set of clickable links using the prefix query and infix query.
+This is a very simple indexing web browser. It is different from the normal browsers in that it builds a searchable index of web page contents dynamically as the user browses. The users are able to search websites or browse local htm/html files. The users can then search through pages that they have visited and have the list of results displayed as a set of clickable links using the prefix query and infix query.
+
+To browse web pages, please use this syntax:
+<ul> 
+  <li>http://...</li>
+  <li>https://...</li>
+</ul>
+
+To browse local html/htm pages, please use this syntax:
+<ul>
+  <li>file:C:\Users\.....</li>
+</ul>
 
 [Note: The code are well documented using Java doc, however, the Java doc html files are not generated. You may want to generate the Java doc if necessary.]
 
@@ -19,9 +30,11 @@ Example of Infix query:
 Example of Prefix query:
 "and(and(whale,fish),not(elephant))"
 
-More Explanation of Functionalities please go to the Wiki page.
-Screenshot of the program:
-[Screenshot of the web browser](https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG)
+<img src:"https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG" width="900", height="600">
+<img src:"https://user-images.githubusercontent.com/45169791/58970136-b8724080-87b0-11e9-9b60-38b4c643c001.PNG" width="900", height="600">
+
+
+
 
 
 
