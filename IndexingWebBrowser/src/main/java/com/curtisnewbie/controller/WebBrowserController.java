@@ -1,3 +1,4 @@
+package com.curtisnewbie.controller;
 
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -27,11 +28,11 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import webBrowserModel.Query;
-import webBrowserModel.QueryBuilder;
-import webBrowserModel.WebDoc;
-import webBrowserModel.WebIndex;
-import webBrowserModel.WebIndex.TypeOfWords;
+import com.curtisnewbie.webBrowserModel.Query;
+import com.curtisnewbie.webBrowserModel.QueryBuilder;
+import com.curtisnewbie.webBrowserModel.WebDoc;
+import com.curtisnewbie.webBrowserModel.WebIndex;
+import com.curtisnewbie.webBrowserModel.WebIndex.TypeOfWords;
 
 /**
  * This is the controller class in the MVC architecture. It deals with the
