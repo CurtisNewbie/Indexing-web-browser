@@ -1,6 +1,8 @@
 # A-simple-indexing-web-browser
 This is a very simple indexing web browser. It is different from the normal browsers in that it builds a searchable index of web page contents dynamically as the user browses. The users are able to search websites or browse local htm/html files. The users can then search through pages that they have visited and have the list of results displayed as a set of clickable links using the prefix query and infix query.
 
+<b>NOTE: I am currently re-implementing this program in branch - <i>JavaFXRefactor</i></b>
+
 <h1>How to use it</h1>
 
 Compile and run:
