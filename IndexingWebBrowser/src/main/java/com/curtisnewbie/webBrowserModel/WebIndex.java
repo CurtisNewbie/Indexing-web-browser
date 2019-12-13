@@ -1,4 +1,5 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

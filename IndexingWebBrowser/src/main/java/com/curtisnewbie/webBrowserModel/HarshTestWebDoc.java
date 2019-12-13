@@ -1,4 +1,5 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,139 +16,161 @@ import java.io.*;
 public class HarshTestWebDoc {
 
 	public static void main(String[] args) {
-//		WebDoc wd = new WebDoc("https://www.google.com");
-//		WebIndex wind = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
-//		wind.add(wd);
-//		try {
-//			System.out.println(QueryBuilder.parse("and(and,or)").matches(wind));
-//		} catch(StringIndexOutOfBoundsException e) {
-//			System.out.println("Query format may be incorrect");
-//		}
-//		System.out.println(QueryBuilder.parseInfixString("not this and not that"));
-//		
-//		System.out.println(QueryBuilder.parse("and(a,b))").matches(wind));
-//
-//			String queryStr = "((((()";
-//			// (and and) (and or) (or and) (or or) (not and) (not not) (not or)
-//			if (queryStr.matches("(.*?\\({1,}\\){1,}.*?)")) {
-//				System.out.println("got yo!");
-//			}
+		// WebDoc wd = new WebDoc("https://www.google.com");
+		// WebIndex wind = new WebIndex(WebIndex.TypeOfWords.CONTENT_WORD);
+		// wind.add(wd);
+		// try {
+		// System.out.println(QueryBuilder.parse("and(and,or)").matches(wind));
+		// } catch(StringIndexOutOfBoundsException e) {
+		// System.out.println("Query format may be incorrect");
+		// }
+		// System.out.println(QueryBuilder.parseInfixString("not this and not that"));
+		//
+		// System.out.println(QueryBuilder.parse("and(a,b))").matches(wind));
+		//
+		// String queryStr = "((((()";
+		// // (and and) (and or) (or and) (or or) (not and) (not not) (not or)
+		// if (queryStr.matches("(.*?\\({1,}\\){1,}.*?)")) {
+		// System.out.println("got yo!");
+		// }
 		/*
-		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: 
-		 * [each element]: e.g., A and B -> and([A],[B])
+		 * Further demonstrating how the QueryBuilder.parseInfixForm() works: [each
+		 * element]: e.g., A and B -> and([A],[B])
 		 */
-//		System.out.println(
-//				"\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works, transforming from Infix to Prefix:");
-//		System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B]):");
-//		System.out.println("PrefixForm: and(and(whale,fish),not(elephant))");
-//		System.out.println("Manual Transformation to InfixFrom: (whale and fish) and not elephant");
-//		System.out.println("Result of QueryBuilder.parseInfixForm() : "
-//				+ QueryBuilder.parseInfixForm("(whale and fish) and not elephant").toString());
-//
-//		// More tests for processing prefix query
-//		System.out.println("\n:::More tests for processing prefix query:");
-//		System.out.println(QueryBuilder.parse("and(aaaaa,bbbbb,ccccc,ddddd,eeeee)").toString());
-//		System.out.println(QueryBuilder.parse("oR    (Peanuts,elephant,not(yikes))").toString());
-//		System.out.println(QueryBuilder.parse("           NoT   (asdfasdf)").toString());
-//		System.out.println(QueryBuilder.parse("and((not(elephant),birdy,NoT(extra)))").toString());
-//
-//		// More tests for processing infix query
-//		System.out.println("\n:::More tests for processing infix query:");
-//		System.out.println(QueryBuilder.parseInfixForm("((aaa or bbb and not ggg) and ddd or not eee)").toString());
-//		System.out.println(QueryBuilder.parseInfixForm("Banana and ((cat and dog) and bird) or coffee").toString());
-//		System.out.println(QueryBuilder.parseInfixForm("not Banana").toString());
-//		System.out.println(QueryBuilder.parseInfixForm("not Banana and not Chocolate").toString());
-//		
-//		System.out.println(QueryBuilder.parse("and(elephant,NoT   (asdfasdf),number,yikes,banana)").toString());
+		// System.out.println(
+		// "\n:::Further demonstrating how the QueryBuilder.parseInfixForm() works,
+		// transforming from Infix to Prefix:");
+		// System.out.println(":::Note:[each element]: e.g., A and B -> and([A],[B]):");
+		// System.out.println("PrefixForm: and(and(whale,fish),not(elephant))");
+		// System.out.println("Manual Transformation to InfixFrom: (whale and fish) and
+		// not elephant");
+		// System.out.println("Result of QueryBuilder.parseInfixForm() : "
+		// + QueryBuilder.parseInfixForm("(whale and fish) and not
+		// elephant").toString());
+		//
+		// // More tests for processing prefix query
+		// System.out.println("\n:::More tests for processing prefix query:");
+		// System.out.println(QueryBuilder.parse("and(aaaaa,bbbbb,ccccc,ddddd,eeeee)").toString());
+		// System.out.println(QueryBuilder.parse("oR
+		// (Peanuts,elephant,not(yikes))").toString());
+		// System.out.println(QueryBuilder.parse(" NoT (asdfasdf)").toString());
+		// System.out.println(QueryBuilder.parse("and((not(elephant),birdy,NoT(extra)))").toString());
+		//
+		// // More tests for processing infix query
+		// System.out.println("\n:::More tests for processing infix query:");
+		// System.out.println(QueryBuilder.parseInfixForm("((aaa or bbb and not ggg) and
+		// ddd or not eee)").toString());
+		// System.out.println(QueryBuilder.parseInfixForm("Banana and ((cat and dog) and
+		// bird) or coffee").toString());
+		// System.out.println(QueryBuilder.parseInfixForm("not Banana").toString());
+		// System.out.println(QueryBuilder.parseInfixForm("not Banana and not
+		// Chocolate").toString());
+		//
+		// System.out.println(QueryBuilder.parse("and(elephant,NoT
+		// (asdfasdf),number,yikes,banana)").toString());
 
 		System.out.println(QueryBuilder.parseInfixForm("not apple").toString());
-//	
-//		String wholeQuery = "abc";
-//		if (wholeQuery.startsWith("(") && wholeQuery.endsWith(")")) {
-//			wholeQuery = wholeQuery.substring(1, wholeQuery.length() - 1);
-//		}
-//		System.out.println(wholeQuery);
-//		System.out.println(wholeQuery.matches("abc|bcd"));
-//		System.out.println("(ate or cat)  and (dog or fisshe) and not jdg");
-//		System.out.println(QueryBuilder.extractInfixQuery("ate or cat and dog"));
-//		QueryBuilder.extractInfixQuery("(ate or cat)  and (dog or fisshe) and not jdg");
-//		System.out.println(splitBracket("(not this and not peanuts) and almonds and (pistacchios and chestnuts)"));
-//		System.out.println(splitOperator("a and b"));
-//		System.out.println(parseCoveringBracket("((((abdnc))))"));
-//		System.out.println(parseInfixQuery("(aaa and bbb) and cde"));
-//		System.out.println(QueryBuilder.parse(QueryBuilder.parseInfixToPrefix("notfe")));
-//		System.out.println(QueryBuilder.parse("and(  bfff, addff)").toString());
-//		System.out.println(QueryBuilder.parseInfixForm((ate or cat) and (dog or fisshe))
+		//
+		// String wholeQuery = "abc";
+		// if (wholeQuery.startsWith("(") && wholeQuery.endsWith(")")) {
+		// wholeQuery = wholeQuery.substring(1, wholeQuery.length() - 1);
+		// }
+		// System.out.println(wholeQuery);
+		// System.out.println(wholeQuery.matches("abc|bcd"));
+		// System.out.println("(ate or cat) and (dog or fisshe) and not jdg");
+		// System.out.println(QueryBuilder.extractInfixQuery("ate or cat and dog"));
+		// QueryBuilder.extractInfixQuery("(ate or cat) and (dog or fisshe) and not
+		// jdg");
+		// System.out.println(splitBracket("(not this and not peanuts) and almonds and
+		// (pistacchios and chestnuts)"));
+		// System.out.println(splitOperator("a and b"));
+		// System.out.println(parseCoveringBracket("((((abdnc))))"));
+		// System.out.println(parseInfixQuery("(aaa and bbb) and cde"));
+		// System.out.println(QueryBuilder.parse(QueryBuilder.parseInfixToPrefix("notfe")));
+		// System.out.println(QueryBuilder.parse("and( bfff, addff)").toString());
+		// System.out.println(QueryBuilder.parseInfixForm((ate or cat) and (dog or
+		// fisshe))
 
-//		System.out.println(QueryBuilder.parseSubquery("elephant,whale,and(fuck,dig),or(a,and(b,c))"));
-//		String path = "file:Test.html";
-//		try {
-//			WebDoc doc1 = new WebDoc(path);
-//			System.out.println(doc1.getContentWords().toString());
-//			System.out.println(doc1.getEntry());
-//		} catch (Exception e) {
-//			System.out.println("Errors");
-//		}
-//		try {	
-//		URL url = new URL(path);
-//		BufferedReader br = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
-//		System.out.println(br.readLine());
-//		br.close();
-//		} catch (MalformedURLException e) {
-//			// TODO: handle exception
-//			System.out.println("URL incorrect");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// System.out.println(QueryBuilder.parseSubquery("elephant,whale,and(fuck,dig),or(a,and(b,c))"));
+		// String path = "file:Test.html";
+		// try {
+		// WebDoc doc1 = new WebDoc(path);
+		// System.out.println(doc1.getContentWords().toString());
+		// System.out.println(doc1.getEntry());
+		// } catch (Exception e) {
+		// System.out.println("Errors");
+		// }
+		// try {
+		// URL url = new URL(path);
+		// BufferedReader br = new BufferedReader(new
+		// InputStreamReader(url.openConnection().getInputStream()));
+		// System.out.println(br.readLine());
+		// br.close();
+		// } catch (MalformedURLException e) {
+		// // TODO: handle exception
+		// System.out.println("URL incorrect");
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
-//		System.out.println(doc1.getContentWords().toString());
-//	
-//		System.out.println(doc1.getContent());
-//		System.out.println(doc1.toString());
+		// System.out.println(doc1.getContentWords().toString());
+		//
+		// System.out.println(doc1.getContent());
+		// System.out.println(doc1.toString());
 
-//		WebIndex obj = new WebIndex();
-//		obj.add(doc1);
-//		System.out.println(obj.getAllDocuments());
-//		System.out.println(obj.getMatches("Google"));
+		// WebIndex obj = new WebIndex();
+		// obj.add(doc1);
+		// System.out.println(obj.getAllDocuments());
+		// System.out.println(obj.getMatches("Google"));
 
-////		WebDoc doc2 = new WebDoc("htt");
-////		WebDoc doc3 = new WebDoc("file asdfasdf");
-//		WebDoc doc4 = new WebDoc("fiLe:assd");
+		//// WebDoc doc2 = new WebDoc("htt");
+		//// WebDoc doc3 = new WebDoc("file asdfasdf");
+		// WebDoc doc4 = new WebDoc("fiLe:assd");
 
-//		String st = "as111df <21asdfjlj @123 / <[> a<asdf333kas2df?> ";
-//		
-//		String pattern = "^a";
-//		Pattern pa = Pattern.compile(pattern);
-//		Matcher matche = pa.matcher(st);
-//		
-//		ArrayList<String> ar = new ArrayList<>();
-//		while(matche.find()) {
-//			ar.add(matche.group(0));
-//		}
-//		
-//		for(String st1 : ar) {
-//			System.out.println(st1);
-//		}
-//		System.out.println(ar.toString());
-//		
+		// String st = "as111df <21asdfjlj @123 / <[> a<asdf333kas2df?> ";
+		//
+		// String pattern = "^a";
+		// Pattern pa = Pattern.compile(pattern);
+		// Matcher matche = pa.matcher(st);
+		//
+		// ArrayList<String> ar = new ArrayList<>();
+		// while(matche.find()) {
+		// ar.add(matche.group(0));
+		// }
+		//
+		// for(String st1 : ar) {
+		// System.out.println(st1);
+		// }
+		// System.out.println(ar.toString());
+		//
 
-//		HarshTestWebDoc obj1 = new HarshTestWebDoc();
-//		HarshTestWebDoc obj2 = new HarshTestWebDoc();
-////				
-//		System.out.println(obj1.getKeyWords("<html>\r\n" + "  <head>\r\n" + "    <title>test</title>\r\n"
-//				+ "    <meta name=\"keywords\" contents=\"peanuts almonds,pistacchios,chestnuts,\">\r\n"
-//				+ "  </head>\r\n" + "\r\n" + "  <body>\r\n" + "    <h1>A list</h1>\r\n" + "<ul>\r\n"
-//				+ "<li>Peanuts</li>\r\n" + "<li>Almonds</li>\r\n" + "<li>Pistacchios</li>\r\n"
-//				+ "<li>Chestnuts</li>\r\n" + "</ul>\r\n" + "    <address/>\r\n" + "  </body>\r\n" + "</html>\r\n"
-//				+ "\r\n" + "\r\n" + ""));
-//
-//		System.out.println(obj2.getKeyWords("<meta name=\"copyright\" content=\"&copy; 2002, 2003, 2004 Tex Texin\">\r\n" + 
-//				"<meta http-equiv=\"Content-Language\" content=\"en-US\">\r\n" + 
-//				"<meta name=\"keywords\"content=\"html, http, meta tag, meta tags, cache, expires, refresh, robot, robots, web-bot, googlebot, crawler, w3c, web, consortium,\">\r\n" + 
-//				"<meta name=\"keywords\" lang=\"en-us\" content=\"cultural differences, Texin, I18nGuy, XenCraft, consult, consultant, expert\">\r\n" + 
-//				"<meta name=\"keywords\" lang=\"en-gb\" content=\"internationalisation, localisation, globalisation\">\r\n" + 
-//				"<meta name=\"robots\" content=\"all\">"));
+		// HarshTestWebDoc obj1 = new HarshTestWebDoc();
+		// HarshTestWebDoc obj2 = new HarshTestWebDoc();
+		////
+		// System.out.println(obj1.getKeyWords("<html>\r\n" + " <head>\r\n" + "
+		// <title>test</title>\r\n"
+		// + " <meta name=\"keywords\" contents=\"peanuts
+		// almonds,pistacchios,chestnuts,\">\r\n"
+		// + " </head>\r\n" + "\r\n" + " <body>\r\n" + " <h1>A list</h1>\r\n" +
+		// "<ul>\r\n"
+		// + "<li>Peanuts</li>\r\n" + "<li>Almonds</li>\r\n" +
+		// "<li>Pistacchios</li>\r\n"
+		// + "<li>Chestnuts</li>\r\n" + "</ul>\r\n" + " <address/>\r\n" + " </body>\r\n"
+		// + "</html>\r\n"
+		// + "\r\n" + "\r\n" + ""));
+		//
+		// System.out.println(obj2.getKeyWords("<meta name=\"copyright\"
+		// content=\"&copy; 2002, 2003, 2004 Tex Texin\">\r\n" +
+		// "<meta http-equiv=\"Content-Language\" content=\"en-US\">\r\n" +
+		// "<meta name=\"keywords\"content=\"html, http, meta tag, meta tags, cache,
+		// expires, refresh, robot, robots, web-bot, googlebot, crawler, w3c, web,
+		// consortium,\">\r\n" +
+		// "<meta name=\"keywords\" lang=\"en-us\" content=\"cultural differences,
+		// Texin, I18nGuy, XenCraft, consult, consultant, expert\">\r\n" +
+		// "<meta name=\"keywords\" lang=\"en-gb\" content=\"internationalisation,
+		// localisation, globalisation\">\r\n" +
+		// "<meta name=\"robots\" content=\"all\">"));
 
 	}
 
@@ -253,7 +276,7 @@ public class HarshTestWebDoc {
 			// find 'and'/ 'or' and combine them
 			for (int x = 0; x < parsedQuery.size(); x++) {
 				String thisPart = parsedQuery.get(x);
-//				if(x==0)
+				// if(x==0)
 				if (thisPart.matches("(and)|(or)") && x > 0) {
 					String lastPart = parsedQuery.get(x - 1);
 					String nextPart = parsedQuery.get(x + 1);

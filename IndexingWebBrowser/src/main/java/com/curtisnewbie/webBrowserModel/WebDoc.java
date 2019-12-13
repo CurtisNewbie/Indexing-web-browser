@@ -1,4 +1,5 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
+
 import java.net.*;
 import java.util.NoSuchElementException;
 import java.util.Stack;

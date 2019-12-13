@@ -1,4 +1,4 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
 
 import java.util.Collection;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class NotQuery implements Query {
 		}
 		// get the webdocs of not query
 		resultOfNotQuery = webDocsMapCopy.get(query);
-		
+
 		// remove the webdocs of not query
 		if (resultOfNotQuery == null) {
 			return allWebDoc;

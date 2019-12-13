@@ -1,4 +1,5 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
+
 import java.util.Set;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Set;
  *
  */
 public interface Query {
-	
+
 	/**
 	 * This method searches through the given WebIndex based on the query to find
 	 * all the matched results.
