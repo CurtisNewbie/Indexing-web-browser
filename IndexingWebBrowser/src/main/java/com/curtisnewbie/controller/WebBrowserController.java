@@ -75,7 +75,7 @@ public class WebBrowserController {
 	/**
 	 * The path of the file that is used to save the index and browsing history.
 	 */
-	private final String LOG_FILE_PATH = "log.txt";
+	private final String LOG_FILE_PATH = "main/resources/log.txt";
 
 	/**
 	 * It represents when the log starts. It is used for reading browsing history.
