@@ -1,3 +1,7 @@
+package com.curtisnewbie.exec;
+
+import com.curtisnewbie.controller.WebBrowserController;
+import com.curtisnewbie.view.WebBrowserView;
 
 /**
  * This class is used to instantiate a new object of WebBrowserView as the view

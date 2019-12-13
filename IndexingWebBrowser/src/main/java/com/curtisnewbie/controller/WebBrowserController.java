@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import com.curtisnewbie.view.WebBrowserView;
 import com.curtisnewbie.webBrowserModel.Query;
 import com.curtisnewbie.webBrowserModel.QueryBuilder;
 import com.curtisnewbie.webBrowserModel.WebDoc;

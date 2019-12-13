@@ -1,12 +1,14 @@
 
+package com.curtisnewbie.exec;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import webBrowserModel.QueryBuilder;
-import webBrowserModel.WebDoc;
-import webBrowserModel.WebIndex;
+import com.curtisnewbie.webBrowserModel.QueryBuilder;
+import com.curtisnewbie.webBrowserModel.WebDoc;
+import com.curtisnewbie.webBrowserModel.WebIndex;
 
 /**
  * This class will be used to read the web documents(entries: files or URLs)
@@ -86,15 +88,15 @@ public class WebTest {
 		System.out.println(webIndexKey.toString() + "\n");
 
 		// Testing WebIndex .getMatches() - For Stage 1.
-//		Set<WebDoc> contentMatchingResult = webIndexContent.getMatches("elephant");
-//		if (contentMatchingResult != null) {
-//			System.out.println(contentMatchingResult.toString() + "\n");
-//		}
-//
-//		Set<WebDoc> keyMatchingResult = webIndexKey.getMatches("zebra");
-//		if (keyMatchingResult != null) {
-//			System.out.println(keyMatchingResult.toString() + "\n");
-//		}
+		// Set<WebDoc> contentMatchingResult = webIndexContent.getMatches("elephant");
+		// if (contentMatchingResult != null) {
+		// System.out.println(contentMatchingResult.toString() + "\n");
+		// }
+		//
+		// Set<WebDoc> keyMatchingResult = webIndexKey.getMatches("zebra");
+		// if (keyMatchingResult != null) {
+		// System.out.println(keyMatchingResult.toString() + "\n");
+		// }
 
 		// Get rid of the illegal prefixQuery - For Stage 2.
 		Iterator<String> prefixIterator = prefixQueryCollection.iterator();
