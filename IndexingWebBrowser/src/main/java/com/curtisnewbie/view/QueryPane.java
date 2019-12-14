@@ -3,8 +3,16 @@ package com.curtisnewbie.view;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.image.*;
+import java.io.*;
 
 public class QueryPane extends BorderPane {
+
+    /** Maximum Height of Image */
+    private double MAX_IMG_HEIGHT = 20;
+
+    /** Path to the icon for menuBtn buttn */
+    private final String PATH_TO_MENUICON = "img/menu_icon.png";
 
     /**
      * menu button for switching to another "view" (i.e., the view for displaying
@@ -16,6 +24,21 @@ public class QueryPane extends BorderPane {
     private Button menuBtn;
 
     public QueryPane() {
+        // load label for the menuBtn button
+        ClassLoader loader = this.getClass().getClassLoader();
+
+        InputStream menuIn = loader.getResourceAsStream(PATH_TO_MENUICON);
+        if (menuIn == null)
+            throw new IllegalArgumentException("Cannot find Icon Image at \"" + PATH_TO_MENUICON + "\"");
+
+        ImageView menuIcon = new ImageView(new Image(menuIn));
+        menuIcon.setFitWidth(MAX_IMG_HEIGHT);
+        menuIcon.setFitHeight(MAX_IMG_HEIGHT);
+        menuBtn = new Button(null, menuIcon);
+        this.setTop(menuBtn);
+        BorderPane.setAlignment(menuBtn, Pos.CENTER_RIGHT);
+
+        // for testing only
         this.setCenter(new QueryControlPanel());
     }
 
