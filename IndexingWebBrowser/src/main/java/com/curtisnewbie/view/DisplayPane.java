@@ -6,15 +6,25 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.image.*;
+import javafx.scene.control.Button;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
 
 import java.io.InputStream;
 
-import javafx.scene.control.Button;
-
 public class DisplayPane extends BorderPane {
 
+    private UrlInputBox urlInputbox;
+
+    private WebView webView;
+    private WebEngine webEngine;
+
     public DisplayPane() {
-        this.setTop(new UrlInputBox());
+        this.urlInputbox = new UrlInputBox();
+        this.webView = new WebView();
+        this.webEngine = webView.getEngine();
+        this.setTop(urlInputbox);
+        this.setCenter(webView);
     }
 
 }
