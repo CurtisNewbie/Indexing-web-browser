@@ -27,7 +27,16 @@ import java.io.InputStream;
  */
 public class DisplayPane extends BorderPane {
 
+    /**
+     * It's a HBox that contains some of the control components/nodes in this pane
+     * 
+     * @see UrlInputBox
+     */
     private UrlInputBox urlInputbox;
+
+    /**
+     * TabPane where each tab shows the content of a web page
+     */
     private TabPane tabPane;
 
     /**
@@ -75,6 +84,13 @@ public class DisplayPane extends BorderPane {
         }
     }
 
+    /**
+     * Get the UrlInputBox which contains the TextField for entering URL, and the
+     * Buttons for going back and forth between the previously viewed web pages.
+     * 
+     * @return an object of UrlInputBox
+     * @see UrlInputBox
+     */
     public UrlInputBox getUrlInputBox() {
         return this.urlInputbox;
     }
@@ -87,15 +103,34 @@ public class DisplayPane extends BorderPane {
  */
 class UrlInputBox extends HBox {
 
+    /** Path to the icon for backTrackBtn buttn */
     private final String PATH_TO_BACKICON = "img/arrow_back.png";
+
+    /** Path to the icon for forwardBtn buttn */
     private final String PATH_TO_FORWICON = "img/arrow_forward.png";
+
+    /** Path to the icon for menuBtn buttn */
     private final String PATH_TO_MENUICON = "img/menu_icon.png";
 
+    /** Maximum height of icon images in the buttons */
     private final double MAX_IMG_HEIGHT = 20.0;
 
+    /** TextField for entering URL */
     private TextField urlTextField;
+
+    /** Button for going back to the previous webpage */
     private Button backTrackBtn;
+
+    /** Button for going forward to the recent viewed webpage */
     private Button forwardBtn;
+
+    /**
+     * menu button for switching to another "view" (i.e., the view for query
+     * searching).
+     * 
+     * @see BrowserView
+     * @see UrlInputBox
+     */
     private Button menuBtn;
 
     public UrlInputBox() {
