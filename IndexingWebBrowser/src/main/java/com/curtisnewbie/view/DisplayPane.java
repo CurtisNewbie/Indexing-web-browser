@@ -8,7 +8,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.image.*;
 import javafx.scene.control.Button;
 import javafx.scene.web.WebView;
-import javafx.scene.web.WebEngine;
 
 import java.io.InputStream;
 
@@ -28,18 +27,22 @@ import java.io.InputStream;
 public class DisplayPane extends BorderPane {
 
     private UrlInputBox urlInputbox;
-
     private WebView webView;
-    private WebEngine webEngine;
 
     public DisplayPane() {
         this.urlInputbox = new UrlInputBox();
         this.webView = new WebView();
-        this.webEngine = webView.getEngine();
         this.setTop(urlInputbox);
         this.setCenter(webView);
     }
 
+    public UrlInputBox getUrlInputBox() {
+        return this.urlInputbox;
+    }
+
+    public WebView getWebView() {
+        return this.webView;
+    }
 }
 
 /**
@@ -95,6 +98,22 @@ class UrlInputBox extends HBox {
 
         this.getChildren().addAll(backTrackBtn, forwardBtn, urlTextField, menuBtn);
         HBox.setHgrow(urlTextField, Priority.ALWAYS);
+    }
+
+    public TextField getUrlTextField() {
+        return this.urlTextField;
+    }
+
+    public Button getBackTrackBtn() {
+        return this.backTrackBtn;
+    }
+
+    public Button getForwardBtn() {
+        return this.forwardBtn;
+    }
+
+    public Button getMenuBtn() {
+        return this.menuBtn;
     }
 
 }
