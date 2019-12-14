@@ -12,6 +12,19 @@ import javafx.scene.web.WebEngine;
 
 import java.io.InputStream;
 
+/**
+ * <p>
+ * This program has two views (or cards of CardLayout) in Javafx, one is for
+ * viewing the content of the webpages, and another one is for using query to
+ * seaarch contents.
+ * </p>
+ * <p>
+ * This class itself is a subclass of BorderPane, and it represents one of the
+ * view in this program for displaying content of webpages.
+ * </p>
+ * 
+ * @see BrowserView
+ */
 public class DisplayPane extends BorderPane {
 
     private UrlInputBox urlInputbox;
@@ -29,6 +42,10 @@ public class DisplayPane extends BorderPane {
 
 }
 
+/**
+ * HBox that contains the TextField for entering URL, and the Buttons for going
+ * back and forth between the previously viewed web pages.
+ */
 class UrlInputBox extends HBox {
 
     private final String PATH_TO_BACKICON = "img/arrow_back.png";
