@@ -31,7 +31,7 @@ public class BrowserView extends BorderPane {
      * A Pane consits of group of nodes/componenets for the layout displaying the
      * query searching UI
      */
-    private BorderPane queryGroup;
+    private BorderPane queryPane;
 
     public BrowserView() {
         init();
