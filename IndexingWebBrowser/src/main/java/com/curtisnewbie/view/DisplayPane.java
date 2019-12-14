@@ -7,8 +7,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.image.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.web.WebView;
-
+import javafx.scene.control.TabPane;
 import java.io.InputStream;
 
 /**
@@ -27,22 +28,57 @@ import java.io.InputStream;
 public class DisplayPane extends BorderPane {
 
     private UrlInputBox urlInputbox;
-    private WebView webView;
+    private TabPane tabPane;
 
+    /**
+     * Instantiate DisplayPane
+     * 
+     * @see DisplayPane
+     */
     public DisplayPane() {
         this.urlInputbox = new UrlInputBox();
-        this.webView = new WebView();
         this.setTop(urlInputbox);
-        this.setCenter(webView);
+        this.tabPane = new TabPane();
+        this.setCenter(tabPane);
+
+        // for testing
+        var v = new WebView();
+        v.getEngine().load("https://www.google.com");
+        var tb = new Tab();
+        tb.setContent(v);
+        tabPane.getTabs().add(tb);
+
+        var tf = urlInputbox.getUrlTextField();
+        tf.setOnAction(e -> {
+            String url = tf.getText();
+            if (url != null && !url.isEmpty())
+                addTab(url);
+        });
+    }
+
+    /**
+     * Create a new {@code Tab} that loads the webpage of the given url. It doesn
+     * not create new tab if the given url is {@code NULL} or of a length of 0.
+     * However, if the given url is invalid (i.e., doesn't exist), it will simply
+     * create a empty tab with no content in it.
+     * 
+     * @param url a URL String
+     * 
+     */
+    public void addTab(String url) {
+        if (url != null && !url.isEmpty()) {
+            Tab tab = new Tab();
+            var view = new WebView();
+            view.getEngine().load(url);
+            tab.setContent(view);
+            tabPane.getTabs().add(tab);
+        }
     }
 
     public UrlInputBox getUrlInputBox() {
         return this.urlInputbox;
     }
 
-    public WebView getWebView() {
-        return this.webView;
-    }
 }
 
 /**
