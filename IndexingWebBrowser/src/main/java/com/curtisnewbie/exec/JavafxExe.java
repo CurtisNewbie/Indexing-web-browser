@@ -17,14 +17,8 @@ public class JavafxExe extends Application {
 
         BrowserView view = new BrowserView();
 
-        /*
-         * !!!!!!!!!!!!!!!!!!!!!!
-         * 
-         * Fix Here After Implementing JavaFX View
-         * 
-         * !!!!!!!!!!!!!!!!!!!!!!!!
-         */
-        // WebBrowserController controller = new WebBrowserController(view);
+        // controller that controls the view
+        BrowserController controller = new BrowserController(view);
 
         // get screen size
         Rectangle2D screen = Screen.getPrimary().getBounds();

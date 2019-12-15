@@ -52,13 +52,6 @@ public class DisplayPane extends BorderPane {
         var tb = new Tab();
         tb.setContent(v);
         tabPane.getTabs().add(tb);
-
-        var tf = urlInputbox.getUrlTextField();
-        tf.setOnAction(e -> {
-            String url = tf.getText();
-            if (url != null && !url.isEmpty())
-                addTab(url);
-        });
     }
 
     /**

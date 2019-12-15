@@ -30,7 +30,7 @@ public class BrowserView extends BorderPane {
     /**
      * Universal Menu for this program
      * 
-     * @see MenuButton
+     * @see MenuBtn
      */
     private Menu menu;
 
@@ -94,6 +94,17 @@ public class BrowserView extends BorderPane {
                 menuItems.get(i).setOnAction(handlers.get(i));
             }
         }
+    }
+
+    /**
+     * Add EventHandler for loading url and creating new tab. This handler is for
+     * the ActionEvent that is fired when a user presses Enter key on the URL
+     * TextField.
+     * 
+     * @param handler EventHandler<ActionEvent> for loading Url and creating new tab
+     */
+    public void addUrlEventHandler(EventHandler<ActionEvent> handler) {
+        displayPane.getUrlInputBox().getUrlTextField().setOnAction(handler);
     }
 
     public Menu getMenu() {
