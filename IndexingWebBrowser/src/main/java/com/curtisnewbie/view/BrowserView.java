@@ -94,6 +94,10 @@ public class BrowserView extends BorderPane {
         }
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
     public QueryPane getQueryPane() {
         return queryPane;
     }
