@@ -35,6 +35,11 @@ public class QueryPane extends BorderPane {
     /** Panel for displaying browsing history */
     private HistoryPanel historyPanel;
 
+    /**
+     * Panel for displaying results of queries (incl. content words and keywords)
+     */
+    private QueryResultPanel queryResultPanel;
+
     public QueryPane() {
         // load image icon for the menuBtn button
         ClassLoader loader = this.getClass().getClassLoader();
@@ -49,8 +54,33 @@ public class QueryPane extends BorderPane {
         this.setTop(menuBtn);
         BorderPane.setAlignment(menuBtn, Pos.CENTER_RIGHT);
 
-        // for testing only
-        this.setCenter(new QueryResultPanel());
+        // create panels that display histories, query controls, queries results
+        queryControlPanel = new QueryControlPanel();
+        historyPanel = new HistoryPanel();
+        queryResultPanel = new QueryResultPanel();
+
+        // this grid pane is used to organise the queryControlPanel, historyPanel and
+        // queryResultPanel
+        GridPane panelGridOrganiser = new GridPane();
+        panelGridOrganiser.add(queryResultPanel, 0, 0);
+        /*
+         * -----------------------------------------------------------------------------
+         * 
+         * 
+         * Second columns will be used for additional functionality
+         * 
+         * -----------------------------------------------------------------------------
+         * panelGridOrganiser.add(htmlAnalysis?????, 1, 0);
+         */
+        panelGridOrganiser.add(new VBox(queryControlPanel, historyPanel), 2, 0);
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(100 / 3);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(100 / 3);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setPercentWidth(100 / 3);
+        panelGridOrganiser.getColumnConstraints().addAll(col1, col2, col3);
+        this.setCenter(panelGridOrganiser);
     }
 }
 
@@ -193,11 +223,9 @@ class QueryResultPanel extends GridPane {
          * --------------------------------------------------------------------------
          */
         var testList = new ArrayList<String>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 40; i++)
             testList.add("https://www.google.com");
         refreshCwRes(testList);
-        for (int i = 0; i < 20; i++)
-            testList.add("https://www.google.com");
         refreshKwRes(testList);
     }
 
