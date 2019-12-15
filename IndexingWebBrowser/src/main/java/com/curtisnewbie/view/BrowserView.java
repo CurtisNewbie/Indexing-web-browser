@@ -1,7 +1,10 @@
 package com.curtisnewbie.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 /**
  * <p>
@@ -22,16 +25,23 @@ import javafx.scene.layout.Pane;
 public class BrowserView extends BorderPane {
 
     /**
+     * Universal Menu for both views
+     * 
+     * @see MenuButton
+     */
+    private Menu menu;
+
+    /**
      * A Pane consits of a group of nodes/componenets for the layout displaying the
      * HTML viewing UI
      */
-    private BorderPane displayPane;
+    private DisplayPane displayPane;
 
     /**
      * A Pane consits of group of nodes/componenets for the layout displaying the
      * query searching UI
      */
-    private BorderPane queryPane;
+    private QueryPane queryPane;
 
     public BrowserView() {
         init();
@@ -39,9 +49,11 @@ public class BrowserView extends BorderPane {
 
     /** Initialise The View including its' internal components */
     private void init() {
+        this.menu = new MenuBtn();
+        displayPane = new DisplayPane(menu);
+        queryPane = new QueryPane(menu);
 
-        displayPane = new DisplayPane();
+        // by default, displayPane is shown first
         this.setCenter(displayPane);
     }
-
 }

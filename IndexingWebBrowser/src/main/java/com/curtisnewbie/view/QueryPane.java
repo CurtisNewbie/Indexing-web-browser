@@ -32,8 +32,14 @@ public class QueryPane extends BorderPane {
      */
     private QueryResultPanel queryResultPanel;
 
-    public QueryPane() {
-        this.menuBtn = new MenuBtn();
+    /**
+     * Instantiate QueryPane
+     * 
+     * @param menuBtn the menu for this view (it can be universal for the whole
+     *                program if necessary)
+     */
+    public QueryPane(Menu menuBtn) {
+        this.menuBtn = menuBtn;
         this.setTop(new MenuBar(menuBtn));
 
         // create panels that display histories, query controls, queries results

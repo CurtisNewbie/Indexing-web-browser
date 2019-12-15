@@ -55,15 +55,18 @@ public class DisplayPane extends VBox {
     /**
      * Instantiate DisplayPane
      * 
+     * @param menuBtn the menu for this view (it can be universal for the whole
+     *                program if necessary)
      * @see DisplayPane
+     * @see MenuButton
      */
-    public DisplayPane() {
+    public DisplayPane(Menu menuBtn) {
         BorderPane borderPane = new BorderPane();
         this.urlInputbox = new UrlInputBox();
         borderPane.setTop(urlInputbox);
         this.tabPane = new TabPane();
         borderPane.setCenter(tabPane);
-        this.menuBtn = new MenuBtn();
+        this.menuBtn = menuBtn;
         this.getChildren().addAll(new MenuBar(menuBtn), borderPane);
 
         // for testing
