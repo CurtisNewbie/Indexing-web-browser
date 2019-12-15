@@ -47,11 +47,6 @@ public class BrowserView extends BorderPane {
     private QueryPane queryPane;
 
     public BrowserView() {
-        init();
-    }
-
-    /** Initialise The View including its' internal components */
-    private void init() {
         this.menu = new MenuBtn();
         this.setTop(new MenuBar(menu));
         displayPane = new DisplayPane();
@@ -105,6 +100,14 @@ public class BrowserView extends BorderPane {
      */
     public void addUrlEventHandler(EventHandler<ActionEvent> handler) {
         displayPane.getUrlInputBox().getUrlTextField().setOnAction(handler);
+    }
+
+    public void addInfixQueryHandler(EventHandler<ActionEvent> handler) {
+
+    }
+
+    public void addPrefixQueryHandler(EventHandler<ActionEvent> handler) {
+
     }
 
     public Menu getMenu() {
