@@ -1,5 +1,7 @@
 package com.curtisnewbie.view;
 
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
@@ -56,4 +58,28 @@ public class BrowserView extends BorderPane {
         // by default, displayPane is shown first
         this.setCenter(displayPane);
     }
+
+    /**
+     * Add Multiple EventHandlers for the Menu, each handler for one of MenuItem in
+     * the menu. These EventHandlers are registered in order.
+     * 
+     * @param handlers EventHandlers
+     * @throws IllegalArgumentException when the number of given handlers is not
+     *                                  equal to the number of MenuItems under this
+     *                                  Menu
+     * @see MenuButton
+     */
+    public void addMenuEventHandlers(List<EventHandler<ActionEvent>> handlers) throws IllegalArgumentException {
+        var menuItems = menu.getItems();
+
+        if (handlers.size() != menuItems.size())
+            throw new IllegalArgumentException(
+                    "Number of EventHandlers should be equal to the number of MenuItems under this Menu");
+        else {
+            for (int i = 0; i < handlers.size(); i++) {
+                menuItems.get(i).setOnAction(handlers.get(i));
+            }
+        }
+    }
+
 }
