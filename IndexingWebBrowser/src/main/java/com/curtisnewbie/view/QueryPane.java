@@ -8,26 +8,18 @@ import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.image.*;
 import javafx.scene.text.Text;
-import java.io.*;
 
 public class QueryPane extends BorderPane {
-
-    /** Maximum Height of Image */
-    private double MAX_IMG_HEIGHT = 20;
-
-    /** Path to the icon for menuBtn buttn */
-    private final String PATH_TO_MENUICON = "img/menu_icon.png";
 
     /**
      * menu button for switching to another "view" (i.e., the view for displaying
      * content of webpages).
      * 
      * @see BrowserView
-     * @see QueryPane
+     * @see MenuButton
      */
-    private Button menuBtn;
+    private Menu menuBtn;
 
     /** Control Panel for entering queries and starting query searching */
     private QueryControlPanel queryControlPanel;
@@ -41,18 +33,8 @@ public class QueryPane extends BorderPane {
     private QueryResultPanel queryResultPanel;
 
     public QueryPane() {
-        // load image icon for the menuBtn button
-        ClassLoader loader = this.getClass().getClassLoader();
-        InputStream menuIn = loader.getResourceAsStream(PATH_TO_MENUICON);
-        if (menuIn == null)
-            throw new IllegalArgumentException("Cannot find Icon Image at \"" + PATH_TO_MENUICON + "\"");
-
-        ImageView menuIcon = new ImageView(new Image(menuIn));
-        menuIcon.setFitWidth(MAX_IMG_HEIGHT);
-        menuIcon.setFitHeight(MAX_IMG_HEIGHT);
-        menuBtn = new Button(null, menuIcon);
-        this.setTop(menuBtn);
-        BorderPane.setAlignment(menuBtn, Pos.CENTER_RIGHT);
+        this.menuBtn = new MenuButton();
+        this.setTop(new MenuBar(menuBtn));
 
         // create panels that display histories, query controls, queries results
         queryControlPanel = new QueryControlPanel();
@@ -82,6 +64,16 @@ public class QueryPane extends BorderPane {
         panelGridOrganiser.getColumnConstraints().addAll(col1, col2, col3);
         this.setCenter(panelGridOrganiser);
     }
+
+    /**
+     * Get Menu
+     * 
+     * @return Menu obj
+     */
+    public Menu getMenuBtn() {
+        return this.menuBtn;
+    }
+
 }
 
 /**
