@@ -7,8 +7,6 @@ import javafx.scene.image.ImageView;
 import java.io.InputStream;
 
 import javafx.collections.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
 public class MenuBtn extends Menu {
 
