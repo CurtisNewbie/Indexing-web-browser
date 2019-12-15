@@ -5,8 +5,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.image.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.web.WebView;
 import javafx.scene.control.TabPane;
@@ -19,13 +22,14 @@ import java.io.InputStream;
  * seaarch contents.
  * </p>
  * <p>
- * This class itself is a subclass of BorderPane, and it represents one of the
- * view in this program for displaying content of webpages.
+ * This class itself is a subclass of VBox, and it represents one of the view in
+ * this program for displaying content of webpages. It internally uses
+ * BorderPane to organise the subnodes.
  * </p>
  * 
  * @see BrowserView
  */
-public class DisplayPane extends BorderPane {
+public class DisplayPane extends VBox {
 
     /**
      * It's a HBox that contains some of the control components/nodes in this pane
@@ -40,15 +44,27 @@ public class DisplayPane extends BorderPane {
     private TabPane tabPane;
 
     /**
+     * menu button for switching to another "view" (i.e., the view for query
+     * searching).
+     * 
+     * @see BrowserView
+     * @see UrlInputBox
+     */
+    private Menu menuBtn;
+
+    /**
      * Instantiate DisplayPane
      * 
      * @see DisplayPane
      */
     public DisplayPane() {
+        BorderPane borderPane = new BorderPane();
         this.urlInputbox = new UrlInputBox();
-        this.setTop(urlInputbox);
+        borderPane.setTop(urlInputbox);
         this.tabPane = new TabPane();
-        this.setCenter(tabPane);
+        borderPane.setCenter(tabPane);
+        this.menuBtn = new MenuButton();
+        this.getChildren().addAll(new MenuBar(menuBtn), borderPane);
 
         // for testing
         var v = new WebView();
@@ -95,6 +111,15 @@ public class DisplayPane extends BorderPane {
         return this.urlInputbox;
     }
 
+    /**
+     * Get Menu
+     * 
+     * @return Menu obj
+     */
+    public Menu getMenuBtn() {
+        return this.menuBtn;
+    }
+
 }
 
 /**
@@ -109,9 +134,6 @@ class UrlInputBox extends HBox {
     /** Path to the icon for forwardBtn buttn */
     private final String PATH_TO_FORWICON = "img/arrow_forward.png";
 
-    /** Path to the icon for menuBtn buttn */
-    private final String PATH_TO_MENUICON = "img/menu_icon.png";
-
     /** Maximum height of icon images in the buttons */
     private final double MAX_IMG_HEIGHT = 20.0;
 
@@ -124,15 +146,6 @@ class UrlInputBox extends HBox {
     /** Button for going forward to the recent viewed webpage */
     private Button forwardBtn;
 
-    /**
-     * menu button for switching to another "view" (i.e., the view for query
-     * searching).
-     * 
-     * @see BrowserView
-     * @see UrlInputBox
-     */
-    private Button menuBtn;
-
     public UrlInputBox() {
         // load icon images for buttons
         ClassLoader loader = getClass().getClassLoader();
@@ -144,10 +157,6 @@ class UrlInputBox extends HBox {
         if (forwIn == null)
             throw new IllegalArgumentException("Cannot find Icon Image at \"" + PATH_TO_FORWICON + "\"");
 
-        InputStream menuIn = loader.getResourceAsStream(PATH_TO_MENUICON);
-        if (menuIn == null)
-            throw new IllegalArgumentException("Cannot find Icon Image at \"" + PATH_TO_MENUICON + "\"");
-
         // initialise buttons and textfield
         ImageView backIcon = new ImageView(new Image(backIn));
         backIcon.setFitHeight(MAX_IMG_HEIGHT);
@@ -155,19 +164,14 @@ class UrlInputBox extends HBox {
         ImageView forwIcon = new ImageView(new Image(forwIn));
         forwIcon.setFitWidth(MAX_IMG_HEIGHT);
         forwIcon.setFitHeight(MAX_IMG_HEIGHT);
-        ImageView menuIcon = new ImageView(new Image(menuIn));
-        menuIcon.setFitWidth(MAX_IMG_HEIGHT);
-        menuIcon.setFitHeight(MAX_IMG_HEIGHT);
 
         backTrackBtn = new Button(null, backIcon);
         forwardBtn = new Button(null, forwIcon);
-        menuBtn = new Button(null, menuIcon);
         urlTextField = new TextField();
         // the actual height for the TextField should be MAX_IMG_HEIGHT + 10, since in
         // the buttons, additional padding within buttons are added
         urlTextField.setMinHeight(MAX_IMG_HEIGHT + 10);
-
-        this.getChildren().addAll(backTrackBtn, forwardBtn, urlTextField, menuBtn);
+        this.getChildren().addAll(backTrackBtn, forwardBtn, urlTextField);
         HBox.setHgrow(urlTextField, Priority.ALWAYS);
     }
 
@@ -182,9 +186,4 @@ class UrlInputBox extends HBox {
     public Button getForwardBtn() {
         return this.forwardBtn;
     }
-
-    public Button getMenuBtn() {
-        return this.menuBtn;
-    }
-
 }
