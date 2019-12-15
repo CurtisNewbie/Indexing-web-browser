@@ -63,7 +63,7 @@ public class DisplayPane extends VBox {
         borderPane.setTop(urlInputbox);
         this.tabPane = new TabPane();
         borderPane.setCenter(tabPane);
-        this.menuBtn = new MenuButton();
+        this.menuBtn = new MenuBtn();
         this.getChildren().addAll(new MenuBar(menuBtn), borderPane);
 
         // for testing

@@ -17,7 +17,7 @@ public class QueryPane extends BorderPane {
      * content of webpages).
      * 
      * @see BrowserView
-     * @see MenuButton
+     * @see MenuBtn
      */
     private Menu menuBtn;
 
@@ -33,7 +33,7 @@ public class QueryPane extends BorderPane {
     private QueryResultPanel queryResultPanel;
 
     public QueryPane() {
-        this.menuBtn = new MenuButton();
+        this.menuBtn = new MenuBtn();
         this.setTop(new MenuBar(menuBtn));
 
         // create panels that display histories, query controls, queries results

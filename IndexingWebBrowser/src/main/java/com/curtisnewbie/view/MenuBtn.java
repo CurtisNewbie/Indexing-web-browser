@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 import javafx.collections.*;
 
-public class MenuButton extends Menu {
+public class MenuBtn extends Menu {
 
     /** Maximum height of icon images in the buttons */
     private double MAX_IMG_HEIGHT = 20;
@@ -19,7 +19,7 @@ public class MenuButton extends Menu {
     /** Path to the icon for menuBtn buttn */
     private final String PATH_TO_MENUICON = "img/menu_icon.png";
 
-    public MenuButton() {
+    public MenuBtn() {
         // load icon for this menu
         ClassLoader loader = getClass().getClassLoader();
         InputStream menuIn = loader.getResourceAsStream(PATH_TO_MENUICON);
