@@ -2,6 +2,8 @@ package com.curtisnewbie.controller;
 
 import com.curtisnewbie.view.*;
 import javafx.event.*;
+import javafx.scene.control.Button;
+
 import java.util.*;
 
 /**
@@ -45,8 +47,17 @@ public class BrowserController {
             displayPane.addTab(url);
 
             // save unique url
-            if (!urlSet.contains(url)) {
+            if (url != null && !url.isEmpty() && !urlSet.contains(url)) {
                 urlSet.add(url);
+
+                // update history view
+                var btn = new Button(url);
+                view.getQueryPane().getHistoryPanel().add(btn);
+                // assign eventhandler for this btn
+                btn.setOnAction(e1 -> {
+                    view.getDisplayPane().addTab(url);
+                    view.switchView(view.getDisplayPane());
+                });
             }
         });
     }

@@ -48,4 +48,8 @@ public class QueryPane extends GridPane {
         this.getColumnConstraints().addAll(col1, col2, col3);
     }
 
+    public HistoryPanel getHistoryPanel() {
+        return historyPanel;
+    }
+
 }

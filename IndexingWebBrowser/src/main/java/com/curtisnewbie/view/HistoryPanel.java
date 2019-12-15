@@ -31,27 +31,37 @@ public class HistoryPanel extends VBox {
          * 
          * --------------------------------------------------------------------------
          */
-        var testList = new ArrayList<String>();
-        for (int i = 0; i < 30; i++)
-            testList.add("https://www.google.com");
-        refresh(testList);
+        // var testList = new ArrayList<String>();
+        // for (int i = 0; i < 30; i++)
+        // testList.add("https://www.google.com");
+        // refresh(testList);
     }
 
     /**
-     * Refresh this history panel by clearing the original {@code ObservableList}
-     * and reloading the strings (each in a {@code Button}) into this {@code
-     * ObservableList}
+     * Add one url string (in a {@code Button}) to the {@code ObservableList}
      * 
-     * @param urls A List of url strings
-     * 
+     * @param urlBtn a Button contains the url string
      */
-    public void refresh(List<String> urls) {
-        if (urls != null && urls.size() > 0) {
-            observableList.clear();
-            for (String url : urls) {
-                var btn = new Button(url);
-                observableList.add(btn);
-            }
-        }
+    public void add(Button urlBtn) {
+        if (urlBtn != null)
+            observableList.add(urlBtn);
     }
+
+    // /**
+    // * Refresh this history panel by clearing the original {@code ObservableList}
+    // * and reloading the strings (each in a {@code Button}) into this {@code
+    // * ObservableList}
+    // *
+    // * @param urls A List of url strings
+    // *
+    // */
+    // public void refresh(List<String> urls) {
+    // if (urls != null && urls.size() > 0) {
+    // observableList.clear();
+    // for (String url : urls) {
+    // var btn = new Button(url);
+    // observableList.add(btn);
+    // }
+    // }
+    // }
 }
