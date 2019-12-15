@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
@@ -15,9 +16,9 @@ import javafx.scene.layout.Pane;
  * stored.
  * </p>
  * <p>
- * This program has two views (or cards of CardLayout) in Javafx, one is for
- * viewing the content of the webpages, and another one is for using query to
- * seaarch contents.
+ * This program has two views (or cards in CardLayout in Swing) in Javafx, one
+ * is for viewing the content of the webpages, and another one is for using
+ * query to seaarch contents.
  * </p>
  * <p>
  * This class itself is a subclass of Pane, and it controls switching between
@@ -27,7 +28,7 @@ import javafx.scene.layout.Pane;
 public class BrowserView extends BorderPane {
 
     /**
-     * Universal Menu for both views
+     * Universal Menu for this program
      * 
      * @see MenuButton
      */
@@ -52,8 +53,9 @@ public class BrowserView extends BorderPane {
     /** Initialise The View including its' internal components */
     private void init() {
         this.menu = new MenuBtn();
-        displayPane = new DisplayPane(menu);
-        queryPane = new QueryPane(menu);
+        this.setTop(new MenuBar(menu));
+        displayPane = new DisplayPane();
+        queryPane = new QueryPane();
 
         // by default, displayPane is shown first
         this.setCenter(displayPane);

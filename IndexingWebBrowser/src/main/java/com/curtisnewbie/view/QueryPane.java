@@ -10,16 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
-public class QueryPane extends BorderPane {
-
-    /**
-     * menu button for switching to another "view" (i.e., the view for displaying
-     * content of webpages).
-     * 
-     * @see BrowserView
-     * @see MenuBtn
-     */
-    private Menu menuBtn;
+public class QueryPane extends GridPane {
 
     /** Control Panel for entering queries and starting query searching */
     private QueryControlPanel queryControlPanel;
@@ -38,19 +29,14 @@ public class QueryPane extends BorderPane {
      * @param menuBtn the menu for this view (it can be universal for the whole
      *                program if necessary)
      */
-    public QueryPane(Menu menuBtn) {
-        this.menuBtn = menuBtn;
-        this.setTop(new MenuBar(menuBtn));
+    public QueryPane() {
 
         // create panels that display histories, query controls, queries results
         queryControlPanel = new QueryControlPanel();
         historyPanel = new HistoryPanel();
         queryResultPanel = new QueryResultPanel();
 
-        // this grid pane is used to organise the queryControlPanel, historyPanel and
-        // queryResultPanel
-        GridPane panelGridOrganiser = new GridPane();
-        panelGridOrganiser.add(queryResultPanel, 0, 0);
+        this.add(queryResultPanel, 0, 0);
         /*
          * -----------------------------------------------------------------------------
          * 
@@ -58,26 +44,16 @@ public class QueryPane extends BorderPane {
          * Second columns will be used for additional functionality
          * 
          * -----------------------------------------------------------------------------
-         * panelGridOrganiser.add(htmlAnalysis?????, 1, 0);
+         * this.add(htmlAnalysis?????, 1, 0);
          */
-        panelGridOrganiser.add(new VBox(queryControlPanel, historyPanel), 2, 0);
+        this.add(new VBox(queryControlPanel, historyPanel), 2, 0);
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setPercentWidth(100 / 3);
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setPercentWidth(100 / 3);
         ColumnConstraints col3 = new ColumnConstraints();
         col3.setPercentWidth(100 / 3);
-        panelGridOrganiser.getColumnConstraints().addAll(col1, col2, col3);
-        this.setCenter(panelGridOrganiser);
-    }
-
-    /**
-     * Get Menu
-     * 
-     * @return Menu obj
-     */
-    public Menu getMenuBtn() {
-        return this.menuBtn;
+        this.getColumnConstraints().addAll(col1, col2, col3);
     }
 
 }

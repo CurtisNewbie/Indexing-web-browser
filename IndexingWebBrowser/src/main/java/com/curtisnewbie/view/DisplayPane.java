@@ -5,11 +5,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.image.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.web.WebView;
 import javafx.scene.control.TabPane;
@@ -22,14 +19,13 @@ import java.io.InputStream;
  * seaarch contents.
  * </p>
  * <p>
- * This class itself is a subclass of VBox, and it represents one of the view in
- * this program for displaying content of webpages. It internally uses
- * BorderPane to organise the subnodes.
+ * This class itself is a subclass of BorderPane, and it represents one of the
+ * view in this program for displaying content of webpages.
  * </p>
  * 
  * @see BrowserView
  */
-public class DisplayPane extends VBox {
+public class DisplayPane extends BorderPane {
 
     /**
      * It's a HBox that contains some of the control components/nodes in this pane
@@ -44,15 +40,6 @@ public class DisplayPane extends VBox {
     private TabPane tabPane;
 
     /**
-     * menu button for switching to another "view" (i.e., the view for query
-     * searching).
-     * 
-     * @see BrowserView
-     * @see UrlInputBox
-     */
-    private Menu menuBtn;
-
-    /**
      * Instantiate DisplayPane
      * 
      * @param menuBtn the menu for this view (it can be universal for the whole
@@ -60,14 +47,11 @@ public class DisplayPane extends VBox {
      * @see DisplayPane
      * @see MenuButton
      */
-    public DisplayPane(Menu menuBtn) {
-        BorderPane borderPane = new BorderPane();
+    public DisplayPane() {
         this.urlInputbox = new UrlInputBox();
-        borderPane.setTop(urlInputbox);
+        this.setTop(urlInputbox);
         this.tabPane = new TabPane();
-        borderPane.setCenter(tabPane);
-        this.menuBtn = menuBtn;
-        this.getChildren().addAll(new MenuBar(menuBtn), borderPane);
+        this.setCenter(tabPane);
 
         // for testing
         var v = new WebView();
@@ -112,15 +96,6 @@ public class DisplayPane extends VBox {
      */
     public UrlInputBox getUrlInputBox() {
         return this.urlInputbox;
-    }
-
-    /**
-     * Get Menu
-     * 
-     * @return Menu obj
-     */
-    public Menu getMenuBtn() {
-        return this.menuBtn;
     }
 
 }
