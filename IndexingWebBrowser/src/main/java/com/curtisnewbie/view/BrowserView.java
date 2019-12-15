@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 
 /**
  * <p>
@@ -60,6 +60,18 @@ public class BrowserView extends BorderPane {
     }
 
     /**
+     * Switch between "view" (e.g., QueryPane and DisplayPane). If the one that is
+     * switched to is the same as the current view, it does nothing.
+     * 
+     * @param view A Pane that is displayed at the center of this program.
+     */
+    public void switchView(Pane view) {
+        if (view != getCenter()) {
+            this.setCenter(view);
+        }
+    }
+
+    /**
      * Add Multiple EventHandlers for the Menu, each handler for one of MenuItem in
      * the menu. These EventHandlers are registered in order.
      * 
@@ -80,6 +92,14 @@ public class BrowserView extends BorderPane {
                 menuItems.get(i).setOnAction(handlers.get(i));
             }
         }
+    }
+
+    public QueryPane getQueryPane() {
+        return queryPane;
+    }
+
+    public DisplayPane getDisplayPane() {
+        return displayPane;
     }
 
 }
