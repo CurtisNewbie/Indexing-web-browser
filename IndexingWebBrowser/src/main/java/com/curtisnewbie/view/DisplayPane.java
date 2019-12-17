@@ -84,4 +84,8 @@ public class DisplayPane extends BorderPane {
         return this.urlInputbox;
     }
 
+    public Tab getCurrentTab() {
+        return this.tabPane.getSelectionModel().getSelectedItem();
+    }
+
 }

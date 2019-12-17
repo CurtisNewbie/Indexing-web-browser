@@ -92,11 +92,10 @@ public class BrowserView extends BorderPane {
     }
 
     /**
-     * Add EventHandler for loading url and creating new tab. This handler is for
-     * the ActionEvent that is fired when a user presses Enter key on the URL
-     * TextField.
+     * Add EventHandler for loading url. This handler is for the ActionEvent that is
+     * fired when a user presses Enter key on the URL TextField.
      * 
-     * @param handler EventHandler<ActionEvent> for loading Url and creating new tab
+     * @param handler EventHandler<ActionEvent> for loading Url
      */
     public void addUrlEventHandler(EventHandler<ActionEvent> handler) {
         displayPane.getUrlInputBox().getUrlTextField().setOnAction(handler);

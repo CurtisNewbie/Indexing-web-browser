@@ -3,6 +3,7 @@ package com.curtisnewbie.controller;
 import com.curtisnewbie.view.*;
 import javafx.event.*;
 import javafx.scene.control.Button;
+import javafx.scene.web.WebView;
 
 import java.util.*;
 
@@ -14,13 +15,13 @@ public class BrowserController {
 
     private BrowserView view;
     private HashSet<String> urlSet;
-    private ArrayList<LinkedList<String>> historyForTabs;
+    // private ArrayList<LinkedList<String>> historyForTabs;
     private String default_url;
 
     public BrowserController(BrowserView view) {
         this.view = view;
         this.urlSet = new HashSet<>();
-        this.historyForTabs = new ArrayList<LinkedList<String>>();
+        // this.historyForTabs = new ArrayList<LinkedList<String>>();
         this.default_url = "https://www.google.com";
 
         // register EventHandlers
@@ -43,25 +44,33 @@ public class BrowserController {
         view.addMenuEventHandlers(handlers);
     }
 
-    /** Register EventHandler for loading url and creating new tab */
+    /** Register EventHandler for loading url */
     private void regUrlEventHandlers() {
         this.view.addUrlEventHandler(e -> {
             // update view
             var displayPane = this.view.getDisplayPane();
             String url = displayPane.getUrlInputBox().getUrlTextField().getText();
 
-            // save unique url
-            if (url != null && !url.isEmpty() && !urlSet.contains(url)) {
-                urlSet.add(url);
+            if (url != null && !url.isEmpty()) {
+                // jump to this url
+                WebView currWebView = (WebView) this.view.getDisplayPane().getCurrentTab().getContent();
+                currWebView.getEngine()
+                        .load(url.startsWith("http://") || url.startsWith("https://") ? url : "http://" + url);
 
-                // update history view
-                var btn = new Button(url);
-                view.getQueryPane().getHistoryPanel().add(btn);
-                // assign eventhandler for this btn
-                btn.setOnAction(e1 -> {
-                    view.getDisplayPane().addTab(url);
-                    view.switchView(view.getDisplayPane());
-                });
+                // save unique url in history
+                if (!urlSet.contains(url)) {
+                    urlSet.add(url);
+
+                    // update history view
+                    var btn = new Button(url);
+                    view.getQueryPane().getHistoryPanel().add(btn);
+
+                    // assign eventhandler for this btn
+                    btn.setOnAction(e1 -> {
+                        view.getDisplayPane().addTab(url);
+                        view.switchView(view.getDisplayPane());
+                    });
+                }
             }
         });
     }
