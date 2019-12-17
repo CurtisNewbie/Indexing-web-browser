@@ -110,6 +110,15 @@ public class BrowserView extends BorderPane {
 
     }
 
+    /**
+     * Add EventHandler for creating new tab.
+     * 
+     * @param handler EventHandler for creating new tab
+     */
+    public void addNewTabHandler(EventHandler<ActionEvent> handler) {
+        displayPane.getUrlInputBox().getAddTabBtn().setOnAction(handler);
+    }
+
     public Menu getMenu() {
         return menu;
     }

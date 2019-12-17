@@ -14,14 +14,19 @@ public class BrowserController {
 
     private BrowserView view;
     private HashSet<String> urlSet;
+    private ArrayList<LinkedList<String>> historyForTabs;
+    private String default_url;
 
     public BrowserController(BrowserView view) {
         this.view = view;
         this.urlSet = new HashSet<>();
+        this.historyForTabs = new ArrayList<LinkedList<String>>();
+        this.default_url = "https://www.google.com";
 
         // register EventHandlers
         regMenuEventHandlers();
         regUrlEventHandlers();
+        regNewTabEventHandler();
     }
 
     /** register EventHandlers for Menu */
@@ -44,7 +49,6 @@ public class BrowserController {
             // update view
             var displayPane = this.view.getDisplayPane();
             String url = displayPane.getUrlInputBox().getUrlTextField().getText();
-            displayPane.addTab(url);
 
             // save unique url
             if (url != null && !url.isEmpty() && !urlSet.contains(url)) {
@@ -61,4 +65,12 @@ public class BrowserController {
             }
         });
     }
+
+    /** Register EventHandler to handle event for creating new tab */
+    private void regNewTabEventHandler() {
+        this.view.addNewTabHandler(e -> {
+            this.view.getDisplayPane().addTab(default_url);
+        });
+    }
+
 }
