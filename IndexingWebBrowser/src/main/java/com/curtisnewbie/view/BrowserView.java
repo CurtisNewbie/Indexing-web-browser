@@ -97,7 +97,7 @@ public class BrowserView extends BorderPane {
      * 
      * @param handler EventHandler<ActionEvent> for loading Url
      */
-    public void addUrlEventHandler(EventHandler<ActionEvent> handler) {
+    public void addUrlLoadingEventHandler(EventHandler<ActionEvent> handler) {
         displayPane.getUrlInputBox().getUrlTextField().setOnAction(handler);
     }
 

@@ -26,7 +26,7 @@ public class BrowserController {
 
         // register EventHandlers
         regMenuEventHandlers();
-        regUrlEventHandlers();
+        regUrlLoadingEventHandler();
         regNewTabEventHandler();
     }
 
@@ -45,8 +45,8 @@ public class BrowserController {
     }
 
     /** Register EventHandler for loading url */
-    private void regUrlEventHandlers() {
-        this.view.addUrlEventHandler(e -> {
+    private void regUrlLoadingEventHandler() {
+        this.view.addUrlLoadingEventHandler(e -> {
             // update view
             var displayPane = this.view.getDisplayPane();
             String url = displayPane.getUrlInputBox().getUrlTextField().getText();
