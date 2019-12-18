@@ -1,9 +1,14 @@
 package com.curtisnewbie.controller;
 
 import com.curtisnewbie.view.*;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker.State;
 import javafx.event.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 import java.util.*;
@@ -45,7 +50,10 @@ public class BrowserController {
         view.addMenuEventHandlers(handlers);
     }
 
-    /** Register EventHandler for loading url */
+    /**
+     * Register EventHandler for loading url in textfield. When no tab exists,
+     * entering url in textfield will result in creating a new tab to load such url.
+     */
     private void regUrlLoadingEventHandler() {
         this.view.addUrlLoadingEventHandler(e -> {
             // update view
@@ -56,40 +64,96 @@ public class BrowserController {
                 Tab currTab = this.view.getDisplayPane().getCurrentTab();
                 if (currTab == null) {
                     // if there is no tab being selected, add new tab
-                    displayPane.addTab(completeURL(url));
+                    Tab createdTab = displayPane.addTab(completeURL(url));
+                    // keep tracks of change of state
+                    registerStateChangeHandler(createdTab);
                 } else {
                     // update current tab to this url
                     WebView currWebView = (WebView) currTab.getContent();
                     currWebView.getEngine().load(completeURL(url));
-
-                    // save unique url in history
-                    if (!urlSet.contains(url)) {
-                        urlSet.add(url);
-
-                        // update history view
-                        var btn = new Button(url);
-                        view.getQueryPane().getHistoryPanel().add(btn);
-
-                        // assign eventhandler for this btn
-                        btn.setOnAction(e1 -> {
-                            view.getDisplayPane().addTab(url);
-                            view.switchView(view.getDisplayPane());
-                        });
-                    }
                 }
             }
         });
     }
 
-    /** Register EventHandler to handle event for creating new tab */
+    /**
+     * <p>
+     * Register EventHandler to handle event for creating new {@code Tab}. The new
+     * {@code Tab} created is registered with a {@code
+     * ChangeListener<State>}, through which it detects the change of the state of
+     * the {@code WebEngine} in the {@code Tab}.
+     * </p>
+     * <p>
+     * When the {@code WebEngine} successfully load the webpage (of the URL entered
+     * in textfield or hyperlink clicked inside the {@code WebView}), it records the
+     * URL in the {@code HistoryPanel}. Note that history is only updated, when the
+     * webpage is successfully loaded.
+     * </p>
+     */
     private void regNewTabEventHandler() {
         this.view.addNewTabHandler(e -> {
-            this.view.getDisplayPane().addTab(default_url);
+            Tab createdTab = this.view.getDisplayPane().addTab(default_url);
+            // keep tracks of change of state
+            registerStateChangeHandler(createdTab);
         });
     }
 
     private String completeURL(String oriUrl) {
         return oriUrl.startsWith("http://") || oriUrl.startsWith("https://") ? oriUrl : "http://" + oriUrl;
+    }
+
+    /**
+     * Update historyPanel only when this url is unique, i.e., it has never been
+     * accessed. This involves creating a new {@code Button} (containing this url
+     * string) in the historyPanel, and setup a {@code EventHandler<ActionEvent>}
+     * for this button to navigate back to the DisplayPane to display the webpage of
+     * this url.
+     * 
+     * @param url URL string
+     */
+    private void updateHistoryPanel(String url) {
+        // save unique url in history
+        if (!urlSet.contains(url)) {
+            urlSet.add(url);
+
+            // update history view
+            var btn = new Button(url);
+            view.getQueryPane().getHistoryPanel().add(btn);
+
+            // assign eventhandler for this btn
+            btn.setOnAction(e1 -> {
+                view.getDisplayPane().addTab(url);
+                view.switchView(view.getDisplayPane());
+            });
+        }
+    }
+
+    /**
+     * <p>
+     * Register a {@code ChangeListener<State>} with a {@code Tab createdTab} so
+     * that whenever the {@code WebView} in this tab successfully loads a webpage,
+     * it updates the historyPanel.
+     * </P>
+     * <p>
+     * The createdTab must already has a WebView insider, else it can throw
+     * exceptions.
+     * </p>
+     * 
+     * @param createdTab Tab with WebView in it as its content.
+     */
+    private void registerStateChangeHandler(Tab createdTab) {
+        WebEngine engine = ((WebView) createdTab.getContent()).getEngine();
+        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
+            @Override
+            public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
+                // if loading url is successful
+                if (newValue == State.SUCCEEDED) {
+                    String url = engine.getLocation();
+                    // update browsing history
+                    updateHistoryPanel(url);
+                }
+            }
+        });
     }
 
 }
