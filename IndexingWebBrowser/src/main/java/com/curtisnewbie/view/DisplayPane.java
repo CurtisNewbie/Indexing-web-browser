@@ -1,6 +1,7 @@
 package com.curtisnewbie.view;
 
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.web.WebView;
 import javafx.scene.control.TabPane;
@@ -84,8 +85,15 @@ public class DisplayPane extends BorderPane {
         return this.urlInputbox;
     }
 
+    /**
+     * Get current selected tab.
+     * 
+     * @return return {@code Tab} if there is tab selected, else return {@code Null}
+     *         if there is no tab availabel at all.
+     */
     public Tab getCurrentTab() {
-        return this.tabPane.getSelectionModel().getSelectedItem();
+        SingleSelectionModel<Tab> model = this.tabPane.getSelectionModel();
+        return model.isEmpty() ? null : model.getSelectedItem();
     }
 
 }
