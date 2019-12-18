@@ -44,9 +44,18 @@ public class QueryResultPanel extends GridPane {
 
         // create and add two VBox to seperate the results for content words and kewords
         var topBox = new VBox();
-        topBox.getChildren().addAll(new Text(title), new Text(cwTitle), new ScrollPane(cwRes));
+        ScrollPane topBoxSP = new ScrollPane(cwRes);
+        topBoxSP.setStyle("-fx-background-color: transparent; -fx-control-inner-background: transparent;");
+        topBoxSP.setFitToHeight(true);
+        topBoxSP.setFitToWidth(true);
+        topBox.getChildren().addAll(new Text(title), new Text(cwTitle), topBoxSP);
+
         var bottomBox = new VBox();
-        bottomBox.getChildren().addAll(new Text(kwTitle), new ScrollPane(kwRes));
+        ScrollPane bottomBoxSP = new ScrollPane(kwRes);
+        bottomBoxSP.setStyle("-fx-background-color: transparent; -fx-control-inner-background: transparent;");
+        bottomBoxSP.setFitToHeight(true);
+        bottomBoxSP.setFitToWidth(true);
+        bottomBox.getChildren().addAll(new Text(kwTitle), bottomBoxSP);
         this.add(topBox, 0, 0);
         this.add(bottomBox, 0, 1);
 
@@ -62,9 +71,9 @@ public class QueryResultPanel extends GridPane {
 
         /*
          * --------------------------------------------------------------------------
-         * 
+         *
          * for testing
-         * 
+         *
          * --------------------------------------------------------------------------
          */
         var testList = new ArrayList<String>();
