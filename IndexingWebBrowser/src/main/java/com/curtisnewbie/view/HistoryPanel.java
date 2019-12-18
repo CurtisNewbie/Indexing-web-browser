@@ -1,12 +1,10 @@
 package com.curtisnewbie.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -23,18 +21,12 @@ public class HistoryPanel extends VBox {
     public HistoryPanel() {
         historiesVBox = new VBox();
         observableList = historiesVBox.getChildren();
-        this.getChildren().addAll(new Text(title), new ScrollPane(historiesVBox));
-        /*
-         * --------------------------------------------------------------------------
-         * 
-         * for testing
-         * 
-         * --------------------------------------------------------------------------
-         */
-        // var testList = new ArrayList<String>();
-        // for (int i = 0; i < 30; i++)
-        // testList.add("https://www.google.com");
-        // refresh(testList);
+        ScrollPane sp = new ScrollPane(historiesVBox);
+        sp.setFitToHeight(true);
+        sp.setFitToWidth(true);
+        sp.setStyle("-fx-background-color: transparent; -fx-control-inner-background: transparent;");
+        sp.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        this.getChildren().addAll(new Text(title), sp);
     }
 
     /**
