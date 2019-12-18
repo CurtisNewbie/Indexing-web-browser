@@ -46,13 +46,6 @@ public class DisplayPane extends BorderPane {
         this.setTop(urlInputbox);
         this.tabPane = new TabPane();
         this.setCenter(tabPane);
-
-        // for testing
-        var v = new WebView();
-        v.getEngine().load("https://www.google.com");
-        var tb = new Tab();
-        tb.setContent(v);
-        tabPane.getTabs().add(tb);
     }
 
     /**

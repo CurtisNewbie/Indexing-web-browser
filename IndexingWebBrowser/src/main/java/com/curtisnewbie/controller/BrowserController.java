@@ -34,6 +34,10 @@ public class BrowserController {
         regMenuEventHandlers();
         regUrlLoadingEventHandler();
         regNewTabEventHandler();
+
+        // by default, display a new tab displaying the default_url
+        var firstTab = this.view.getDisplayPane().addTab(default_url);
+        registerStateChangeHandler(firstTab);
     }
 
     /** register EventHandlers for Menu */
