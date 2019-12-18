@@ -62,15 +62,19 @@ public class DisplayPane extends BorderPane {
      * create a empty tab with no content in it.
      * 
      * @param url a URL String
+     * @return return {@code Tab} created if successful, else return {@code null}
      * 
      */
-    public void addTab(String url) {
+    public Tab addTab(String url) {
         if (url != null && !url.isEmpty()) {
             Tab tab = new Tab();
             var view = new WebView();
             view.getEngine().load(url);
             tab.setContent(view);
             tabPane.getTabs().add(tab);
+            return tab;
+        } else {
+            return null;
         }
     }
 
