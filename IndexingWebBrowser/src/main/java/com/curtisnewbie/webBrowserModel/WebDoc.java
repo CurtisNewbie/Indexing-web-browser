@@ -234,37 +234,28 @@ public class WebDoc implements Comparable<WebDoc> {
 	}
 
 	/**
-	 * Read the content from the local HTML file. The content can be empty, while if
-	 * exceptions occur, the fileStatus is set to FAILED_READING and this method
-	 * returns an empty, no length string. This method only runs once.
+	 * Read the content from the local HTML file (the url should have a prefix of
+	 * "file:"). The content can be empty. This method only runs once.
 	 * 
 	 * @return a String that contains the content of the local HTML file, including
 	 *         all the HTML and JS tags.
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
-	private String readLocalFile() {
+	public String readLocalFile(String url) throws FileNotFoundException, IOException {
 		StringBuilder result = new StringBuilder("");
-		String localWebEntry = urlString;
-		Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
-		Matcher entryMatcher = entryPattern.matcher(urlString);
-		if (entryMatcher.find()) {
-			localWebEntry = entryMatcher.group(2); // extract the true file path.
-		}
-		// Read File
-		try {
-			FileReader fileInput = new FileReader(localWebEntry);
-			BufferedReader reader = new BufferedReader(fileInput);
-			String temp;
-			while ((temp = reader.readLine()) != null) {
-				result.append(temp + " ");
+		Pattern prefixPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
+		Matcher prefixMatcher = prefixPattern.matcher(url);
+
+		String pathToFile;
+		if (prefixMatcher.find()) {
+			// extract the true file path.
+			pathToFile = prefixMatcher.group(2);
+			try (BufferedReader reader = new BufferedReader(new FileReader(pathToFile));) {
+				String temp;
+				while ((temp = reader.readLine()) != null)
+					result.append(temp + " ");
 			}
-			reader.close();
-			fileStatus = FileStatus.SUCCESSFUL_READING;
-		} catch (FileNotFoundException e) {
-			System.out.println("[Warning --- File:\"" + localWebEntry + "\" cannot be found.]");
-			fileStatus = FileStatus.FAILED_READING;
-		} catch (IOException e) {
-			System.out.println("[Warning --- File:\"" + localWebEntry + "\" cannot be accessed.]");
-			fileStatus = FileStatus.FAILED_READING;
 		}
 		return result.toString();
 	}
