@@ -102,6 +102,13 @@ public class BrowserController {
         });
     }
 
+    /**
+     * Add "http://" protocol to the given url string if this url is not starting
+     * with "http://" or "https://".
+     * 
+     * @param oriUrl
+     * @return url string
+     */
     private String completeURL(String oriUrl) {
         return oriUrl.startsWith("http://") || oriUrl.startsWith("https://") ? oriUrl : "http://" + oriUrl;
     }
