@@ -1,6 +1,9 @@
 package com.curtisnewbie.webBrowserModel;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.*;
 import java.net.*;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.TreeSet;
@@ -46,10 +49,11 @@ public class WebDoc implements Comparable<WebDoc> {
 	private FileStatus fileStatus;
 
 	/**
-	 * The entry of this file. If it's a local web document, it may include "File:"
-	 * at the beginning. If it's a web URL, it may include "http:" at the beginning.
+	 * The urlString of this file. If it's a local web document, it may include
+	 * "File:" at the beginning. If it's a web URL, it may include "http:" at the
+	 * beginning.
 	 */
-	private String entry;
+	private String urlString;
 
 	/**
 	 * The original content of this file, including HTML or JS tags.
@@ -100,28 +104,39 @@ public class WebDoc implements Comparable<WebDoc> {
 	 * 
 	 * @param url The URL of this web document. It can either be a web URL or a
 	 *            local web document.
+	 * @throws IOException when it's unable to connect to the given URL string.
 	 */
-	public WebDoc(String url) {
-		this.entry = url;
-		this.checkFileType();
-		if (fileType != FileType.INCORRECT_ENTRY_FORMAT) { // Entry is in correct format.
-			if (fileType == FileType.WEB_URL) {
-				this.content = readWebUrl();
-			} else if (fileType == FileType.LOCAL_WEB_DOC) {
-				this.content = readLocalFile();
-			}
-			this.syntaxQuality = this.checkQualityOfSyntax(); // check whether is well formed.
-			this.keywords = this.extractKeywords();
-			this.numOfKeywords = this.keywords.size();
-			this.contentWords = this.extractContentWords();
-			this.numOfContentWords = this.contentWords.size();
+	public WebDoc(String url) throws IOException, IllegalArgumentException {
 
-			try {
-				this.rangeOfWords = this.contentWords.first() + "-" + this.contentWords.last();
-			} catch (NoSuchElementException e) {
-				rangeOfWords = " "; // no content words.
-			}
-		}
+		this.urlString = url;
+		this.fileType = checkFileType(url);
+		// if (fileType != FileType.INCORRECT_ENTRY_FORMAT) { // Entry is in correct
+		// format.
+		// if (fileType == FileType.WEB_URL) {
+		// this.content = readWebUrl();
+		// } else if (fileType == FileType.LOCAL_WEB_DOC) {
+		// this.content = readLocalFile();
+		// }
+		// this.syntaxQuality = this.checkQualityOfSyntax(); // check whether is well
+		// formed.
+		// this.keywords = this.extractKeywords();
+		// this.numOfKeywords = this.keywords.size();
+		// this.contentWords = this.extractContentWords();
+		// this.numOfContentWords = this.contentWords.size();
+		//
+		// try {
+		// this.rangeOfWords = this.contentWords.first() + "-" +
+		// this.contentWords.last();
+		// } catch (NoSuchElementException e) {
+		// rangeOfWords = " "; // no content words.
+		// }
+		// }
+
+		// GET request to url, and parse it into a document
+		// Document document = Jsoup.connect(url).get();
+		// String content = document.body().text();
+		// String head = document.head().text();
+
 	}
 
 	/**
@@ -194,7 +209,7 @@ public class WebDoc implements Comparable<WebDoc> {
 	private String readWebUrl() {
 		StringBuffer result = new StringBuffer(""); // Read the content into a temporary StringBuffer.
 		try {
-			URL url = new URL(entry);
+			URL url = new URL(urlString);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
 
 			String eachLine = "";
@@ -204,14 +219,14 @@ public class WebDoc implements Comparable<WebDoc> {
 			reader.close();
 			fileStatus = FileStatus.SUCCESSFUL_READING;
 		} catch (MalformedURLException e) {
-			System.out.println("[Warning --- \"" + entry + "\" --- The URL format is incorrect.]");
+			System.out.println("[Warning --- \"" + urlString + "\" --- The URL format is incorrect.]");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IllegalArgumentException e) {
-			System.out.println("[Warning --- \"" + entry
+			System.out.println("[Warning --- \"" + urlString
 					+ "\" --- The protocol is incorrect, please make sure the URL is correct.]");
 			fileStatus = FileStatus.FAILED_READING;
 		} catch (IOException e) {
-			System.out.println("[Warning --- Cannot connect to \"" + entry
+			System.out.println("[Warning --- Cannot connect to \"" + urlString
 					+ "\", please make sure that you have connected to the Internet or that the URL is correct.]");
 			fileStatus = FileStatus.FAILED_READING;
 		}
@@ -228,9 +243,9 @@ public class WebDoc implements Comparable<WebDoc> {
 	 */
 	private String readLocalFile() {
 		StringBuilder result = new StringBuilder("");
-		String localWebEntry = entry;
+		String localWebEntry = urlString;
 		Pattern entryPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
-		Matcher entryMatcher = entryPattern.matcher(entry);
+		Matcher entryMatcher = entryPattern.matcher(urlString);
 		if (entryMatcher.find()) {
 			localWebEntry = entryMatcher.group(2); // extract the true file path.
 		}
@@ -255,27 +270,38 @@ public class WebDoc implements Comparable<WebDoc> {
 	}
 
 	/**
+	 * <p>
 	 * Check whether the type of this entry is a web URL or a local web file or a
-	 * illegal entry. A warning message will be displayed if the format of the entry
-	 * is incorrect.
+	 * illegal entry, by looking at its prefix.
+	 * </p>
+	 * <p>
+	 * If the given url is a web url (with HTTP protocol), it's set to be of
+	 * {@code FileType.WEB_URL}, else if it's a local file (with a prefix of
+	 * "file:"), it's set to be of {@code FileType.LOCAL_WEB_DOC}.
+	 * </p>
+	 * 
+	 * @param url url string
+	 * @throws IllegalArgumentException when the format of the url is incorrect
+	 *                                  (neither has a prefix of "https?:" or
+	 *                                  "file:")
+	 * @see FileType
 	 */
-	private void checkFileType() {
+	private FileType checkFileType(String url) throws IllegalArgumentException {
 		Pattern urlPattern = Pattern.compile("https?:", Pattern.CASE_INSENSITIVE); // Identify whether it's a URL.
 		Pattern localFilePattern = Pattern.compile("file:", Pattern.CASE_INSENSITIVE); // Identify whether it's a local
 																						// file.
-		Matcher urlMatcher = urlPattern.matcher(entry);
-		Matcher localFileMatcher = localFilePattern.matcher(entry);
+		Matcher urlMatcher = urlPattern.matcher(url);
+		Matcher localFileMatcher = localFilePattern.matcher(url);
 
 		// Check whether the entry is a URL or a local file.
-		if (urlMatcher.lookingAt()) { // for a URL.
-			fileType = FileType.WEB_URL;
+		if (urlMatcher.lookingAt()) {
+			return FileType.WEB_URL;
 		} else if (localFileMatcher.lookingAt()) {
-			fileType = FileType.LOCAL_WEB_DOC;
+			return FileType.LOCAL_WEB_DOC;
 		} else {
-			System.out.println("[Warning --- \"" + entry
-					+ "\" is neither a web url, nor a local html file. Please makes sure it's in correct entry format.]");
 			fileType = FileType.INCORRECT_ENTRY_FORMAT;
-			this.fileStatus = FileStatus.FAILED_READING;
+			throw new IllegalArgumentException("[" + url
+					+ "\" is neither a web url, nor a local html file. Please makes sure it's in correct entry format.]\n");
 		}
 	}
 
@@ -363,7 +389,7 @@ public class WebDoc implements Comparable<WebDoc> {
 	 */
 	@Override
 	public String toString() {
-		return entry + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeywords + " " + syntaxQuality;
+		return urlString + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeywords + " " + syntaxQuality;
 	}
 
 	/**
@@ -412,7 +438,7 @@ public class WebDoc implements Comparable<WebDoc> {
 	 * @return the entry of this file.
 	 */
 	public String getEntry() {
-		return entry;
+		return urlString;
 	}
 
 	/**
@@ -443,7 +469,15 @@ public class WebDoc implements Comparable<WebDoc> {
 	 */
 	@Override
 	public int compareTo(WebDoc webdoc) {
-		return entry.compareTo(webdoc.getEntry());
+		return urlString.compareTo(webdoc.getEntry());
+	}
+
+	/**
+	 * @return FileType
+	 * @see FileType
+	 */
+	public FileType getFileType() {
+		return fileType;
 	}
 
 }
