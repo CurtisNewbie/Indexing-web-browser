@@ -37,7 +37,7 @@ public class BrowserController {
 
         // by default, display a new tab displaying the default_url
         var firstTab = this.view.getDisplayPane().addTab(default_url);
-        registerStateChangeHandler(firstTab);
+        regStateChangeHandler(firstTab);
     }
 
     /** register EventHandlers for Menu */
@@ -70,7 +70,7 @@ public class BrowserController {
                     // if there is no tab being selected, add new tab
                     Tab createdTab = displayPane.addTab(completeURL(url));
                     // keep tracks of change of state
-                    registerStateChangeHandler(createdTab);
+                    regStateChangeHandler(createdTab);
                 } else {
                     // update current tab to this url
                     WebView currWebView = (WebView) currTab.getContent();
@@ -98,7 +98,35 @@ public class BrowserController {
         this.view.addNewTabHandler(e -> {
             Tab createdTab = this.view.getDisplayPane().addTab(default_url);
             // keep tracks of change of state
-            registerStateChangeHandler(createdTab);
+            regStateChangeHandler(createdTab);
+        });
+    }
+
+    /**
+     * <p>
+     * Register a {@code ChangeListener<State>} with a {@code Tab createdTab} so
+     * that whenever the {@code WebView} in this tab successfully loads a webpage,
+     * it updates the historyPanel.
+     * </P>
+     * <p>
+     * The createdTab must already has a WebView insider, else it can throw
+     * exceptions.
+     * </p>
+     * 
+     * @param createdTab Tab with WebView in it as its content.
+     */
+    private void regStateChangeHandler(Tab createdTab) {
+        WebEngine engine = ((WebView) createdTab.getContent()).getEngine();
+        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
+            @Override
+            public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
+                // if loading url is successful
+                if (newValue == State.SUCCEEDED) {
+                    String url = engine.getLocation();
+                    // update browsing history
+                    updateHistoryPanel(url);
+                }
+            }
         });
     }
 
@@ -137,34 +165,6 @@ public class BrowserController {
                 view.switchView(view.getDisplayPane());
             });
         }
-    }
-
-    /**
-     * <p>
-     * Register a {@code ChangeListener<State>} with a {@code Tab createdTab} so
-     * that whenever the {@code WebView} in this tab successfully loads a webpage,
-     * it updates the historyPanel.
-     * </P>
-     * <p>
-     * The createdTab must already has a WebView insider, else it can throw
-     * exceptions.
-     * </p>
-     * 
-     * @param createdTab Tab with WebView in it as its content.
-     */
-    private void registerStateChangeHandler(Tab createdTab) {
-        WebEngine engine = ((WebView) createdTab.getContent()).getEngine();
-        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
-            @Override
-            public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
-                // if loading url is successful
-                if (newValue == State.SUCCEEDED) {
-                    String url = engine.getLocation();
-                    // update browsing history
-                    updateHistoryPanel(url);
-                }
-            }
-        });
     }
 
 }
