@@ -14,48 +14,48 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * A GridPane used to display the results of query (content words and keywords).
- * The results consists a list of url Strings, and each url string is in a
- * clickable Button.
+ * A GridPane used to display the results of query (Head and Body sections in
+ * the HTML). The results consists a list of url Strings, and each url string is
+ * in a clickable Button.
  */
 public class QueryResultPanel extends GridPane {
 
     private final String title = "Query Results: ";
-    private final String cwTitle = "Content Words: ";
-    private final String kwTitle = "Keywords: ";
+    private final String hdTitle = "<Head>: ";
+    private final String bdTitle = "<Body>: ";
 
-    /** Display content word results */
-    private VBox cwRes;
+    /** Display Head results */
+    private VBox hdRes;
 
-    /** Display keywords results */
-    private VBox kwRes;
+    /** Display Body results */
+    private VBox bdRes;
 
-    /** {@code ObservableList} for {@code VBox cwRes} */
-    private ObservableList<Node> cwResList;
+    /** {@code ObservableList} for {@code VBox hdRes} */
+    private ObservableList<Node> hdResList;
 
-    /** {@code ObservableList} for {@code VBox kwRes} */
-    private ObservableList<Node> kwResList;
+    /** {@code ObservableList} for {@code VBox bdRes} */
+    private ObservableList<Node> bdResList;
 
     public QueryResultPanel() {
-        cwRes = new VBox();
-        kwRes = new VBox();
-        cwResList = cwRes.getChildren();
-        kwResList = kwRes.getChildren();
+        hdRes = new VBox();
+        bdRes = new VBox();
+        hdResList = hdRes.getChildren();
+        bdResList = bdRes.getChildren();
 
-        // create and add two VBox to seperate the results for content words and kewords
+        // create and add two VBox to seperate the results for Head and Body
         var topBox = new VBox();
-        ScrollPane topBoxSP = new ScrollPane(cwRes);
+        ScrollPane topBoxSP = new ScrollPane(hdRes);
         topBoxSP.setStyle("-fx-background-color: transparent; -fx-control-inner-background: transparent;");
         topBoxSP.setFitToHeight(true);
         topBoxSP.setFitToWidth(true);
-        topBox.getChildren().addAll(new Text(title), new Text(cwTitle), topBoxSP);
+        topBox.getChildren().addAll(new Text(title), new Text(hdTitle), topBoxSP);
 
         var bottomBox = new VBox();
-        ScrollPane bottomBoxSP = new ScrollPane(kwRes);
+        ScrollPane bottomBoxSP = new ScrollPane(bdRes);
         bottomBoxSP.setStyle("-fx-background-color: transparent; -fx-control-inner-background: transparent;");
         bottomBoxSP.setFitToHeight(true);
         bottomBoxSP.setFitToWidth(true);
-        bottomBox.getChildren().addAll(new Text(kwTitle), bottomBoxSP);
+        bottomBox.getChildren().addAll(new Text(bdTitle), bottomBoxSP);
         this.add(topBox, 0, 0);
         this.add(bottomBox, 0, 1);
 
@@ -79,42 +79,42 @@ public class QueryResultPanel extends GridPane {
         var testList = new ArrayList<String>();
         for (int i = 0; i < 40; i++)
             testList.add("https://www.google.com");
-        refreshCwRes(testList);
-        refreshKwRes(testList);
+        refreshHdRes(testList);
+        refreshBdRes(testList);
     }
 
     /**
-     * Refresh content word query results by clearing the original
-     * {@code ObservableList<Node> cwResList} and reloading the strings (each in a
+     * Refresh Head query results by clearing the original
+     * {@code ObservableList<Node> hdResList} and reloading the strings (each in a
      * {@code Button}) into this {@code ObservableList}
      * 
      * @param urls A List of url strings
      * 
      */
-    public void refreshCwRes(List<String> urls) {
+    public void refreshHdRes(List<String> urls) {
         if (urls != null) {
-            cwResList.clear();
+            hdResList.clear();
             for (String url : urls) {
                 var btn = new Button(url);
-                cwResList.add(btn);
+                hdResList.add(btn);
             }
         }
     }
 
     /**
-     * Refresh keyword query results by clearing the original
-     * {@code ObservableList<Node> kwResList} and reloading the strings (each in a
+     * Refresh Body query results by clearing the original
+     * {@code ObservableList<Node> bdResList} and reloading the strings (each in a
      * {@code Button}) into this {@code ObservableList}
      * 
      * @param urls A List of url strings
      * 
      */
-    public void refreshKwRes(List<String> urls) {
+    public void refreshBdRes(List<String> urls) {
         if (urls != null) {
-            kwResList.clear();
+            bdResList.clear();
             for (String url : urls) {
                 var btn = new Button(url);
-                kwResList.add(btn);
+                bdResList.add(btn);
             }
         }
     }
