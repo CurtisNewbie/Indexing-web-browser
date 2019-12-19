@@ -2,38 +2,28 @@ package com.curtisnewbie.webBrowserModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
-import java.net.*;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 import java.util.TreeSet;
 import java.util.regex.*;
 import java.io.*;
 
 /**
- * This class is for the web documents created based on the entries. The entries
- * can either be a web URL or a local web file. It will store the content of the
- * web document, provide access to the content words, and provide the statistics
- * summary of the document.
+ * This class is for the web documents created based on the given url string.
+ * The url string can either be a web URL or a path pointing to a local web
+ * file. Objects of this class will store the content of the webpage, providing
+ * access to all the words, and provide the basic statistics summary of the
+ * document.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  */
 public class WebDoc implements Comparable<WebDoc> {
-	/**
-	 * Type of file. It is used to verify whether the entry is in the correct
-	 * format, and whether it is a web URL or a local web document.
-	 */
-	public enum FileType {
-		WEB_URL, LOCAL_WEB_DOC, INCORRECT_ENTRY_FORMAT
-	}
 
 	/**
-	 * Status of file - whether it has successfully accessed to its content or not.
-	 * It can be used to verify whether the object of WebDoc has successfully read
-	 * its content and extracted the content words and keywords.
+	 * Type of file. It is used to verify whether it is a web URL or a local web
+	 * document.
 	 */
-	public enum FileStatus {
-		FAILED_READING, SUCCESSFUL_READING
+	public enum FileType {
+		WEB_URL, LOCAL_WEB_DOC
 	}
 
 	/**
@@ -43,15 +33,9 @@ public class WebDoc implements Comparable<WebDoc> {
 	private FileType fileType;
 
 	/**
-	 * Status of the file that indicates whether it has successfully accessed to its
-	 * content: FAILED_READING or SUCCESSFUL_READING.
-	 */
-	private FileStatus fileStatus;
-
-	/**
 	 * The urlString of this file. If it's a local web document, it may include
-	 * "File:" at the beginning. If it's a web URL, it may include "http:" at the
-	 * beginning.
+	 * "File:" at the beginning. If it's a web URL, it may include "http:" or
+	 * "https:" at the beginning.
 	 */
 	private String urlString;
 
@@ -66,31 +50,21 @@ public class WebDoc implements Comparable<WebDoc> {
 	private String rangeOfWords;
 
 	/**
-	 * The collection of keywords, excluding HTML and JS tags, numbers and duplicate
-	 * words.
-	 */
-	private TreeSet<String> keywords;
-
-	/**
 	 * Quality of syntax - It refers to whether HTML or JS tags are correctly closed
 	 * with closing tags and correctly nested.
 	 */
 	private String syntaxQuality;
-	/**
-	 * The collection of content words, excluding HTML and JS tags, numbers and
-	 * duplicate words.
-	 */
-	private TreeSet<String> contentWords;
 
 	/**
-	 * The number of keywords, excluding the duplicate words.
+	 * The collection of words, excluding HTML and JS tags, numbers and duplicate
+	 * words.
 	 */
-	private int numOfKeywords;
+	private TreeSet<String> words;
 
 	/**
-	 * The number of contentWords, excluding the duplicate words.
+	 * The number of words, excluding the duplicate words.
 	 */
-	private int numOfContentWords;
+	private int numOfWords;
 
 	/**
 	 * This constructor only set the value of legal entries. The entries that are
@@ -106,31 +80,26 @@ public class WebDoc implements Comparable<WebDoc> {
 	 *            local web document.
 	 * @throws IOException when it's unable to connect to the given URL string.
 	 */
-	public WebDoc(String url) throws IOException, IllegalArgumentException {
+	public WebDoc(String url) throws IOException, IllegalArgumentException, FileNotFoundException {
 
 		this.urlString = url;
 		this.fileType = checkFileType(url);
-		// if (fileType != FileType.INCORRECT_ENTRY_FORMAT) { // Entry is in correct
-		// format.
-		// if (fileType == FileType.WEB_URL) {
-		// this.content = readWebUrl();
-		// } else if (fileType == FileType.LOCAL_WEB_DOC) {
-		// this.content = readLocalFile();
-		// }
+		this.content = readLocalFile(url);
+
+		if (fileType == FileType.WEB_URL) {
+			this.content = null;
+		} else if (fileType == FileType.LOCAL_WEB_DOC) {
+			this.content = readLocalFile(url);
+		}
+		this.numOfWords = words.size();
 		// this.syntaxQuality = this.checkQualityOfSyntax(); // check whether is well
 		// formed.
-		// this.keywords = this.extractKeywords();
-		// this.numOfKeywords = this.keywords.size();
-		// this.contentWords = this.extractContentWords();
-		// this.numOfContentWords = this.contentWords.size();
-		//
-		// try {
-		// this.rangeOfWords = this.contentWords.first() + "-" +
-		// this.contentWords.last();
-		// } catch (NoSuchElementException e) {
-		// rangeOfWords = " "; // no content words.
-		// }
-		// }
+
+		try {
+			this.rangeOfWords = this.words.first() + "-" + this.words.last();
+		} catch (NoSuchElementException e) {
+			rangeOfWords = " "; // no content words.
+		}
 
 		// GET request to url, and parse it into a document
 		// Document document = Jsoup.connect(url).get();
@@ -198,40 +167,45 @@ public class WebDoc implements Comparable<WebDoc> {
 		return result;
 	}
 
-	/**
-	 * Read the content from the web URL. The content can be empty, while if
-	 * exceptions occur, the fileStatus is set to FAILED_READING and this method
-	 * returns an empty, no length string. This method only runs once.
-	 * 
-	 * @return a String that contains the content of the web URL, including all the
-	 *         HTML and JS tags.
-	 */
-	private String readWebUrl() {
-		StringBuffer result = new StringBuffer(""); // Read the content into a temporary StringBuffer.
-		try {
-			URL url = new URL(urlString);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
+	// /**
+	// * Read the content from the web URL. The content can be empty, while if
+	// * exceptions occur, the fileStatus is set to FAILED_READING and this method
+	// * returns an empty, no length string. This method only runs once.
+	// *
+	// * @return a String that contains the content of the web URL, including all
+	// the
+	// * HTML and JS tags.
+	// */
+	// private String readWebUrl() {
+	// StringBuffer result = new StringBuffer(""); // Read the content into a
+	// temporary StringBuffer.
+	// try {
+	// URL url = new URL(urlString);
+	// BufferedReader reader = new BufferedReader(new
+	// InputStreamReader(url.openConnection().getInputStream()));
 
-			String eachLine = "";
-			while ((eachLine = reader.readLine()) != null) {
-				result.append(eachLine + " ");
-			}
-			reader.close();
-			fileStatus = FileStatus.SUCCESSFUL_READING;
-		} catch (MalformedURLException e) {
-			System.out.println("[Warning --- \"" + urlString + "\" --- The URL format is incorrect.]");
-			fileStatus = FileStatus.FAILED_READING;
-		} catch (IllegalArgumentException e) {
-			System.out.println("[Warning --- \"" + urlString
-					+ "\" --- The protocol is incorrect, please make sure the URL is correct.]");
-			fileStatus = FileStatus.FAILED_READING;
-		} catch (IOException e) {
-			System.out.println("[Warning --- Cannot connect to \"" + urlString
-					+ "\", please make sure that you have connected to the Internet or that the URL is correct.]");
-			fileStatus = FileStatus.FAILED_READING;
-		}
-		return result.toString();
-	}
+	// String eachLine = "";
+	// while ((eachLine = reader.readLine()) != null) {
+	// result.append(eachLine + " ");
+	// }
+	// reader.close();
+	// fileStatus = FileStatus.SUCCESSFUL_READING;
+	// } catch (MalformedURLException e) {
+	// System.out.println("[Warning --- \"" + urlString + "\" --- The URL format is
+	// incorrect.]");
+	// fileStatus = FileStatus.FAILED_READING;
+	// } catch (IllegalArgumentException e) {
+	// System.out.println("[Warning --- \"" + urlString
+	// + "\" --- The protocol is incorrect, please make sure the URL is correct.]");
+	// fileStatus = FileStatus.FAILED_READING;
+	// } catch (IOException e) {
+	// System.out.println("[Warning --- Cannot connect to \"" + urlString
+	// + "\", please make sure that you have connected to the Internet or that the
+	// URL is correct.]");
+	// fileStatus = FileStatus.FAILED_READING;
+	// }
+	// return result.toString();
+	// }
 
 	/**
 	 * Read the content from the local HTML file (the url should have a prefix of
@@ -277,7 +251,7 @@ public class WebDoc implements Comparable<WebDoc> {
 	 *                                  "file:")
 	 * @see FileType
 	 */
-	private FileType checkFileType(String url) throws IllegalArgumentException {
+	public FileType checkFileType(String url) throws IllegalArgumentException {
 		Pattern urlPattern = Pattern.compile("https?:", Pattern.CASE_INSENSITIVE); // Identify whether it's a URL.
 		Pattern localFilePattern = Pattern.compile("file:", Pattern.CASE_INSENSITIVE); // Identify whether it's a local
 																						// file.
@@ -290,85 +264,92 @@ public class WebDoc implements Comparable<WebDoc> {
 		} else if (localFileMatcher.lookingAt()) {
 			return FileType.LOCAL_WEB_DOC;
 		} else {
-			fileType = FileType.INCORRECT_ENTRY_FORMAT;
 			throw new IllegalArgumentException("[" + url
 					+ "\" is neither a web url, nor a local html file. Please makes sure it's in correct entry format.]\n");
 		}
 	}
 
-	/**
-	 * Check the quality of syntax. It refers to whether HTML or JS tags are
-	 * correctly closed with closing tags and correctly nested. When any syntax
-	 * other than HTML is used, the accuracy cannot be guaranteed. A string is
-	 * returned to indicate the quality of the syntax - "well-formed";
-	 * "partly-formed"; "ill-formed".
-	 * 
-	 * @return a string that indicates the quality of the syntax.
-	 */
-	private String checkQualityOfSyntax() {
-		Pattern syntaxPattern = Pattern.compile("<([!/a-zA-Z]*)[^>]*>");
-		Matcher syntaxChecker = syntaxPattern.matcher(content);
-		Stack<String> normalTagStack = new Stack<>(); // Stack for normal tags
-		Stack<String> specialTagsStack = new Stack<>(); // stack for special tags
-		final String meta_tag = "[Mm][Ee][Tt][Aa]"; // <meta>
-		final String p_tag = "/{0,1}[Pp]"; // </p> or <p>
-		final String hr_tag = "[Hh][Rr]"; // <hr>
-		final String br_tag = "[Bb][Rr]"; // <br>
-		final String link_tag = "[Ll][Ii][Nn][Kk]"; // <link>
-		String tag; // Only the first word after '<'. E.g., <style ...>
-		String wholeTag; // Anything that is within < and >
+	// /**
+	// * Check the quality of syntax. It refers to whether HTML or JS tags are
+	// * correctly closed with closing tags and correctly nested. When any syntax
+	// * other than HTML is used, the accuracy cannot be guaranteed. A string is
+	// * returned to indicate the quality of the syntax - "well-formed";
+	// * "partly-formed"; "ill-formed".
+	// *
+	// * @return a string that indicates the quality of the syntax.
+	// */
+	// private String checkQualityOfSyntax() {
+	// Pattern syntaxPattern = Pattern.compile("<([!/a-zA-Z]*)[^>]*>");
+	// Matcher syntaxChecker = syntaxPattern.matcher(content);
+	// Stack<String> normalTagStack = new Stack<>(); // Stack for normal tags
+	// Stack<String> specialTagsStack = new Stack<>(); // stack for special tags
+	// final String meta_tag = "[Mm][Ee][Tt][Aa]"; // <meta>
+	// final String p_tag = "/{0,1}[Pp]"; // </p> or <p>
+	// final String hr_tag = "[Hh][Rr]"; // <hr>
+	// final String br_tag = "[Bb][Rr]"; // <br>
+	// final String link_tag = "[Ll][Ii][Nn][Kk]"; // <link>
+	// String tag; // Only the first word after '<'. E.g., <style ...>
+	// String wholeTag; // Anything that is within < and >
 
-		if (syntaxChecker.find()) { // First tag can only be pushed into the stack
-			tag = syntaxChecker.group(1);
-			wholeTag = syntaxChecker.group(0);
-			if (!wholeTag.matches("<.*/>") && !wholeTag.matches("<!.*>")) { // Allowed self-closing tags
-				// Not including the special tags for partly well-formed input.
-				if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) && !tag.matches(br_tag)
-						&& !tag.matches(link_tag)) {
-					normalTagStack.push(tag);
-				} else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag) || tag.matches(br_tag)
-						|| tag.matches(link_tag)) { // Allowed tags for partly well-formed input
-					specialTagsStack.push(tag);
-				} else {
-					// do nothing
-				}
-			}
+	// if (syntaxChecker.find()) { // First tag can only be pushed into the stack
+	// tag = syntaxChecker.group(1);
+	// wholeTag = syntaxChecker.group(0);
+	// if (!wholeTag.matches("<.*/>") && !wholeTag.matches("<!.*>")) { // Allowed
+	// self-closing tags
+	// // Not including the special tags for partly well-formed input.
+	// if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) &&
+	// !tag.matches(br_tag)
+	// && !tag.matches(link_tag)) {
+	// normalTagStack.push(tag);
+	// } else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag)
+	// || tag.matches(br_tag)
+	// || tag.matches(link_tag)) { // Allowed tags for partly well-formed input
+	// specialTagsStack.push(tag);
+	// } else {
+	// // do nothing
+	// }
+	// }
 
-			while (syntaxChecker.find()) { // The second or more tags are found.
-				tag = syntaxChecker.group(1);
-				wholeTag = syntaxChecker.group(0);
-				if (!wholeTag.matches("<.*/>") && !wholeTag.matches("<!.*>")) { // Allowed self-closing tags
-					// Not including the special tags for partly well-formed input.
-					if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) && !tag.matches(br_tag)
-							&& !tag.matches(link_tag)) {
-						// matches its closing tag or the stack is empty.
-						if (!normalTagStack.empty() && ("/" + normalTagStack.peek()).equalsIgnoreCase(tag)) {
-							normalTagStack.pop();
-						} else {
-							normalTagStack.push(tag);
-						}
-					} else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag) || tag.matches(br_tag)
-							|| tag.matches(link_tag)) {// Allowed tags for partly well-formed input
-						// matches its closing tag or the stack is empty.
-						if (!specialTagsStack.empty() && ("/" + specialTagsStack.peek()).equalsIgnoreCase(tag)) {
-							specialTagsStack.pop();
-						} else {
-							specialTagsStack.push(tag);
-						}
-					} else {
-						// do nothing
-					}
-				}
-			}
-		}
-		if (normalTagStack.size() == 0 && specialTagsStack.size() == 0) {
-			return "well-formed";
-		} else if (normalTagStack.size() == 0 && specialTagsStack.size() > 0) {
-			return "partly-formed";
-		} else {
-			return "ill-formed";
-		}
-	}
+	// while (syntaxChecker.find()) { // The second or more tags are found.
+	// tag = syntaxChecker.group(1);
+	// wholeTag = syntaxChecker.group(0);
+	// if (!wholeTag.matches("<.*/>") && !wholeTag.matches("<!.*>")) { // Allowed
+	// self-closing tags
+	// // Not including the special tags for partly well-formed input.
+	// if (!tag.matches(meta_tag) && !tag.matches(p_tag) && !tag.matches(hr_tag) &&
+	// !tag.matches(br_tag)
+	// && !tag.matches(link_tag)) {
+	// // matches its closing tag or the stack is empty.
+	// if (!normalTagStack.empty() && ("/" +
+	// normalTagStack.peek()).equalsIgnoreCase(tag)) {
+	// normalTagStack.pop();
+	// } else {
+	// normalTagStack.push(tag);
+	// }
+	// } else if (tag.matches(meta_tag) || tag.matches(p_tag) || tag.matches(hr_tag)
+	// || tag.matches(br_tag)
+	// || tag.matches(link_tag)) {// Allowed tags for partly well-formed input
+	// // matches its closing tag or the stack is empty.
+	// if (!specialTagsStack.empty() && ("/" +
+	// specialTagsStack.peek()).equalsIgnoreCase(tag)) {
+	// specialTagsStack.pop();
+	// } else {
+	// specialTagsStack.push(tag);
+	// }
+	// } else {
+	// // do nothing
+	// }
+	// }
+	// }
+	// }
+	// if (normalTagStack.size() == 0 && specialTagsStack.size() == 0) {
+	// return "well-formed";
+	// } else if (normalTagStack.size() == 0 && specialTagsStack.size() > 0) {
+	// return "partly-formed";
+	// } else {
+	// return "ill-formed";
+	// }
+	// }
 
 	/**
 	 * Return a String that provides the basic statistical summary of this file:
@@ -380,74 +361,40 @@ public class WebDoc implements Comparable<WebDoc> {
 	 */
 	@Override
 	public String toString() {
-		return urlString + " " + numOfContentWords + " (" + rangeOfWords + ") " + numOfKeywords + " " + syntaxQuality;
+		return urlString + " " + numOfWords + " (" + rangeOfWords + ") " + syntaxQuality;
 	}
 
 	/**
-	 * Get the file status of the file. If the file status returned is
-	 * SUCCESSFUL_READING; it means the content of this file is successfully
-	 * accessed. If the file status returned is FAILED_READING; it means the content
-	 * of this file is not accessible.
+	 * Get a deep copy of the {@code TreeSet<String> words}.
 	 * 
-	 * @return the fileStatus of this file.
+	 * @return deep copy of {@code TreeSet<String> words}
 	 */
-	public FileStatus getFileStatus() {
-		return fileStatus;
-	}
-
-	/**
-	 * Get the content words that have already been extracted from the URL.
-	 * 
-	 * @return a TreeSet (deep copy) of all content words.
-	 */
-	public TreeSet<String> getContentWords() {
+	public TreeSet<String> getWords() {
 		TreeSet<String> tempTreeSet = new TreeSet<>();
-		for (String st : contentWords) {
+		for (String st : words) {
 			tempTreeSet.add(st);
 		}
 		return tempTreeSet;
 	}
 
 	/**
-	 * Get the keywords that have already been extracted from the URL.
-	 * 
-	 * @return a TreeSet (deep copy) of all keywords.
-	 */
-	public TreeSet<String> getKeywords() {
-		TreeSet<String> tempTreeSet = new TreeSet<>();
-		for (String st : keywords) {
-			tempTreeSet.add(st);
-		}
-		return tempTreeSet;
-	}
-
-	/**
-	 * Get the entry as a String. If the web document is a web URL, it may be like
+	 * Get the original urlString. If the web document is a web URL, it may be like
 	 * this: "http://www.google.co.uk". If it's a local web document, it may be like
 	 * this: "file:test111.htm".
 	 * 
-	 * @return the entry of this file.
+	 * @return the urlString of this webpage(online or local).
 	 */
-	public String getEntry() {
+	public String getUrlString() {
 		return urlString;
 	}
 
 	/**
-	 * Get the number of keywords as an integer.
+	 * Get the number of words (unique).
 	 * 
-	 * @return the number of keywords.
+	 * @return the number of words.
 	 */
-	public int getNumOfKeywords() {
-		return numOfKeywords;
-	}
-
-	/**
-	 * Get the number of content words.
-	 * 
-	 * @return the number of Content words.
-	 */
-	public int getNumOfContentWords() {
-		return numOfContentWords;
+	public int getNumOfWords() {
+		return numOfWords;
 	}
 
 	/**
@@ -460,7 +407,7 @@ public class WebDoc implements Comparable<WebDoc> {
 	 */
 	@Override
 	public int compareTo(WebDoc webdoc) {
-		return urlString.compareTo(webdoc.getEntry());
+		return urlString.compareTo(webdoc.getUrlString());
 	}
 
 	/**
@@ -469,6 +416,15 @@ public class WebDoc implements Comparable<WebDoc> {
 	 */
 	public FileType getFileType() {
 		return fileType;
+	}
+
+	/**
+	 * Get original content (before parsing)
+	 * 
+	 * @return original content as a string
+	 */
+	public String getContent() {
+		return content;
 	}
 
 }
