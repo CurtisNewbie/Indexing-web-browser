@@ -120,6 +120,32 @@ public class BrowserView extends BorderPane {
         displayPane.getUrlInputBox().getAddTabBtn().setOnAction(handler);
     }
 
+    /**
+     * Add EventHandler for the backTrack button in UrlInputBox in DisplayPane. It
+     * should force the current selected WebView to go backword in history.
+     * 
+     * @param handler EventHandler for the button to go backword in history
+     * 
+     * @see DisplayPane
+     * @see UrlInputBox
+     */
+    public void AddBackTrackBtnHandler(EventHandler<ActionEvent> handler) {
+        displayPane.getUrlInputBox().getBackTrackBtn().setOnAction(handler);
+    }
+
+    /**
+     * Add EventHandler for the forward button in UrlInputBox in DisplayPane. It
+     * should force the current selected WebView to go forward in history.
+     * 
+     * @param handler EventHandler for the button to go forward in history
+     * 
+     * @see DisplayPane
+     * @see UrlInputBox
+     */
+    public void AddForwardBtnHandler(EventHandler<ActionEvent> handler) {
+        displayPane.getUrlInputBox().getForwardBtn().setOnAction(handler);
+    }
+
     public Menu getMenu() {
         return menu;
     }

@@ -21,19 +21,19 @@ public class BrowserController {
 
     private BrowserView view;
     private HashSet<String> urlSet;
-    // private ArrayList<LinkedList<String>> historyForTabs;
     private String default_url;
 
     public BrowserController(BrowserView view) {
         this.view = view;
         this.urlSet = new HashSet<>();
-        // this.historyForTabs = new ArrayList<LinkedList<String>>();
         this.default_url = "https://www.google.com";
 
         // register EventHandlers
         regMenuEventHandlers();
         regUrlLoadingEventHandler();
         regNewTabEventHandler();
+        regBackwordBtnHandler();
+        regForwardBtnHandler();
 
         // by default, display a new tab displaying the default_url
         var firstTab = this.view.getDisplayPane().addTab(default_url);
@@ -128,6 +128,45 @@ public class BrowserController {
                 }
             }
         });
+    }
+
+    /**
+     * Add {@code EventHandler} to backTrack Btn for going back in history in
+     * current selected {@code Tab} or {@code WebView}
+     * 
+     * @see UrlInputBox
+     * @see BrowserView
+     */
+    private void regBackwordBtnHandler() {
+        this.view.AddBackTrackBtnHandler(e -> {
+            var currTab = this.view.getDisplayPane().getCurrentTab();
+            if (currTab != null) {
+                var webHistory = ((WebView) currTab.getContent()).getEngine().getHistory();
+                int index = webHistory.getCurrentIndex();
+                if (index >= 0 && index < webHistory.getEntries().size())
+                    webHistory.go(-1);
+            }
+        });
+    }
+
+    /**
+     * Add {@code EventHandler} to forward Btn for going forward in history in
+     * current selected {@code Tab} or {@code WebView}
+     * 
+     * @see UrlInputBox
+     * @see BrowserView
+     */
+    private void regForwardBtnHandler() {
+        this.view.AddForwardBtnHandler(e -> {
+            var currTab = this.view.getDisplayPane().getCurrentTab();
+            if (currTab != null) {
+                var webHistory = ((WebView) currTab.getContent()).getEngine().getHistory();
+                int index = webHistory.getCurrentIndex();
+                if (index >= 0 && index < webHistory.getEntries().size())
+                    webHistory.go(1);
+            }
+        });
+
     }
 
     /**
