@@ -21,6 +21,7 @@ public class UrlInputBox extends HBox {
     /** Path to the icon for forwardBtn buttn */
     private final String PATH_TO_FORWICON = "img/arrow_forward.png";
 
+    /** Path to the icon for addTabBtn button */
     private final String PATH_TO_ADDICON = "img/plus_icon.png";
 
     /** Maximum height of icon images in the buttons */
