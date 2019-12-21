@@ -60,4 +60,23 @@ public class QueryControlPanel extends VBox {
         this.getChildren().addAll(panelLabel, boxTop, boxBottom);
         this.setPadding(new Insets(PANEL_PADDING_TOP, PANEL_PADDING_RIGHT, PANEL_PADDING_BOTTOM, PANEL_PADDING_LEFT));
     }
+
+    /**
+     * Get TextField for Infix query
+     * 
+     * @return TextField for Infix query
+     */
+    public TextField getInfixTf() {
+        return infixTf;
+    }
+
+    /**
+     * Get TextField for Prefix query
+     * 
+     * @return TextField for Prefix query
+     */
+    public TextField getPrefixTf() {
+        return prefixTf;
+    }
+
 }
