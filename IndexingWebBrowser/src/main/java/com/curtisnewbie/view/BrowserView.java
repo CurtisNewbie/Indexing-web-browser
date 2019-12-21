@@ -139,7 +139,7 @@ public class BrowserView extends BorderPane {
      * @see DisplayPane
      * @see UrlInputBox
      */
-    public void AddBackTrackBtnHandler(EventHandler<ActionEvent> handler) {
+    public void addBackTrackBtnHandler(EventHandler<ActionEvent> handler) {
         displayPane.getUrlInputBox().getBackTrackBtn().setOnAction(handler);
     }
 
@@ -152,7 +152,7 @@ public class BrowserView extends BorderPane {
      * @see DisplayPane
      * @see UrlInputBox
      */
-    public void AddForwardBtnHandler(EventHandler<ActionEvent> handler) {
+    public void addForwardBtnHandler(EventHandler<ActionEvent> handler) {
         displayPane.getUrlInputBox().getForwardBtn().setOnAction(handler);
     }
 

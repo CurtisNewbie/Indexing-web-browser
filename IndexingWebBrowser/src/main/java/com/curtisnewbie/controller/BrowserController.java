@@ -40,21 +40,25 @@ public class BrowserController {
         this.bodyIndex = new WebIndexForBody();
 
         // register EventHandlers
-        regMenuEventHandlers();
-        regUrlLoadingEventHandler();
-        regNewTabEventHandler();
-        regBackwordBtnHandler();
-        regForwardBtnHandler();
-        regInfixQueryHandler();
-        regPrefixQueryHandler();
+        this.view.addMenuEventHandlers(CreateMenuEventHandlers());
+        this.view.addUrlLoadingEventHandler(CreateUrlLoadingEventHandler());
+        this.view.addNewTabHandler(CreateNewTabEventHandler());
+        this.view.addBackTrackBtnHandler(CreateBackwordBtnHandler());
+        this.view.addForwardBtnHandler(CreateForwardBtnHandler());
+        this.view.addInfixQueryHandler(CreateInfixQueryHandler());
+        this.view.addPrefixQueryHandler(CreatePrefixQueryHandler());
 
         // by default, display a new tab displaying the default_url
         var firstTab = this.view.getDisplayPane().addTab(default_url);
         regStateChangeHandler(firstTab);
     }
 
-    /** register EventHandlers for Menu */
-    private void regMenuEventHandlers() {
+    /**
+     * Create a list of EventHandlers for Menu
+     * 
+     * @return List of {@code EventHandler} for Menu
+     */
+    private ArrayList<EventHandler<ActionEvent>> CreateMenuEventHandlers() {
         ArrayList<EventHandler<ActionEvent>> handlers = new ArrayList<>();
         handlers.add(e -> {
             // handler for toDisplayPane menuItem
@@ -64,15 +68,17 @@ public class BrowserController {
             // handler for toQueryPane menuItem
             this.view.switchView(view.getQueryPane());
         });
-        view.addMenuEventHandlers(handlers);
+        return handlers;
     }
 
     /**
-     * Register EventHandler for loading url in textfield. When no tab exists,
+     * Create EventHandler for loading url in textfield. When no tab exists,
      * entering url in textfield will result in creating a new tab to load such url.
+     * 
+     * @return {@code EventHandler} for loading url in textfield
      */
-    private void regUrlLoadingEventHandler() {
-        this.view.addUrlLoadingEventHandler(e -> {
+    private EventHandler<ActionEvent> CreateUrlLoadingEventHandler() {
+        return e -> {
             // update view
             var displayPane = this.view.getDisplayPane();
             String url = displayPane.getUrlInputBox().getUrlTextField().getText();
@@ -90,12 +96,12 @@ public class BrowserController {
                     currWebView.getEngine().load(completeURL(url));
                 }
             }
-        });
+        };
     }
 
     /**
      * <p>
-     * Register EventHandler to handle event for creating new {@code Tab}. The new
+     * Create EventHandler to handle event for creating new {@code Tab}. The new
      * {@code Tab} created is registered with a {@code
      * ChangeListener<State>}, through which it detects the change of the state of
      * the {@code WebEngine} in the {@code Tab}.
@@ -106,13 +112,15 @@ public class BrowserController {
      * URL in the {@code HistoryPanel}. Note that history is only updated, when the
      * webpage is successfully loaded.
      * </p>
+     * 
+     * @return {@code EventHandler} to handle event for creating new {@code Tab}
      */
-    private void regNewTabEventHandler() {
-        this.view.addNewTabHandler(e -> {
+    private EventHandler<ActionEvent> CreateNewTabEventHandler() {
+        return e -> {
             Tab createdTab = this.view.getDisplayPane().addTab(default_url);
-            // keep tracks of change of state
+            // register ChangeListener with this cratedTab
             regStateChangeHandler(createdTab);
-        });
+        };
     }
 
     /**
@@ -150,14 +158,17 @@ public class BrowserController {
     }
 
     /**
-     * Add {@code EventHandler} to backTrack Btn for going back in history in
-     * current selected {@code Tab} or {@code WebView}
+     * Create {@code EventHandler} for Button to go back in history in current
+     * selected {@code Tab} or {@code WebView}
+     * 
+     * @return {@code EventHandler} for Button to go back in history in current
+     *         selected {@code Tab} or {@code WebView}
      * 
      * @see UrlInputBox
      * @see BrowserView
      */
-    private void regBackwordBtnHandler() {
-        this.view.AddBackTrackBtnHandler(e -> {
+    private EventHandler<ActionEvent> CreateBackwordBtnHandler() {
+        return e -> {
             var currTab = this.view.getDisplayPane().getCurrentTab();
             if (currTab != null) {
                 var webHistory = ((WebView) currTab.getContent()).getEngine().getHistory();
@@ -165,18 +176,20 @@ public class BrowserController {
                 if (index >= 0 && index < webHistory.getEntries().size())
                     webHistory.go(-1);
             }
-        });
+        };
     }
 
     /**
-     * Add {@code EventHandler} to forward Btn for going forward in history in
-     * current selected {@code Tab} or {@code WebView}
+     * create {@code EventHandler} for Button to go forward in history in current
+     * selected {@code Tab} or {@code WebView}
      * 
+     * @return {@code EventHandler} for Button to go forward in history in current
+     *         selected {@code Tab} or {@code WebView}
      * @see UrlInputBox
      * @see BrowserView
      */
-    private void regForwardBtnHandler() {
-        this.view.AddForwardBtnHandler(e -> {
+    private EventHandler<ActionEvent> CreateForwardBtnHandler() {
+        return e -> {
             var currTab = this.view.getDisplayPane().getCurrentTab();
             if (currTab != null) {
                 var webHistory = ((WebView) currTab.getContent()).getEngine().getHistory();
@@ -184,19 +197,21 @@ public class BrowserController {
                 if (index >= 0 && index < webHistory.getEntries().size())
                     webHistory.go(1);
             }
-        });
-
+        };
     }
 
     /**
-     * Add {@code EventHandler} to process the infix query (in the
-     * {@code TextField infixTf} and update the result panel to display the results
+     * Create {@code EventHandler} to process the infix query and update the result
+     * panel to display the results
+     * 
+     * @return {@code EventHandler} to process the infix query and update the result
+     *         panel to display the results
      * 
      * @see BrowserView
      * @see QueryControlPanel
      */
-    private void regInfixQueryHandler() {
-        this.view.addInfixQueryHandler(e -> {
+    private EventHandler<ActionEvent> CreateInfixQueryHandler() {
+        return e -> {
             var textField = this.view.getQueryPane().getQueryControlPanel().getInfixTf();
             String infixQuery = textField.getText();
             if (infixQuery != null && !infixQuery.isEmpty()) {
@@ -206,18 +221,21 @@ public class BrowserController {
                 updateQueryResultpanel(parsedQuery);
             }
             textField.clear();
-        });
+        };
     }
 
     /**
-     * Add {@code EventHandler} to process the prefix query (in the
-     * {@code TextField prefixTf} and update the result panel to display the results
+     * Create {@code EventHandler} to process the prefix query and update the result
+     * panel to display the results
+     * 
+     * @return {@code EventHandler} to process the prefix query and update the
+     *         result panel to display the results
      * 
      * @see BrowserView
      * @see QueryControlPanel
      */
-    private void regPrefixQueryHandler() {
-        this.view.addPrefixQueryHandler(e -> {
+    private EventHandler<ActionEvent> CreatePrefixQueryHandler() {
+        return e -> {
             var textField = this.view.getQueryPane().getQueryControlPanel().getPrefixTf();
             String prefixQuery = textField.getText();
             if (prefixQuery != null && !prefixQuery.isEmpty()) {
@@ -227,7 +245,7 @@ public class BrowserController {
                 updateQueryResultpanel(parsedQuery);
             }
             textField.clear();
-        });
+        };
     }
 
     /**
