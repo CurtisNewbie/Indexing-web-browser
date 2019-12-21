@@ -1,6 +1,9 @@
 package com.curtisnewbie.controller;
 
 import com.curtisnewbie.view.*;
+import com.curtisnewbie.webBrowserModel.WebDoc;
+import com.curtisnewbie.webBrowserModel.WebIndexForBody;
+import com.curtisnewbie.webBrowserModel.WebIndexForHead;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,6 +14,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -22,11 +27,15 @@ public class BrowserController {
     private BrowserView view;
     private HashSet<String> urlSet;
     private String default_url;
+    private WebIndexForHead headIndex;
+    private WebIndexForBody bodyIndex;
 
     public BrowserController(BrowserView view) {
         this.view = view;
         this.urlSet = new HashSet<>();
         this.default_url = "https://www.google.com";
+        this.headIndex = new WebIndexForHead();
+        this.bodyIndex = new WebIndexForBody();
 
         // register EventHandlers
         regMenuEventHandlers();
@@ -123,8 +132,14 @@ public class BrowserController {
                 // if loading url is successful
                 if (newValue == State.SUCCEEDED) {
                     String url = engine.getLocation();
-                    // update browsing history
-                    updateHistoryPanel(url);
+                    // save unique url in history
+                    if (!urlSet.contains(url)) {
+                        urlSet.add(url);
+                        // update browsing history
+                        updateHistoryPanel(url);
+                        // update web index
+                        updateWebIndices(url);
+                    }
                 }
             }
         });
@@ -181,28 +196,57 @@ public class BrowserController {
     }
 
     /**
-     * Update historyPanel only when this url is unique, i.e., it has never been
-     * accessed. This involves creating a new {@code Button} (containing this url
-     * string) in the historyPanel, and setup a {@code EventHandler<ActionEvent>}
-     * for this button to navigate back to the DisplayPane to display the webpage of
-     * this url.
+     * <p>
+     * Update historyPanel. This involves creating a new {@code Button} (containing
+     * this url string) in the historyPanel, and setup a
+     * {@code EventHandler<ActionEvent>} for this button to navigate back to the
+     * DisplayPane to display the webpage of this url.
+     * </p>
+     * <p>
+     * This method does not know whether this url has been visited before, so this
+     * method can generate duplicates buttons in the historyPanel.
+     * </p>
+     * 
      * 
      * @param url URL string
      */
     private void updateHistoryPanel(String url) {
-        // save unique url in history
-        if (!urlSet.contains(url)) {
-            urlSet.add(url);
+        // update history view
+        var btn = new Button(url);
+        view.getQueryPane().getHistoryPanel().add(btn);
 
-            // update history view
-            var btn = new Button(url);
-            view.getQueryPane().getHistoryPanel().add(btn);
+        // assign eventhandler for this btn
+        btn.setOnAction(e1 -> {
+            view.getDisplayPane().addTab(url);
+            view.switchView(view.getDisplayPane());
+        });
+    }
 
-            // assign eventhandler for this btn
-            btn.setOnAction(e1 -> {
-                view.getDisplayPane().addTab(url);
-                view.switchView(view.getDisplayPane());
-            });
+    /**
+     * <p>
+     * Update the WebIndex for body and head sections of the webpage, only when this
+     * url has neven been accessed to. This method should only be called when the
+     * url is correct and has been successfully accessed.
+     * </p>
+     * <p>
+     * This method does not know whether this url has been visited before, so other
+     * means should be used to ensure this url is unique and has neven been passed
+     * to this method before.
+     * </p>
+     * 
+     * @param url URL String
+     */
+    private void updateWebIndices(String url) {
+        try {
+            WebDoc doc = new WebDoc(url);
+            bodyIndex.add(doc);
+            headIndex.add(doc);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
