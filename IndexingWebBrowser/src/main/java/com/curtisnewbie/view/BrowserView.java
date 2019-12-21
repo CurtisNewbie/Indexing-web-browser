@@ -8,8 +8,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 
 /**
  * <p>
@@ -103,12 +101,24 @@ public class BrowserView extends BorderPane {
         displayPane.getUrlInputBox().getUrlTextField().setOnAction(handler);
     }
 
+    /**
+     * Add EventHandler for infix query textfield. This handler should process the
+     * infix query and update the result panel to display the results.
+     * 
+     * @param handler
+     */
     public void addInfixQueryHandler(EventHandler<ActionEvent> handler) {
-
+        queryPane.getQueryControlPanel().getInfixTf().setOnAction(handler);
     }
 
+    /**
+     * Add EventHandler for prefix query textfield. This handler should process the
+     * prefix query and update the result panel to display the results.
+     * 
+     * @param handler
+     */
     public void addPrefixQueryHandler(EventHandler<ActionEvent> handler) {
-
+        queryPane.getQueryControlPanel().getPrefixTf().setOnAction(handler);
     }
 
     /**

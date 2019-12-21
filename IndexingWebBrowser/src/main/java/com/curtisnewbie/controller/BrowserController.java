@@ -4,6 +4,8 @@ import com.curtisnewbie.view.*;
 import com.curtisnewbie.webBrowserModel.WebDoc;
 import com.curtisnewbie.webBrowserModel.WebIndexForBody;
 import com.curtisnewbie.webBrowserModel.WebIndexForHead;
+import com.curtisnewbie.webBrowserModel.Query;
+import com.curtisnewbie.webBrowserModel.QueryBuilder;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,6 +45,8 @@ public class BrowserController {
         regNewTabEventHandler();
         regBackwordBtnHandler();
         regForwardBtnHandler();
+        regInfixQueryHandler();
+        regPrefixQueryHandler();
 
         // by default, display a new tab displaying the default_url
         var firstTab = this.view.getDisplayPane().addTab(default_url);
@@ -182,6 +186,106 @@ public class BrowserController {
             }
         });
 
+    }
+
+    /**
+     * Add {@code EventHandler} to process the infix query (in the
+     * {@code TextField infixTf} and update the result panel to display the results
+     * 
+     * @see BrowserView
+     * @see QueryControlPanel
+     */
+    private void regInfixQueryHandler() {
+        this.view.addInfixQueryHandler(e -> {
+            var textField = this.view.getQueryPane().getQueryControlPanel().getInfixTf();
+            String infixQuery = textField.getText();
+            if (infixQuery != null && !infixQuery.isEmpty()) {
+                // parse query
+                Query parsedQuery = QueryBuilder.parseInfixForm(infixQuery);
+                // update view
+                updateQueryResultpanel(parsedQuery);
+            }
+            textField.clear();
+        });
+    }
+
+    /**
+     * Add {@code EventHandler} to process the prefix query (in the
+     * {@code TextField prefixTf} and update the result panel to display the results
+     * 
+     * @see BrowserView
+     * @see QueryControlPanel
+     */
+    private void regPrefixQueryHandler() {
+        this.view.addPrefixQueryHandler(e -> {
+            var textField = this.view.getQueryPane().getQueryControlPanel().getPrefixTf();
+            String prefixQuery = textField.getText();
+            if (prefixQuery != null && !prefixQuery.isEmpty()) {
+                // parse query
+                Query parsedQuery = QueryBuilder.parse(prefixQuery);
+                // update view
+                updateQueryResultpanel(parsedQuery);
+            }
+            textField.clear();
+        });
+    }
+
+    /**
+     * Update the QueryResultPanel by clearing the {@code ObservableList<Node>} in
+     * the two VBoxs, and refill them with the Buttons that contain the results of
+     * the query (the URL String). Each button is registered with an EventHandler
+     * that when it is clicked, the displayPane will be shown and a new tab will be
+     * created displaying the webpage of this url.
+     * 
+     * @param parsedQuery
+     * @see QueryResultPanel
+     */
+    private void updateQueryResultpanel(Query parsedQuery) {
+        // get results of head and body
+        Set<WebDoc> hdResSet = parsedQuery.matches(headIndex);
+        Set<WebDoc> bdResSet = parsedQuery.matches(bodyIndex);
+
+        List<String> headList = new ArrayList<>();
+        if (hdResSet != null)
+            for (WebDoc doc : hdResSet) {
+                headList.add(doc.getUrlString());
+            }
+        List<String> bodyList = new ArrayList<>();
+        if (bdResSet != null)
+            for (WebDoc doc : bdResSet) {
+                bodyList.add(doc.getUrlString());
+            }
+
+        // update view
+        var queryResult = this.view.getQueryPane().getQueryResultPanel();
+        var listForHead = queryResult.getBdResVBox().getChildren();
+        listForHead.clear();
+        for (String url : headList) {
+            listForHead.add(queryResultBtn(url));
+        }
+        var listForBody = queryResult.getHdResVBox().getChildren();
+        listForBody.clear();
+        for (String url : bodyList) {
+            listForBody.add(queryResultBtn(url));
+        }
+    }
+
+    /**
+     * Return a new Button of the given url, which is registered with an
+     * EventHandler that when it is clicked, the displayPane will be shown and a new
+     * tab created for this url.
+     * 
+     * @param url URL string
+     * @return a new Button of the url that is registered with an EventHandler that
+     *         navigates to the displayPane and create a new tab for this url.
+     */
+    private Button queryResultBtn(String url) {
+        var btn = new Button(url);
+        btn.setOnAction(e -> {
+            view.getDisplayPane().addTab(url);
+            view.switchView(view.getDisplayPane());
+        });
+        return btn;
     }
 
     /**
