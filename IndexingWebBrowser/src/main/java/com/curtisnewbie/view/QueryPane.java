@@ -52,4 +52,12 @@ public class QueryPane extends GridPane {
         return historyPanel;
     }
 
+    public QueryControlPanel getQueryControlPanel() {
+        return queryControlPanel;
+    }
+
+    public QueryResultPanel getQueryResultPanel() {
+        return queryResultPanel;
+    }
+
 }
