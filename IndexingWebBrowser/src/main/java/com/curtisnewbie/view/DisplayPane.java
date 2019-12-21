@@ -72,6 +72,28 @@ public class DisplayPane extends BorderPane {
     }
 
     /**
+     * Create a new {@code Tab} that loads the webpage of the given html text. It
+     * doesn not create new tab if the given htmlText is {@code NULL}.
+     * 
+     * 
+     * @param htmlText html text
+     * @return return {@code Tab} created if successful, else return {@code null}
+     * 
+     */
+    public Tab loadIntoNewTab(String htmlText) {
+        if (htmlText != null) {
+            Tab tab = new Tab();
+            var view = new WebView();
+            view.getEngine().loadContent(htmlText);
+            tab.setContent(view);
+            tabPane.getTabs().add(tab);
+            return tab;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Get the UrlInputBox which contains the TextField for entering URL, and the
      * Buttons for going back and forth between the previously viewed web pages.
      * 

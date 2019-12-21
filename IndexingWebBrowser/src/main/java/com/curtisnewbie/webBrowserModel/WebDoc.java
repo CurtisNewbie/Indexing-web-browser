@@ -148,7 +148,7 @@ public class WebDoc implements Comparable<WebDoc> {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public String readLocalFile(String url) throws FileNotFoundException, IOException {
+	public static String readLocalFile(String url) throws FileNotFoundException, IOException {
 		StringBuilder result = new StringBuilder("");
 		Pattern prefixPattern = Pattern.compile("([Ff][Ii][Ll][Ee]:)(.++)");
 		Matcher prefixMatcher = prefixPattern.matcher(url);

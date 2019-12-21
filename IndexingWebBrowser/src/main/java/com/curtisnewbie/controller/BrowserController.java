@@ -84,19 +84,34 @@ public class BrowserController {
             String url = displayPane.getUrlInputBox().getUrlTextField().getText();
 
             if (url != null && !url.isEmpty()) {
-                Tab currTab = this.view.getDisplayPane().getCurrentTab();
-                if (currTab == null) {
-                    // if there is no tab being selected, add new tab
-                    Tab createdTab = displayPane.addTab(completeURL(url));
-                    // keep tracks of change of state
-                    regStateChangeHandler(createdTab);
+
+                // always create a new tab for local file
+                if (url.toLowerCase().startsWith("file:")) {
+                    try {
+                        String content = WebDoc.readLocalFile(url);
+                        Tab createdTab = displayPane.loadIntoNewTab(content);
+                        // register ChangeListener with this cratedTab
+                        regStateChangeHandler(createdTab);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 } else {
-                    // update current tab to this url
-                    WebView currWebView = (WebView) currTab.getContent();
-                    currWebView.getEngine().load(completeURL(url));
+                    // for online webpage
+                    Tab currTab = this.view.getDisplayPane().getCurrentTab();
+                    if (currTab == null) {
+                        // if there is no tab being selected, add new tab
+                        Tab createdTab = displayPane.addTab(completeURL(url));
+                        // register ChangeListener with this cratedTab
+                        regStateChangeHandler(createdTab);
+                    } else {
+                        // update current tab to this url
+                        WebView currWebView = (WebView) currTab.getContent();
+                        currWebView.getEngine().load(completeURL(url));
+                    }
                 }
             }
         };
+
     }
 
     /**
@@ -144,8 +159,14 @@ public class BrowserController {
                 // if loading url is successful
                 if (newValue == State.SUCCEEDED) {
                     String url = engine.getLocation();
+
+                    // if this is a local file, the .getLocation() method cannot return the actual
+                    // location of this file.
+                    if (url == null || url.isEmpty())
+                        url = view.getDisplayPane().getUrlInputBox().getUrlTextField().getText();
+
                     // save unique url in history
-                    if (!urlSet.contains(url)) {
+                    if (url != null && !urlSet.contains(url)) {
                         urlSet.add(url);
                         // update browsing history
                         updateHistoryPanel(url);
