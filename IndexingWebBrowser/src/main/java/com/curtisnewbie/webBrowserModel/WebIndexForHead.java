@@ -3,6 +3,13 @@ package com.curtisnewbie.webBrowserModel;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * Subclass of WebIndex that implements the add(WebDoc doc) method exclusively
+ * for the head words in a WebDoc
+ * 
+ * @see WebIndex
+ * @see WebDoc
+ */
 public class WebIndexForHead extends WebIndex {
 
     @Override
