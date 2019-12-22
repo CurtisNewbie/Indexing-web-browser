@@ -83,14 +83,8 @@ public class WebDoc implements Comparable<WebDoc> {
 	private Document document;
 
 	/**
-	 * This constructor only set the value of legal entries. The entries that are
-	 * identified as FileType.INCORRECT_ENTRY_FORMAT will be ignored and the
-	 * FileStatus of the illegal entries will be set to the
-	 * FileStatus.FAILED_READING. Trying to read the data of illegal entries may
-	 * cause exceptions as there is not value given to the illegal entries. For the
-	 * legal entries, a number of private methods will be called only once to read
-	 * contents from the web URL or local web documents and assign the relevant
-	 * values to the instance variables.
+	 * Construct A WebDoc by making connection to the given url and extracting the
+	 * textual words.
 	 * 
 	 * @param url The URL of this web document. It can either be a web URL or a
 	 *            local web document.
@@ -114,6 +108,33 @@ public class WebDoc implements Comparable<WebDoc> {
 			this.content = readLocalFile(url);
 			this.document = Jsoup.parse(content);
 		}
+
+		// get body and head, and extract words in it
+		String bodyTxt = document.body().text();
+		String headTxt = document.head().text();
+		this.bodyWords = extractWords(bodyTxt);
+		this.headWords = extractWords(headTxt);
+		this.numOfWords = bodyWords.size() + headWords.size();
+	}
+
+	/**
+	 * Construct A WebDoc by parsing the given content (html/js, etc) and extracting
+	 * the textual words. This is used when the webpage is preloaded, so no
+	 * connection needs to be made.
+	 * 
+	 * @param url The URL of this web document. It can either be a web URL or a
+	 *            local web document.
+	 * 
+	 * @throws IllegalArgumentException when the format of the url is incorrect
+	 *                                  (neither has a prefix of "https?:" or
+	 *                                  "file:")
+	 */
+	public WebDoc(String url, String content) throws IllegalArgumentException {
+		this.urlString = url;
+		this.fileType = checkFileType(url);
+		// load the given content (html text) regardless the fileType
+		this.content = content;
+		this.document = Jsoup.parse(content);
 
 		// get body and head, and extract words in it
 		String bodyTxt = document.body().text();
