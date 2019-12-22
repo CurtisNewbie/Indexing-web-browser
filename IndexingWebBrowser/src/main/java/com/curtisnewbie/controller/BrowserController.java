@@ -201,7 +201,7 @@ public class BrowserController {
             if (currTab != null) {
                 var webHistory = ((WebView) currTab.getContent()).getEngine().getHistory();
                 int index = webHistory.getCurrentIndex();
-                if (index >= 0 && index < webHistory.getEntries().size())
+                if (index > 0 && index < webHistory.getEntries().size())
                     webHistory.go(-1);
             }
         };
@@ -222,7 +222,7 @@ public class BrowserController {
             if (currTab != null) {
                 var webHistory = ((WebView) currTab.getContent()).getEngine().getHistory();
                 int index = webHistory.getCurrentIndex();
-                if (index >= 0 && index < webHistory.getEntries().size())
+                if (index >= 0 && index < webHistory.getEntries().size() - 1)
                     webHistory.go(1);
             }
         };
