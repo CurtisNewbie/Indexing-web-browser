@@ -40,13 +40,13 @@ public class BrowserController {
         this.bodyIndex = new WebIndexForBody();
 
         // register EventHandlers
-        this.view.addMenuEventHandlers(CreateMenuEventHandlers());
-        this.view.addUrlLoadingEventHandler(CreateUrlLoadingEventHandler());
-        this.view.addNewTabHandler(CreateNewTabEventHandler());
-        this.view.addBackTrackBtnHandler(CreateBackwordBtnHandler());
-        this.view.addForwardBtnHandler(CreateForwardBtnHandler());
-        this.view.addInfixQueryHandler(CreateInfixQueryHandler());
-        this.view.addPrefixQueryHandler(CreatePrefixQueryHandler());
+        this.view.addMenuEventHandlers(createMenuEventHandlers());
+        this.view.addUrlLoadingEventHandler(createUrlLoadingEventHandler());
+        this.view.addNewTabHandler(createNewTabEventHandler());
+        this.view.addBackTrackBtnHandler(createBackwordBtnHandler());
+        this.view.addForwardBtnHandler(createForwardBtnHandler());
+        this.view.addInfixQueryHandler(createInfixQueryHandler());
+        this.view.addPrefixQueryHandler(createPrefixQueryHandler());
 
         // by default, display a new tab displaying the default_url
         var firstTab = this.view.getDisplayPane().addTab(default_url);
@@ -58,7 +58,7 @@ public class BrowserController {
      * 
      * @return List of {@code EventHandler} for Menu
      */
-    private ArrayList<EventHandler<ActionEvent>> CreateMenuEventHandlers() {
+    private ArrayList<EventHandler<ActionEvent>> createMenuEventHandlers() {
         ArrayList<EventHandler<ActionEvent>> handlers = new ArrayList<>();
         handlers.add(e -> {
             // handler for toDisplayPane menuItem
@@ -77,7 +77,7 @@ public class BrowserController {
      * 
      * @return {@code EventHandler} for loading url in textfield
      */
-    private EventHandler<ActionEvent> CreateUrlLoadingEventHandler() {
+    private EventHandler<ActionEvent> createUrlLoadingEventHandler() {
         return e -> {
             // update view
             var displayPane = this.view.getDisplayPane();
@@ -130,7 +130,7 @@ public class BrowserController {
      * 
      * @return {@code EventHandler} to handle event for creating new {@code Tab}
      */
-    private EventHandler<ActionEvent> CreateNewTabEventHandler() {
+    private EventHandler<ActionEvent> createNewTabEventHandler() {
         return e -> {
             Tab createdTab = this.view.getDisplayPane().addTab(default_url);
             // register ChangeListener with this cratedTab
@@ -195,7 +195,7 @@ public class BrowserController {
      * @see UrlInputBox
      * @see BrowserView
      */
-    private EventHandler<ActionEvent> CreateBackwordBtnHandler() {
+    private EventHandler<ActionEvent> createBackwordBtnHandler() {
         return e -> {
             var currTab = this.view.getDisplayPane().getCurrentTab();
             if (currTab != null) {
@@ -216,7 +216,7 @@ public class BrowserController {
      * @see UrlInputBox
      * @see BrowserView
      */
-    private EventHandler<ActionEvent> CreateForwardBtnHandler() {
+    private EventHandler<ActionEvent> createForwardBtnHandler() {
         return e -> {
             var currTab = this.view.getDisplayPane().getCurrentTab();
             if (currTab != null) {
@@ -238,7 +238,7 @@ public class BrowserController {
      * @see BrowserView
      * @see QueryControlPanel
      */
-    private EventHandler<ActionEvent> CreateInfixQueryHandler() {
+    private EventHandler<ActionEvent> createInfixQueryHandler() {
         return e -> {
             var textField = this.view.getQueryPane().getQueryControlPanel().getInfixTf();
             String infixQuery = textField.getText();
@@ -262,7 +262,7 @@ public class BrowserController {
      * @see BrowserView
      * @see QueryControlPanel
      */
-    private EventHandler<ActionEvent> CreatePrefixQueryHandler() {
+    private EventHandler<ActionEvent> createPrefixQueryHandler() {
         return e -> {
             var textField = this.view.getQueryPane().getQueryControlPanel().getPrefixTf();
             String prefixQuery = textField.getText();
