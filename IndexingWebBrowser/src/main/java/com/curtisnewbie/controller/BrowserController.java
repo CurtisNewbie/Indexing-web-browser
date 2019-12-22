@@ -162,8 +162,9 @@ public class BrowserController {
 
                     // if this is a local file, the .getLocation() method cannot return the actual
                     // location of this file.
+                    var textField = view.getDisplayPane().getUrlInputBox().getUrlTextField();
                     if (url == null || url.isEmpty())
-                        url = view.getDisplayPane().getUrlInputBox().getUrlTextField().getText();
+                        url = textField.getText();
 
                     // save unique url in history
                     if (url != null && !urlSet.contains(url)) {
@@ -172,6 +173,12 @@ public class BrowserController {
                         updateHistoryPanel(url);
                         // update web index
                         updateWebIndices(url);
+                    }
+
+                    // update textField to tell the user the location of current webpage (just like
+                    // what normal browser does)
+                    if (url != null && !textField.getText().equalsIgnoreCase(url)) {
+                        textField.setText(url);
                     }
                 }
             }
