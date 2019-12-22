@@ -42,6 +42,9 @@ public abstract class WebIndex {
 
 	/**
 	 * Add an object of WebDoc into the index and increment numOfDocs by one.
+	 * WebIndex internally uses a map for searching WebDoc based on the given words,
+	 * and this WebDoc is added in a way such that the words in this WebDoc becomes
+	 * the keys, and this WebDoc becomes the value.
 	 * 
 	 * @param doc An object of WebDoc
 	 */
