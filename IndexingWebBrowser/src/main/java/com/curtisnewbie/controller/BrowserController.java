@@ -304,15 +304,15 @@ public class BrowserController {
 
         // update view
         var queryResult = this.view.getQueryPane().getQueryResultPanel();
-        var listForHead = queryResult.getBdResVBox().getChildren();
-        listForHead.clear();
+        var headVBox = queryResult.getHdResVBox();
+        headVBox.getChildren().clear();
         for (String url : headList) {
-            listForHead.add(queryResultBtn(url));
+            headVBox.getChildren().add(queryResultBtn(url));
         }
-        var listForBody = queryResult.getHdResVBox().getChildren();
-        listForBody.clear();
+        var bodyVBox = queryResult.getBdResVBox();
+        bodyVBox.getChildren().clear();
         for (String url : bodyList) {
-            listForBody.add(queryResultBtn(url));
+            bodyVBox.getChildren().add(queryResultBtn(url));
         }
     }
 
