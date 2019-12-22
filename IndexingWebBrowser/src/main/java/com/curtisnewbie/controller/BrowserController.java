@@ -38,20 +38,22 @@ import javax.xml.transform.stream.StreamResult;
 public class BrowserController {
 
     private BrowserView view;
-    private HashSet<String> urlSet;
     private String default_url;
     private WebIndexForHead headIndex;
     private WebIndexForBody bodyIndex;
+
+    /** Map used to keep track of WebDoc that has never been visited */
+    private Map<String, WebDoc> allWebDocs;
 
     /** transformer for transform Document to HTML text */
     private Transformer transformer;
 
     public BrowserController(BrowserView view) {
         this.view = view;
-        this.urlSet = new HashSet<>();
         this.default_url = "https://www.google.com";
         this.headIndex = new WebIndexForHead();
         this.bodyIndex = new WebIndexForBody();
+        this.allWebDocs = new HashMap<>();
 
         // register EventHandlers
         this.view.addMenuEventHandlers(createMenuEventHandlers());
@@ -181,8 +183,7 @@ public class BrowserController {
                         url = textField.getText();
 
                     // save unique url in history
-                    if (url != null && !urlSet.contains(url)) {
-                        urlSet.add(url);
+                    if (url != null && !allWebDocs.containsKey(url)) {
                         // update browsing history
                         updateHistoryPanel(url);
 
@@ -190,7 +191,12 @@ public class BrowserController {
                         String content = transformDocumentToString(engine.getDocument());
 
                         // update web index
-                        updateWebIndices(url, content);
+                        WebDoc doc = updateWebIndices(url, content);
+
+                        // update unique history
+                        if (doc != null) {
+                            allWebDocs.put(url, doc);
+                        }
                     }
 
                     // update textField to tell the user the location of current webpage (just like
@@ -366,18 +372,30 @@ public class BrowserController {
 
     /**
      * Return a new Button of the given url, which is registered with an
-     * EventHandler that when it is clicked, the displayPane will be shown and a new
-     * tab created for this url.
+     * EventHandler that when it is clicked, the panel in the middle of the
+     * QueryPane will show the summary (words in head and body) of this url.
      * 
      * @param url URL string
      * @return a new Button of the url that is registered with an EventHandler that
-     *         navigates to the displayPane and create a new tab for this url.
+     *         shows the summary (words in head and body) of this url in the middle
+     *         of the QueryPane.
+     * @see QueryPane
      */
     private Button queryResultBtn(String url) {
         var btn = new Button(url);
         btn.setOnAction(e -> {
-            view.getDisplayPane().addTab(url);
-            view.switchView(view.getDisplayPane());
+            var textArea = view.getQueryPane().getUrlSummaryPanel().getTextArea();
+            WebDoc webDoc = allWebDocs.get(url);
+            StringBuilder headWords = new StringBuilder();
+            for (String wd : webDoc.getHeadWords()) {
+                headWords.append(wd + " ");
+            }
+
+            StringBuilder bodyWords = new StringBuilder();
+            for (String wd : webDoc.getBodyWords()) {
+                bodyWords.append(wd + " ");
+            }
+            textArea.setText("[Words In Head:]\n" + headWords + "\n\n[Words In Body:]\n" + bodyWords);
         });
         return btn;
     }
@@ -437,8 +455,9 @@ public class BrowserController {
      *                {@code Null}, a {@code new WebDoc} will be constructed by
      *                making connection to the URL, else it will be constructed by
      *                parsing the given content string.
+     * @return the created WebDoc
      */
-    private void updateWebIndices(String url, String content) {
+    private WebDoc updateWebIndices(String url, String content) {
         try {
             WebDoc doc;
             if (content == null) {
@@ -448,6 +467,7 @@ public class BrowserController {
             }
             headIndex.add(doc);
             bodyIndex.add(doc);
+            return doc;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -455,6 +475,7 @@ public class BrowserController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 }
