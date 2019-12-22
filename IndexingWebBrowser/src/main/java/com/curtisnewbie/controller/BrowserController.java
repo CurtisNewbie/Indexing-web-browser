@@ -4,6 +4,7 @@ import com.curtisnewbie.view.*;
 import com.curtisnewbie.webBrowserModel.WebDoc;
 import com.curtisnewbie.webBrowserModel.WebIndexForBody;
 import com.curtisnewbie.webBrowserModel.WebIndexForHead;
+
 import com.curtisnewbie.webBrowserModel.Query;
 import com.curtisnewbie.webBrowserModel.QueryBuilder;
 
@@ -18,7 +19,17 @@ import javafx.scene.web.WebView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
+
+import org.w3c.dom.Document;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * Controller in MVC, this controller controls how the view and the model
@@ -31,6 +42,9 @@ public class BrowserController {
     private String default_url;
     private WebIndexForHead headIndex;
     private WebIndexForBody bodyIndex;
+
+    /** transformer for transform Document to HTML text */
+    private Transformer transformer;
 
     public BrowserController(BrowserView view) {
         this.view = view;
@@ -171,8 +185,12 @@ public class BrowserController {
                         urlSet.add(url);
                         // update browsing history
                         updateHistoryPanel(url);
+
+                        // transform document to a string
+                        String content = transformDocumentToString(engine.getDocument());
+
                         // update web index
-                        updateWebIndices(url);
+                        updateWebIndices(url, content);
                     }
 
                     // update textField to tell the user the location of current webpage (just like
@@ -183,6 +201,36 @@ public class BrowserController {
                 }
             }
         });
+    }
+
+    /**
+     * Transform Document object to a string.
+     * 
+     * @param document org.w3c.dom.Document representing the loaded webpage
+     * @return content of this Document object as a string. It can be {@code NULL}
+     *         if the transformation is failed.
+     */
+    private String transformDocumentToString(Document document) {
+        if (transformer == null)
+            try {
+                transformer = TransformerFactory.newInstance().newTransformer();
+            } catch (TransformerConfigurationException e) {
+                e.printStackTrace();
+            } catch (TransformerFactoryConfigurationError e) {
+                e.printStackTrace();
+            }
+
+        if (transformer != null) {
+            StringWriter writer = new StringWriter();
+            try {
+                transformer.transform(new DOMSource(document), new StreamResult(writer));
+            } catch (TransformerException e) {
+                e.printStackTrace();
+            }
+            return writer.toString();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -384,13 +432,22 @@ public class BrowserController {
      * to this method before.
      * </p>
      * 
-     * @param url URL String
+     * @param url     URL String
+     * @param content Actual content (html/js code) of this webpage. if it's
+     *                {@code Null}, a {@code new WebDoc} will be constructed by
+     *                making connection to the URL, else it will be constructed by
+     *                parsing the given content string.
      */
-    private void updateWebIndices(String url) {
+    private void updateWebIndices(String url, String content) {
         try {
-            WebDoc doc = new WebDoc(url);
-            bodyIndex.add(doc);
+            WebDoc doc;
+            if (content == null) {
+                doc = new WebDoc(url);
+            } else {
+                doc = new WebDoc(url, content);
+            }
             headIndex.add(doc);
+            bodyIndex.add(doc);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
