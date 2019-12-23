@@ -323,8 +323,10 @@ public class BrowserController {
             if (prefixQuery != null && !prefixQuery.isEmpty()) {
                 // parse query
                 Query parsedQuery = QueryBuilder.parse(prefixQuery);
+                Set<WebDoc> headResultSet = parsedQuery.matches(headIndex);
+                Set<WebDoc> bodyResultSet = parsedQuery.matches(bodyIndex);
                 // update view
-                updateQueryResultpanel(parsedQuery);
+                updateQueryResultPanel(headResultSet, bodyResultSet);
             }
             textField.clear();
         };
@@ -337,22 +339,19 @@ public class BrowserController {
      * that when it is clicked, the displayPane will be shown and a new tab will be
      * created displaying the webpage of this url.
      * 
-     * @param parsedQuery
+     * @param headResSet set of WebDoc for the head section
+     * @param bodyResSet set of WebDoc for the body section
      * @see QueryResultPanel
      */
-    private void updateQueryResultpanel(Query parsedQuery) {
-        // get results of head and body
-        Set<WebDoc> hdResSet = parsedQuery.matches(headIndex);
-        Set<WebDoc> bdResSet = parsedQuery.matches(bodyIndex);
-
+    private void updateQueryResultPanel(Set<WebDoc> headResSet, Set<WebDoc> bodyResSet) {
         List<String> headList = new ArrayList<>();
-        if (hdResSet != null)
-            for (WebDoc doc : hdResSet) {
+        if (headResSet != null)
+            for (WebDoc doc : headResSet) {
                 headList.add(doc.getUrlString());
             }
         List<String> bodyList = new ArrayList<>();
-        if (bdResSet != null)
-            for (WebDoc doc : bdResSet) {
+        if (bodyResSet != null)
+            for (WebDoc doc : bodyResSet) {
                 bodyList.add(doc.getUrlString());
             }
 
