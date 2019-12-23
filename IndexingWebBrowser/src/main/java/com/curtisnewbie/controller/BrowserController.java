@@ -297,10 +297,17 @@ public class BrowserController {
             var textField = this.view.getQueryPane().getQueryControlPanel().getInfixTf();
             String infixQuery = textField.getText();
             if (infixQuery != null && !infixQuery.isEmpty()) {
-                // parse query
-                Query parsedQuery = QueryBuilder.parseInfixForm(infixQuery);
-                // update view
-                updateQueryResultpanel(parsedQuery);
+                if (infixQuery.trim().equalsIgnoreCase("/all")) {
+                    // special command for showing all WebDoc
+                    updateQueryResultPanel(allWebDocs.values(), null);
+                } else {
+                    // parse query
+                    Query parsedQuery = QueryBuilder.parseInfixForm(infixQuery);
+                    Set<WebDoc> headResultSet = parsedQuery.matches(headIndex);
+                    Set<WebDoc> bodyResultSet = parsedQuery.matches(bodyIndex);
+                    // update view
+                    updateQueryResultPanel(headResultSet, bodyResultSet);
+                }
             }
             textField.clear();
         };
@@ -321,12 +328,18 @@ public class BrowserController {
             var textField = this.view.getQueryPane().getQueryControlPanel().getPrefixTf();
             String prefixQuery = textField.getText();
             if (prefixQuery != null && !prefixQuery.isEmpty()) {
-                // parse query
-                Query parsedQuery = QueryBuilder.parse(prefixQuery);
-                Set<WebDoc> headResultSet = parsedQuery.matches(headIndex);
-                Set<WebDoc> bodyResultSet = parsedQuery.matches(bodyIndex);
-                // update view
-                updateQueryResultPanel(headResultSet, bodyResultSet);
+
+                if (prefixQuery.trim().equalsIgnoreCase("/all")) {
+                    // special command for showing all WebDoc
+                    updateQueryResultPanel(allWebDocs.values(), null);
+                } else {
+                    // parse query
+                    Query parsedQuery = QueryBuilder.parse(prefixQuery);
+                    Set<WebDoc> headResultSet = parsedQuery.matches(headIndex);
+                    Set<WebDoc> bodyResultSet = parsedQuery.matches(bodyIndex);
+                    // update view
+                    updateQueryResultPanel(headResultSet, bodyResultSet);
+                }
             }
             textField.clear();
         };
@@ -339,11 +352,11 @@ public class BrowserController {
      * that when it is clicked, the panel in the middle of the QueryPane will show
      * the summary (words in head and body) of this url.
      * 
-     * @param headResSet set of WebDoc for the head section
-     * @param bodyResSet set of WebDoc for the body section
+     * @param headResSet Collection of WebDoc for the head section
+     * @param bodyResSet Collection of WebDoc for the body section
      * @see QueryResultPanel
      */
-    private void updateQueryResultPanel(Set<WebDoc> headResSet, Set<WebDoc> bodyResSet) {
+    private void updateQueryResultPanel(Collection<WebDoc> headResSet, Collection<WebDoc> bodyResSet) {
         List<String> headList = new ArrayList<>();
         if (headResSet != null)
             for (WebDoc doc : headResSet) {
