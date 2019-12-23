@@ -46,7 +46,6 @@ public class NotQuery implements Query {
 		Map<String, Set<WebDoc>> webDocsMapCopy;
 		webDocsMapCopy = wind.getWebDocsMap();
 
-		Set<String> allKeySet = webDocsMapCopy.keySet();
 		Collection<Set<WebDoc>> allValues = webDocsMapCopy.values();
 		Set<WebDoc> allWebDoc = new TreeSet<>();
 
