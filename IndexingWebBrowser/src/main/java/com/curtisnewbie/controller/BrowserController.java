@@ -360,12 +360,12 @@ public class BrowserController {
         var headVBox = queryResult.getHdResVBox();
         headVBox.getChildren().clear();
         for (String url : headList) {
-            headVBox.getChildren().add(queryResultBtn(url));
+            headVBox.getChildren().add(createQueryResultBtn(url));
         }
         var bodyVBox = queryResult.getBdResVBox();
         bodyVBox.getChildren().clear();
         for (String url : bodyList) {
-            bodyVBox.getChildren().add(queryResultBtn(url));
+            bodyVBox.getChildren().add(createQueryResultBtn(url));
         }
     }
 
@@ -380,7 +380,7 @@ public class BrowserController {
      *         of the QueryPane.
      * @see QueryPane
      */
-    private Button queryResultBtn(String url) {
+    private Button createQueryResultBtn(String url) {
         var btn = new Button(url);
         btn.setOnAction(e -> {
             var textArea = view.getQueryPane().getUrlSummaryPanel().getTextArea();
