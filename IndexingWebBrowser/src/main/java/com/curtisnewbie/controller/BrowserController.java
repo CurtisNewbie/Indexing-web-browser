@@ -34,6 +34,8 @@ import javax.xml.transform.stream.StreamResult;
 /**
  * Controller in MVC, this controller controls how the view and the model
  * interact with eachother.
+ * 
+ * @author Yongjie Zhuang
  */
 public class BrowserController {
 

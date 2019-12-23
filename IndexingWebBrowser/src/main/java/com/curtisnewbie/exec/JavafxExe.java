@@ -9,7 +9,11 @@ import javafx.scene.Scene;
 import com.curtisnewbie.view.*;
 import com.curtisnewbie.controller.*;
 
-/** This where the javafx implementation of this program is started. */
+/**
+ * This where the javafx implementation of this program is started.
+ * 
+ * @author Yongjie Zhuang
+ */
 public class JavafxExe extends Application {
 
     @Override

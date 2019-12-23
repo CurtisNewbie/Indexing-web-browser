@@ -17,6 +17,8 @@ import javafx.scene.control.TabPane;
  * view in this program for displaying content of webpages.
  * </p>
  * 
+ * @author Yongjie Zhuang
+ * 
  * @see BrowserView
  */
 public class DisplayPane extends BorderPane {

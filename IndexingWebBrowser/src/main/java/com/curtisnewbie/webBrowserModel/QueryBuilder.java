@@ -8,7 +8,7 @@ import java.util.TreeSet;
  * (AndQuery, OrQuery, NotQuery, AtomicQuery). It can deal with both the prefix
  * form query and the infix form query.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  *
  */
 public class QueryBuilder {

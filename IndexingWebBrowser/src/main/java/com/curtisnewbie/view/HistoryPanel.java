@@ -11,6 +11,8 @@ import javafx.scene.text.Text;
 /**
  * VBox that displays the history of the browsed webpages. Each webpage (URL
  * links) shown in this VBox is a clickable button.
+ * 
+ * @author Yongjie Zhuang
  */
 public class HistoryPanel extends VBox {
 

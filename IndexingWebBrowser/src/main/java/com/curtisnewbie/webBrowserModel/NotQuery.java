@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * This class is used to handle the prefix NotQuery, e.g., not(banana).
  * Theoretically, NotQuery is the 'end' of the recursion.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  *
  */
 public class NotQuery implements Query {

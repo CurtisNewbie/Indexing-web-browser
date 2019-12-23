@@ -24,6 +24,8 @@ import javafx.scene.layout.Pane;
  * This class itself is a subclass of Pane, and it controls switching between
  * the two views by have two BorderPane as its instance variables.
  * </p>
+ * 
+ * @author Yongjie Zhuang
  */
 public class BrowserView extends BorderPane {
 

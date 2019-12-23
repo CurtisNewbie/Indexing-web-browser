@@ -12,6 +12,7 @@ import java.util.TreeSet;
  * @see WebDoc
  * @see WebIndexForBody
  * @see WebIndexForHead
+ * 
  * @author Yongjie Zhuang
  */
 public abstract class WebIndex {

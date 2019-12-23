@@ -7,6 +7,8 @@ import java.util.TreeSet;
  * Subclass of WebIndex that implements the add(WebDoc doc) method exclusively
  * for the head words in a WebDoc
  * 
+ * @author Yongjie Zhuang
+ * 
  * @see WebIndex
  * @see WebDoc
  */

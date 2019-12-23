@@ -1,7 +1,6 @@
 package com.curtisnewbie.view;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -13,6 +12,8 @@ import javafx.scene.text.Font;
  * VBox that consits of controls used to control searching web content (content
  * words and keywords). E.g., TextField for entering infix queries and prefix
  * queries.
+ * 
+ * @author Yongjie Zhuang
  */
 public class QueryControlPanel extends VBox {
 

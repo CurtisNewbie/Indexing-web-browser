@@ -8,6 +8,11 @@ import java.io.InputStream;
 
 import javafx.collections.*;
 
+/**
+ * Menu Button
+ * 
+ * @author Yongjie Zhuang
+ */
 public class MenuBtn extends Menu {
 
     /** Maximum height of icon images in the buttons */
