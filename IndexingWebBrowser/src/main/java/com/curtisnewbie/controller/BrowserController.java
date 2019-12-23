@@ -336,8 +336,8 @@ public class BrowserController {
      * Update the QueryResultPanel by clearing the {@code ObservableList<Node>} in
      * the two VBoxs, and refill them with the Buttons that contain the results of
      * the query (the URL String). Each button is registered with an EventHandler
-     * that when it is clicked, the displayPane will be shown and a new tab will be
-     * created displaying the webpage of this url.
+     * that when it is clicked, the panel in the middle of the QueryPane will show
+     * the summary (words in head and body) of this url.
      * 
      * @param headResSet set of WebDoc for the head section
      * @param bodyResSet set of WebDoc for the body section
