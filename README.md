@@ -1,44 +1,171 @@
 # A-simple-indexing-web-browser
-This is a very simple indexing web browser. It is different from the normal browsers in that it builds a searchable index of web page contents dynamically as the user browses. The users are able to search websites or browse local htm/html files. The users can then search through pages that they have visited and have the list of results displayed as a set of clickable links using the prefix query and infix query.
 
-To browse web pages, please use this syntax:
-<ul> 
-  <li>http://...</li>
-  <li>https://...</li>
-</ul>
+This is a very simple indexing web browser, it builds a searchable index of web page contents dynamically as the user browses. This program has two "views"/"windows", one is for browsing webpages, and another is for searching content words with queries.
 
-To browse local html/htm pages, please use this syntax:
+The users are able to browse online websites (by entering URL) or local html files (by providing path to these files). Once the webpages are visited, users can then search through these webpages using <b>infix or prefix queries</b>. There are two type of contents words that can be searched for: the uniques words within the <b>\<head>...\</head></b> tags and the unique words within the <b>\<body>...\</body></b> tags.
+
+If you are only interested in what it does, you can have a look at the demos in Section 2. Using it as a simple web browser would only need to know the basic functionalities in Section 2 and Section 3 (for loading local webpage).
+
+If you want to use the query functions to search through contents, you may need to have a look at Section 4, it shouldn't be hard to understand, but I hope that I have explained it clearly. :D
+
+This program is developed using:
+
 <ul>
-  <li>file:C:\Users\.....</li>
+	<li>JavaSE</li>
+	<li>JavaFX</li>
+	<li>JSoup</li>
 </ul>
 
-[Note: The code are well documented using Java doc, however, the Java doc html files are not generated. You may want to generate the Java doc if necessary.]
+<h2>1. Running This Program With Maven</h2>
 
-<h1>Searching Functionality:</h1>
-  
-For searching the content word and key word in the web pages, three types of quries can be used:
-1) AndQuery, 2) OrQuery, and 3) NoQuery. The explanation of them is provided below. Each query will return a set of the URLs (results).
+External dependencies are resolved using Maven, which include JavaFx, JSoup and JUnit. To run this, you should have Maven installed. Navigate to where the pom.xmll file located, and execute the following command in your CLI:
 
-1) AndQuery: is the set intersection of the results, for the infix query, it can only consist of two components (e.g., queryA and queryB). For the prefix query, it can consist of more than two components, e.g., and(queryA, queryB, queryC). 
+    mvn compile javafx:run
 
-2) OrQuery: is the set union of the results. For the infix query, it can only consist of two components (e.g., queryA or queryB). For the prefix query, it can consist of more than two components, e.g., or(queryA, queryB, queryC).
+If you have problems downloading the dependencies, you can execute the command below before the one above.
 
-3) NotQuery: is the set difference between the set of all documents (that the users browsed) and the result of the component in the NotQuery. NotQuery can always has one component, e.g., not(query) / not query
+    mvn dependency:resolve
 
-Example of Infix query: 
-"(whale and fish) and not elephant"
-Example of Prefix query:
-"and(and(whale,fish),not(elephant))"
+<h2>2. Demonstration of Functionalities With GIF</h2>
+
+You can browse online websites as follows by entering the URL in the textfield as usual.
+
+<img src="https://user-images.githubusercontent.com/45169791/71385799-7e984880-25e1-11ea-8c59-6de47e381488.gif" width=711 height=400 >
+
+You can also browse local webpages as follows by entering the path to the file with a prefix of "file:".
+
+<img src="https://user-images.githubusercontent.com/45169791/71385950-50ffcf00-25e2-11ea-81be-a4cb797d408d.gif" width=711 height=400 >
+
+This simple program supports multiple tabs, you can create a new tab by pressing the "plus" symbol on the right.
+
+<img src="https://user-images.githubusercontent.com/45169791/71385976-84daf480-25e2-11ea-99f9-0db260924f91.gif" width=711 height=400 >
+
+Going backward and forward in history for each tab is also supported, you can do so by pressing the "<" or ">" buttons for the currently selected tab.
+
+<img src="https://user-images.githubusercontent.com/45169791/71386022-cff50780-25e2-11ea-86f4-3dc3b5b1c00b.gif" width=711 height=400 >
+
+As this program supports multiple views, one for browsing webpages, another for searching content with queries. You can switch between views through the menu.
+
+<img src="https://user-images.githubusercontent.com/45169791/71386046-fadf5b80-25e2-11ea-9120-e97285de5af4.gif" width=711 height=400 >
+
+In the "view" or "panel" for using query function, you can check the previous history and open a tab to display the one of the previously visited URL by clicking on it. This function also works for local webpage.
+
+<img src="https://user-images.githubusercontent.com/45169791/71386748-bacea780-25e7-11ea-9a08-12527bf635e4.gif" width=711 height=400 >
+
+Using Infix or Prefix queries allows you to search through the content of the previously visisted webpages.
+
+<img src="https://user-images.githubusercontent.com/45169791/71386786-1731c700-25e8-11ea-9e35-2854c3b4cd2d.gif" width=711 height=400 >
+
+By clicking on the one of the results of the query, the summary panel will display its unique content words.
+
+<img src="https://user-images.githubusercontent.com/45169791/71386819-4a745600-25e8-11ea-85f3-0a2ccd2a4a98.gif" width=711 height=400 >
+
+Using <b>"/all"</b> command can display all the webpages in the results panel, so that you can view the summary of each webpage that you have visisted without using query.
+
+<img src="https://user-images.githubusercontent.com/45169791/71386854-96bf9600-25e8-11ea-90b3-e8b31654087a.gif" width=711 height=400 >
+
+<h2>2. How to Browse Online Website and Local WebPage</h2>
+
+You can either use it as a normal browser to visit online website by entering url, if no "http://" or "https://" protocols are given, the browser will automatically complete it for you.
+
+If you want to load a local webpage (html file), then you need to use specific syntax. <b>A prefix of "file:" (case-insensitive)</b> tells the program that you are looking for a local file, then all you need to do is to append the absolute path to it as follows.
+
+    Syntax:
+    file:[path/to/file]
+
+    E.g.,
+
+    file:/home/yongjie/test.html
+
+<h2>3. Explanation of Queries</h2>
+
+<h3>Operators</h3>
+
+To use the infix and prefix queries, it's essential to understand the operators available. In this program, there are three types of <b>operators</b>, they are:
+
+    AND operator - the set intersection of the results
+    OR operator - the set union of the results
+    NOT operator - the set difference, or the results other than that for the word in this NOT query
+
+<h3>Infix and Prefix Queries</h3>
+
+<b>Infix Queries</b> refer to the queries wherein the operators are declared between normal words. <b>Prefix Queries</b> refer to those queries wherein the operators are declared before normal words, the parentheses and comma are needed. <b>They can be nested as long as the fundamental rules of syntax are met.</b>
+
+<b>In the follwing examples, operators are in uppercase for demonstartion, they are case-insensitive in the program.</b>
+
+They are as follows:
+
+    Infix Query:
+    	Syntax: [Subquery] operator [Subquery]
+    	e.g., "apple AND orange"
 
 
-<h1> Explanation of the GUI </h1>
+    Prefix Query:
+    	Syntax: operator ([Subquery],[Subquery],[Subquery]...)
+    	"AND(apple, orange)"
 
-![Screenshot of the web browser1](https://user-images.githubusercontent.com/45169791/58969625-ec993180-87af-11e9-9a8b-4b3d5fe7fa64.PNG)
+So, for the example above, the two queries are looking for set intersection of results of "apple" and "orange", or i.e., which webpage has both "apple" and "orange".
 
-![Screenshot of the web browser2](https://user-images.githubusercontent.com/45169791/58970136-b8724080-87b0-11e9-9b60-38b4c643c001.PNG)
+<h3>Rules for Infix Query</h3>
 
-Note: The links/URLs/Results in the history pane and query result panes (content word result and keyword result) are clickable, that allow you to browse the content of these URLs.
+This section describes the fundamental rules for Infix Query. <b>The fundamental rule is that there must be an operator between any two subqueries or words. Further, both infix query and prefix query can be nested, thus there can be subquries.</b> For example:
 
+    Query:
+    "(whale and fish) and not elephant"
 
+    Here, "whale and fish", "not elephant" are treated as subqueries.
+    Between these two subquery, there (must) be an operator between them. In this example, the operator is AND operator.
 
+<b>Parentheses can be used to indicate a subquery, which makes sure this subquery is processed in one go (being treated as a single result) rather then being seperated. By default, the whole query is always processed from left to right, so ordering does matter.</b>
 
+<b>Queries with AND operators and OR operators are very similar. There must be two words or subqueries between AND operators and OR operators</b>, for example:
+
+    "apple AND pig"
+    "apple OR pig"
+
+    However, the following queries are incorrect:
+    "AND pig"
+    "pig OR"
+
+For queries with NOT operator, it's different. <b>NOT operator only accepts one subquery or one word on its right-hand side, subqueries must be covered with parentheses, else it may lead to unexpected results</b>. For example:
+
+    This is a correct query:
+    "NOT apple"
+
+    This one is also correct, but more attention is needed:
+    "NOT apple and orange"
+
+    The parser will treat it as below, because no parentheses are provided:
+    "NOT (apple and orange)"
+
+    If you want to make sure the "NOT apple" is processed first, you will need to add parentheses as follows:
+    "(NOT apple) and orange"
+
+More examples of infix query:
+
+    "whale and (apple or pig or dog)"
+    "not dog and not pig"
+
+<h3>Rules for Prefix Query</h3>
+
+Prefix queries have more restriction on the syntax, however, it may be easier to use to build a query.<b> For each query or subquery, an operator must be declared at the beginnin, and there must be parentheses covering the rest of the subquery or words.</b> For example,
+
+    "AND(apple, organge, food, OR(cat, dog), NOT(AND(apple, orange)), no, lol)"
+
+    There can be unlimited number of words/subqueries within the parentheses within this AND query.
+
+    "OR(apple, organge, food, OR(cat, dog), NOT(AND(apple, orange)), no, lol)"
+
+    There can be unlimited number of words/subqueries within the parentheses within this OR query.
+
+Based on the structure or syntax of prefix query, this becomes much clearer on how the query will be processed. <b>Generally, the subquery in the deeper level will be processed first. To be clear, this is processed recursively, so the results of subqueries must be got before we start processing the outter layer.</b>
+
+<b>For AND and OR operators, there can be unlimited number of words/subqueries within the parentheses, however, for NOT operator, there can only be one word or one nested subquery in it.</b> For example,
+
+    These are correct queries:
+    "NOT(apple)"
+    "NOT(AND(apple, orange))"
+    "NOT(AND(apple, OR(orange, banana)))"
+
+    This is an incorrect query:
+    "NOT(apple, orange)"
