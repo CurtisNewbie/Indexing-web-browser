@@ -1,11 +1,12 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
+
 import java.util.Set;
 
 /**
  * This class is used to handle the prefix AtomicQuery, e.g., banana.
  * Theoretically, AtomicQuery is the 'end' of the recursion.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  *
  */
 public class AtomicQuery implements Query {

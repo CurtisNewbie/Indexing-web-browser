@@ -1,4 +1,4 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
 
 import java.util.Collection;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * This class is used to handle the prefix NotQuery, e.g., not(banana).
  * Theoretically, NotQuery is the 'end' of the recursion.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  *
  */
 public class NotQuery implements Query {
@@ -46,7 +46,6 @@ public class NotQuery implements Query {
 		Map<String, Set<WebDoc>> webDocsMapCopy;
 		webDocsMapCopy = wind.getWebDocsMap();
 
-		Set<String> allKeySet = webDocsMapCopy.keySet();
 		Collection<Set<WebDoc>> allValues = webDocsMapCopy.values();
 		Set<WebDoc> allWebDoc = new TreeSet<>();
 
@@ -58,7 +57,7 @@ public class NotQuery implements Query {
 		}
 		// get the webdocs of not query
 		resultOfNotQuery = webDocsMapCopy.get(query);
-		
+
 		// remove the webdocs of not query
 		if (resultOfNotQuery == null) {
 			return allWebDoc;

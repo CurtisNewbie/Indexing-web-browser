@@ -1,4 +1,5 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.TreeSet;
  * calls the matches() of the sub-query. The sub-query can be an OrQuqery object
  * as well.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  */
 public class OrQuery implements Query {
 

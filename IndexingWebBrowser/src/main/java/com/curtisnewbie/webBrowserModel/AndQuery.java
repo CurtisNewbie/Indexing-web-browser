@@ -1,4 +1,5 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -9,7 +10,7 @@ import java.util.TreeSet;
  * consist of a number of sub-query. The sub-query can be an AndQuqery object as
  * well.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  */
 public class AndQuery implements Query {
 

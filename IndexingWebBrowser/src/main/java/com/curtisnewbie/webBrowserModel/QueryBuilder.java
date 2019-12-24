@@ -1,4 +1,4 @@
-package webBrowserModel;
+package com.curtisnewbie.webBrowserModel;
 
 import java.util.Stack;
 import java.util.TreeSet;
@@ -8,7 +8,7 @@ import java.util.TreeSet;
  * (AndQuery, OrQuery, NotQuery, AtomicQuery). It can deal with both the prefix
  * form query and the infix form query.
  * 
- * @author 180139796
+ * @author Yongjie Zhuang
  *
  */
 public class QueryBuilder {
@@ -175,7 +175,8 @@ public class QueryBuilder {
 		} else if (operator.equals("atomic")) {
 			return query;
 		} else { // it is for debugging, in normal situations, it should never occur.
-//			System.out.println("parseInfixString(String q) -> Incorrect Format! Query:[" + query + "]");
+			// System.out.println("parseInfixString(String q) -> Incorrect Format! Query:["
+			// + query + "]");
 			return null;
 		}
 	}
