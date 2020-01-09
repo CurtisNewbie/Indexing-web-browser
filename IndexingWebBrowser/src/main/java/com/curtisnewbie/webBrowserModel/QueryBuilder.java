@@ -225,19 +225,30 @@ public class QueryBuilder {
 	}
 
 	/**
-	 * This is a recursive method. It helps get rid of the outside bracket. See this
-	 * example: "(((banana)))" -> "banana"
+	 * <p>
+	 * This is a helper method. It gets rid of pairs of the outside brackets
+	 * iteratively.<br>
+	 * </p>
+	 * For example:
+	 * <p>
+	 * "(((banana)))" -> "banana"
+	 * </p>
+	 * <p>
+	 * "(((banana)" -> "((banana"
+	 * </p>
 	 * 
 	 * @param q a query
-	 * @return a processed query
+	 * @return a query without the "symmetric" outside brackets.
 	 */
 	private static String removeCoveringBracket(String q) {
 		String thisQuery = q;
-		if (thisQuery.length() > 0 && thisQuery.charAt(0) == '(' && thisQuery.charAt(thisQuery.length() - 1) == ')') {
-			thisQuery = thisQuery.substring(1, thisQuery.length() - 1);
-			if (thisQuery.length() > 0 && thisQuery.charAt(0) == '('
-					&& thisQuery.charAt(thisQuery.length() - 1) == ')') {
-				thisQuery = removeCoveringBracket(thisQuery);
+		if (thisQuery != null) {
+			int len;
+			while ((len = thisQuery.length()) > 1 && thisQuery.charAt(0) == '(' && thisQuery.charAt(len - 1) == ')') {
+				if (thisQuery == "()")
+					return "";
+				else
+					thisQuery = thisQuery.substring(1, len - 1);
 			}
 		}
 		return thisQuery;
