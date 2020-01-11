@@ -14,39 +14,47 @@ import java.util.TreeSet;
 public class QueryBuilder {
 
 	/**
+	 * <p>
 	 * It deals with the prefix form query. It returns an object of Query based on
-	 * the given String. This object returned, represents the highest level of the
-	 * hierarchy, as a Query object can consist of other type of Query objects.
-	 * E.g., and(and(cat,dog),sheep).
+	 * the given String. The Query object returned represents the highest level of
+	 * the hierarchy, as a Query object can consist of other type of Query objects.
+	 * </p>
+	 * <p>
+	 * This methods uses the helper method {@link #parsePrefixSubQuery(String)} to
+	 * create a collection of subqueries to instantiate propery Query objects.
+	 * </p>
+	 * <p>
+	 * E.g., "and(and(cat,dog),sheep)" query will return a AndQuery which contains
+	 * two subqueries: 1) "and(cat,doc)" and 2) "sheep". Its subquery can be nested,
+	 * thus the nested queries can be further broken down until they are atomic
+	 * query (simple word) or NotQuery.
+	 * </p>
 	 * 
-	 * @param q the given query in the form of String.
+	 * @param q a prefix query
 	 * @return a Query object
 	 */
 	public static Query parse(String q) {
 		String wholeQuery = q.toLowerCase();
 		wholeQuery = wholeQuery.replaceAll("\\s", "");
+		Query resultQuery;
 
-		if (!wholeQuery.contains("and") && !wholeQuery.contains("or") && !wholeQuery.contains("not")) {
-			return new AtomicQuery(wholeQuery);
+		if (wholeQuery.startsWith("and")) {
+			// "and(" starting from 4
+			String subQueryInBracket = wholeQuery.substring(4, wholeQuery.length() - 1);
+			resultQuery = new AndQuery(parsePrefixSubQuery(subQueryInBracket));
+		} else if (wholeQuery.startsWith("not")) {
+			// "not(" starting from 4
+			String notQuery = wholeQuery.substring(4, wholeQuery.length() - 1);
+			resultQuery = new NotQuery(notQuery);
+		} else if (wholeQuery.startsWith("or")) {
+			// "or(" starting from 3
+			String subQueryInBracket = wholeQuery.substring(3, wholeQuery.length() - 1);
+			resultQuery = new OrQuery(parsePrefixSubQuery(subQueryInBracket));
 		} else {
-			String notQuery;
-			int Starting_Index;
-			if (wholeQuery.startsWith("and")) {
-				Starting_Index = 4; // "and(" starting from 4
-				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
-				return new AndQuery(parsePrefixSubQuery(subQueryInBracket));
-			} else if (wholeQuery.startsWith("not")) {
-				Starting_Index = 4; // "not(" starting from 4
-				notQuery = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
-				return new NotQuery(notQuery);
-			} else if (wholeQuery.startsWith("or")) {
-				Starting_Index = 3; // "or(" starting from 3
-				String subQueryInBracket = wholeQuery.substring(Starting_Index, wholeQuery.length() - 1);
-				return new OrQuery(parsePrefixSubQuery(subQueryInBracket));
-			} else {
-				return new AtomicQuery(wholeQuery); // (a query may be atomic query but contain or/and/not)
-			}
+			resultQuery = new AtomicQuery(wholeQuery); // an atomic query (a simple word that will be searched. E.g,.
+														// "apple", which doesn't start with any operator)
 		}
+		return resultQuery;
 	}
 
 	/**
