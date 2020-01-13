@@ -58,29 +58,26 @@ public class QueryBuilder {
 	}
 
 	/**
-	 * This method is used to support the .parse(String q) method. It splits the
-	 * given String into a number of sub-query based on the ',', and put the
-	 * sub-query into a TreeSet<String> for initialising an object of Query(e.g.,
-	 * AndQuery, OrQuery).
-	 * 
-	 * E.g., "and(apple, and(banana,cat))";In this case, the given String will be
-	 * "apple, and(banana,cat)"
+	 * <p>
+	 * This method is a helper method to support the {@link #parse(String)} method.
+	 * It splits the given subquery further into a number of sub-query based on the
+	 * comma and parentheses, and put these subqueries into a TreeSet<String> for
+	 * initialising an object of Query(e.g., AndQuery, OrQuery).
+	 * </p>
 	 * 
 	 * @param q the given String that represents the everything within the bracket
 	 *          of the AndQuery or OrQuery.
-	 * @return a TreeSet<String> of all the sub-query.
+	 * @return a TreeSet<String> of subqueries.
 	 */
 	private static TreeSet<String> parsePrefixSubQuery(String q) {
 		TreeSet<String> subQuery = new TreeSet<>();
 		Stack<Character> bracket = new Stack<>();
 		int startIndex = 0;
-		int endIndex;
 
 		for (int x = 0; x < q.length(); x++) {
 			char tempChar = q.charAt(x);
 			if (tempChar == ',' && bracket.empty()) {
-				endIndex = x;
-				subQuery.add(q.substring(startIndex, endIndex));
+				subQuery.add(q.substring(startIndex, x));
 				startIndex = x + 1;
 			} else if (tempChar == '(' || tempChar == ')') {
 				if (!bracket.empty() && bracket.peek() != tempChar) {
