@@ -65,6 +65,8 @@ public class QueryBuilder {
 	 * initialising an object of Query(e.g., AndQuery, OrQuery).
 	 * </p>
 	 * 
+	 * @see {@link #parse(String)}
+	 * 
 	 * @param q the given String that represents the everything within the bracket
 	 *          of the AndQuery or OrQuery.
 	 * @return a TreeSet<String> of subqueries.
@@ -93,12 +95,18 @@ public class QueryBuilder {
 	}
 
 	/**
+	 * <p>
 	 * This method parse the infix form query into prefix form query, and returns an
-	 * object of Query in prefix form. It is also used to initiate the recursion for
-	 * processing infix query.
+	 * object of Query in prefix form.
+	 * </p>
+	 * It internally uses the helper method {@link #convertInfixString(String)} to
+	 * convert the prefix query to infix query, and then calls the method
+	 * {@link #parse(String)} to parse this converted query.
 	 * 
-	 * @param q the query in the forms of String
-	 * @return a Query object
+	 * @see {@link #parse(String)}
+	 * @see {@link #convertInfixString(String)}
+	 * @param q an infix query
+	 * @return a Query object if successful, else {@code NULL}.
 	 */
 	public static Query parseInfixForm(String q) {
 		String query = q.toLowerCase();
