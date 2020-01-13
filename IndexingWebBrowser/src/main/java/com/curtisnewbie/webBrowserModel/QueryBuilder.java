@@ -109,8 +109,7 @@ public class QueryBuilder {
 	 * @return a Query object if successful, else {@code NULL}.
 	 */
 	public static Query parseInfixForm(String q) {
-		String query = q.toLowerCase();
-		String prefixQuery = convertInfixString(query);
+		String prefixQuery = convertInfixString(q);
 		if (prefixQuery == null) {
 			return null;
 		} else {
