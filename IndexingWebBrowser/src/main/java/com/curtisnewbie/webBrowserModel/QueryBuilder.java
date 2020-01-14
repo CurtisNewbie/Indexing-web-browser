@@ -36,17 +36,18 @@ public class QueryBuilder {
 	public static Query parse(String q) {
 		String wholeQuery = q.toLowerCase();
 		wholeQuery = wholeQuery.replaceAll("\\s", "");
+		int len = wholeQuery.length();
 		Query resultQuery;
 
-		if (wholeQuery.startsWith("and")) {
+		if (wholeQuery.startsWith("and") && len > 3 && !Character.isLetterOrDigit(wholeQuery.charAt(3))) {
 			// "and(" starting from 4
 			String subQueryInBracket = wholeQuery.substring(4, wholeQuery.length() - 1);
 			resultQuery = new AndQuery(parsePrefixSubQuery(subQueryInBracket));
-		} else if (wholeQuery.startsWith("not")) {
+		} else if (wholeQuery.startsWith("not") && len > 3 && !Character.isLetterOrDigit(wholeQuery.charAt(3))) {
 			// "not(" starting from 4
 			String notQuery = wholeQuery.substring(4, wholeQuery.length() - 1);
 			resultQuery = new NotQuery(notQuery);
-		} else if (wholeQuery.startsWith("or")) {
+		} else if (wholeQuery.startsWith("or") && len > 2 && !Character.isLetterOrDigit(wholeQuery.charAt(2))) {
 			// "or(" starting from 3
 			String subQueryInBracket = wholeQuery.substring(3, wholeQuery.length() - 1);
 			resultQuery = new OrQuery(parsePrefixSubQuery(subQueryInBracket));
