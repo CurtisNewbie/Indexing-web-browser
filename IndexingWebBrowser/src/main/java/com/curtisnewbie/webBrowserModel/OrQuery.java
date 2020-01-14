@@ -17,8 +17,8 @@ import java.util.TreeSet;
 public class OrQuery implements Query {
 
 	/**
-	 * It represents the sub-query of this AndQuery, it can be more than two in case
-	 * of the prefix form.
+	 * A Set of subqueries of this AndQuery, it can be more than two in case of the
+	 * prefix form.
 	 */
 	private TreeSet<String> subQueryCollection;
 
@@ -28,8 +28,7 @@ public class OrQuery implements Query {
 	private ArrayList<Set<WebDoc>> subQueryResult;
 
 	/**
-	 * Constructor of AndQuery that initialises the instance
-	 * variables(subQueryCollection and subQueryResult).
+	 * Instantiate OrQuery
 	 * 
 	 * @param subQuery a TreeSet<String> of sub-query.
 	 */
@@ -69,12 +68,16 @@ public class OrQuery implements Query {
 	}
 
 	/**
-	 * This method returns a String indicate the type of the query and the
-	 * sub-query.The sub-query is indicated using '[' and ']'. E.g., or(A,and(C,D))
-	 * -> OR([A],[and(C,D)])
+	 * <p>
+	 * This method returns a String that indicates the type of the query and its
+	 * subqueries.The subqueries are indicated using '[' and ']'.
+	 * </p>
+	 * <p>
+	 * E.g., or(A,and(C,D)) -> OR([A],[and(C,D)])
+	 * </p>
 	 * 
-	 * @return a string that indicates the type of this query as well as the
-	 *         sub-query of this query.
+	 * @return a string that indicates the type of this query as well as its
+	 *         subqueries.
 	 */
 	@Override
 	public String toString() {
