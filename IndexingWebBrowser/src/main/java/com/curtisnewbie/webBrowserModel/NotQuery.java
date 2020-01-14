@@ -15,16 +15,14 @@ import java.util.TreeSet;
 public class NotQuery implements Query {
 
 	/**
-	 * It indicates the sub-query of this NotQuery. As it's a NotQuery, it only has
-	 * one sub-query.
+	 * A subquery or simple word of this NotQuery
 	 */
 	private String query;
 
 	/**
-	 * Constructor of NotQuery that assigns a value to the (instance variable)
-	 * query.
+	 * Instantiate NotQuery
 	 * 
-	 * @param s the sub-query of the NotQuery.
+	 * @param s the subquery or a simple word of this NotQuery.
 	 */
 	public NotQuery(String s) {
 		query = s;
@@ -68,12 +66,16 @@ public class NotQuery implements Query {
 	}
 
 	/**
-	 * This method returns a String indicate the type of the query and the
-	 * sub-query.The sub-query is indicated using '[' and ']'. E.g., not(banana) ->
-	 * Not([banana])
+	 * <p>
+	 * This method returns a String that indicates the type of the query and its
+	 * subquery. The subquery is indicated using '[' and ']'.
+	 * </p>
+	 * <p>
+	 * E.g., not(banana) -> Not([banana])
+	 * </p>
 	 * 
 	 * @return a string that indicates the type of this query as well as the
-	 *         sub-query of this query.
+	 *         subquery of this query.
 	 */
 	@Override
 	public String toString() {
