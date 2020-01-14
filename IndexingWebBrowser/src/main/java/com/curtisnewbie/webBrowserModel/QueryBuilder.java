@@ -99,17 +99,17 @@ public class QueryBuilder {
 	 * This method parse the infix form query into prefix form query, and returns an
 	 * object of Query in prefix form.
 	 * </p>
-	 * It internally uses the helper method {@link #convertInfixString(String)} to
+	 * It internally uses the helper method {@link #convertToPrefix(String)} to
 	 * convert the prefix query to infix query, and then calls the method
 	 * {@link #parse(String)} to parse this converted query.
 	 * 
 	 * @see {@link #parse(String)}
-	 * @see {@link #convertInfixString(String)}
+	 * @see {@link #convertToPrefix(String)}
 	 * @param q an infix query
 	 * @return a Query object if successful, else {@code NULL}.
 	 */
 	public static Query parseInfixForm(String q) {
-		String prefixQuery = convertInfixString(q);
+		String prefixQuery = convertToPrefix(q);
 		if (prefixQuery == null) {
 			return null;
 		} else {
@@ -153,7 +153,7 @@ public class QueryBuilder {
 	 * @param infixQuery a infix query
 	 * @return a (converted) prefix query if successfully, else {@ocde NULL}.
 	 */
-	private static String convertInfixString(String infixQuery) {
+	private static String convertToPrefix(String infixQuery) {
 		// preprocessing the query string
 		String query = removeCoveringBracket(infixQuery.trim().toLowerCase());
 		query = query.replaceAll("\\s{2,}", " ");
@@ -207,8 +207,8 @@ public class QueryBuilder {
 	 * @return prefix form query
 	 */
 	private static String convertAndInfixString(String left, String right) {
-		String leftQuery = convertInfixString(left);
-		String rightQuery = convertInfixString(right);
+		String leftQuery = convertToPrefix(left);
+		String rightQuery = convertToPrefix(right);
 		return "and(" + leftQuery + "," + rightQuery + ")";
 	}
 
@@ -222,8 +222,8 @@ public class QueryBuilder {
 	 * @return prefix form query
 	 */
 	private static String convertOrInfixString(String left, String right) {
-		String leftQuery = convertInfixString(left);
-		String rightQuery = convertInfixString(right);
+		String leftQuery = convertToPrefix(left);
+		String rightQuery = convertToPrefix(right);
 		return "or(" + leftQuery + "," + rightQuery + ")";
 	}
 
@@ -236,7 +236,7 @@ public class QueryBuilder {
 	 * @return prefix form query
 	 */
 	private static String convertNotInfixString(String right) {
-		String rightQuery = convertInfixString(right);
+		String rightQuery = convertToPrefix(right);
 		return "not(" + rightQuery + ")";
 	}
 
