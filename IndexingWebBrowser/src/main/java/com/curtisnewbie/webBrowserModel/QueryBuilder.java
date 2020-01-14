@@ -118,79 +118,83 @@ public class QueryBuilder {
 	}
 
 	/**
-	 * This method is part of the recursion for processing infix query. It takes the
-	 * input String, and identifies whether it's a notQuery, andQuery, orQuery, or
-	 * atomicQuery. It treats everything within the bracket as a whole, and it scans
-	 * the input String from left to right. The first operator that is found outside
-	 * the bracket will be used to determine which type of query it is. Once it has
-	 * identified the type of the query, the associated method is called, such as
-	 * .convertAndInfixString(), .convertOrInfixString() and
-	 * .convertNotInfixString(). The atomic query is returned directly.
+	 * <p>
+	 * This is a helper method for converting the infix query to prefix query.
+	 * </p>
+	 * <p>
+	 * It takes the input String, and identifies whether it's a notQuery, andQuery,
+	 * orQuery, or atomicQuery. It treats everything within the bracket as a whole,
+	 * and it scans the input String from left to right.
+	 * </p>
+	 * <p>
+	 * The first operator that is found outside the bracket will be used to
+	 * determine which type of query it is. Once it has identified the type of the
+	 * query, the associated method is called to continue converting the subqueries
+	 * within the subquery recursively, such as the
+	 * {@link #convertAndInfixString(String, String)},
+	 * {@link #convertOrInfixString(String, String)} and
+	 * {@link #convertNotInfixString(String)}. The atomic query is returned
+	 * directly, since it's only a simple word.
+	 * <p>
+	 * For example:, for the infix query: "(apple or banana) and cat and dog". <br>
 	 * 
-	 * Infix query example: "(apple or banana) and cat and dog" - See explanation.
-	 * The first operator is "and" and it is not covered by the bracket, so it is
-	 * converted into "and((apple or banana),cat and dog)." Same logic applied for
-	 * other types of query.
+	 * The first operator is "and" outside the parentheses, so it is converted into
+	 * "and((apple or banana),cat and dog)." Then this method identifies this query
+	 * as an AND query, thus call the method
+	 * {@link #convertAndInfixString(String, String)}. Same logic applied for other
+	 * types of query.
+	 * </p>
 	 * 
-	 * @param str a query (that may consist of sub-queries)
-	 * @return a (converted) prefix query
+	 * @see {@link #parseInfixForm(String)}
+	 * @see {@link #convertAndInfixString(String, String)}
+	 * @see {@link #convertOrInfixString(String, String)}
+	 * @see {@link #convertNotInfixString(String)}
+	 * 
+	 * @param infixQuery a infix query
+	 * @return a (converted) prefix query if successfully, else {@ocde NULL}.
 	 */
-	private static String convertInfixString(String str) {
-		String query = str.trim();
-		query = removeCoveringBracket(query); // get rid of all the outside closing bracket.
-		Stack<Character> bracket = new Stack<>();
-		String operator = "default";
-		int startIndex = 0;
-		int endIndex = 0;
-		StringBuilder stringBuilder = new StringBuilder();
+	private static String convertInfixString(String infixQuery) {
+		// preprocessing the query string
+		String query = removeCoveringBracket(infixQuery.trim().toLowerCase());
+		query = query.replaceAll("\\s{2,}", " ");
 
-		if (query.matches("(not\\s*\\(.+\\))|(not\\s*[A-Z-a-z]*)")) { // NotQuery
-			operator = "not";
-			endIndex = 3;
-		} else if (!query.contains("and") && !query.contains("not") && !query.contains("or")
-				|| query.matches("(and\\(.+,.+\\))|(or\\(.+,.+\\))")) {
-			operator = "atomic"; // AtomicQuery
+		if (!query.contains(" ") && !query.equals("and") && !query.equals("or") && !query.equals("not")) {
+			// AtomicQuery
+			return query;
+		} else if (query.matches("(not\\s?\\(.+\\))|(not\\s[A-Z-a-z]*)")) {
+			// NotQuery e.g., "not( ..nested subqueries... )" or "not apple".
+			return convertNotInfixString(query.substring(3));
 		} else {
+			// AND query or OR query or ill-formed query
+			Stack<Character> bracket = new Stack<>();
+			StringBuilder stringBuilder = new StringBuilder();
 			for (int x = 0; x < query.length(); x++) {
 				char tempChar = query.charAt(x);
 				if (tempChar == ' ' && bracket.isEmpty()) {
-					if (stringBuilder.toString().contains("and")) { // AndQuery
-						operator = "and";
-						startIndex = x - 3;
-						endIndex = x;
-						break;
-					} else if (stringBuilder.toString().contains("or")) { // OrQuery
-						operator = "or";
-						startIndex = x - 2;
-						endIndex = x;
-						break;
+					if (stringBuilder.toString().contains("and")) {
+						// AndQuery, e.g., with "apple and ..." we can already identify it as an
+						// AndQuery
+						return convertAndInfixString(query.substring(0, x - 3), query.substring(x));
+					} else if (stringBuilder.toString().contains("or")) {
+						// OrQuery, e.g., with "apple or ..." we can already identify it as an
+						// OrQuery
+						return convertOrInfixString(query.substring(0, x - 2), query.substring(x));
 					}
-				} else if (tempChar == '(' || tempChar == ')') { // see whether the current char is within the brackets
+				} else if (tempChar == '(' || tempChar == ')') {
+					// see whether the current char is within the brackets
 					if (!bracket.empty() && bracket.peek() != tempChar) {
 						bracket.pop();
 					} else {
 						bracket.push(tempChar);
 					}
-				} else if (tempChar != ' ' && tempChar != '(' && tempChar != ')' && bracket.empty()) {
+				} else if (Character.isLetterOrDigit(tempChar) && bracket.empty()) {
 					// only check the next operator that is outside the bracket
 					stringBuilder.append(tempChar);
 				}
 			}
 		}
-		// check what type of query it is.
-		if (operator.equals("and")) {
-			return convertAndInfixString(query.substring(0, startIndex), query.substring(endIndex));
-		} else if (operator.equals("or")) {
-			return convertOrInfixString(query.substring(0, startIndex), query.substring(endIndex));
-		} else if (operator.equals("not")) {
-			return convertNotInfixString(query.substring(endIndex));
-		} else if (operator.equals("atomic")) {
-			return query;
-		} else { // it is for debugging, in normal situations, it should never occur.
-			// System.out.println("parseInfixString(String q) -> Incorrect Format! Query:["
-			// + query + "]");
-			return null;
-		}
+		// ill-formed query
+		return null;
 	}
 
 	/**
