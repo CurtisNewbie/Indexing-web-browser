@@ -13,8 +13,25 @@ public class QueryBuilderTest {
 				QueryBuilder.parse("or(apple,orange)").toString().equals("OR([apple],[orange])"));
 		Assert.assertTrue("Query \"not(apple)\" should be parsed to \"NOT([apple])\"",
 				QueryBuilder.parse("not(apple)").toString().equals("NOT([apple])"));
-		Assert.assertTrue("\"apple\" should be parsed to be an AtomicQuery object",
-				QueryBuilder.parse("apple") instanceof AtomicQuery);
+	}
+
+	@Test
+	public void parsedPrefixQueryTypeShouldBeCorrect() {
+		// test whether it will get confused by simple word that contains the operators.
+		Assert.assertTrue("\"orange\" should be an AtomicQuery Object",
+				QueryBuilder.parse("orange") instanceof AtomicQuery);
+		Assert.assertTrue("\"andcccc\" should be an AtomicQuery Object",
+				QueryBuilder.parse("andcccc") instanceof AtomicQuery);
+		Assert.assertTrue("\"notme\" should be an AtomicQuery Object",
+				QueryBuilder.parse("notme") instanceof AtomicQuery);
+
+		// test prefix query for types: AndQuery, OrQuery, NotQuery
+		Assert.assertTrue("\"and(apple,orange)\" should be an AndQuery",
+				QueryBuilder.parse("and(apple,orange)") instanceof AndQuery);
+		Assert.assertTrue("\"or(apple,orange)\" should be an OrQuery",
+				QueryBuilder.parse("or(apple,orange)") instanceof OrQuery);
+		Assert.assertTrue("\"not(apple)\" should be a NotQuery", QueryBuilder.parse("not(apple)") instanceof NotQuery);
+
 	}
 
 	@Test
