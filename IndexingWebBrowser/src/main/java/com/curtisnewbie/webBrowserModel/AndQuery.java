@@ -6,30 +6,30 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * This class is used to handle the prefix AndQuery, e.g., and(banana,apple). It
- * consist of a number of sub-query. The sub-query can be an AndQuqery object as
- * well.
+ * This class is used to handle the prefix AndQuery, e.g., and(banana,apple). A
+ * AndQuery consists of a number of subqueries, where the sub-query can be an
+ * AndQuqery object as well. Consider a query that can be nested with many
+ * layers.
  * 
  * @author Yongjie Zhuang
  */
 public class AndQuery implements Query {
 
 	/**
-	 * It represents the sub-queries of this AndQuery, it can be more than two in
-	 * case of the prefix form.
+	 * A collection of sub-queries of this AndQuery, it can have more than two
+	 * subqueryies in case of the prefix form.
 	 */
 	private TreeSet<String> subQueryCollection;
 
 	/**
-	 * It's a collection of results of all subqueries.
+	 * A collection of results this AndQuery.
 	 */
 	private ArrayList<Set<WebDoc>> queryResults;
 
 	/**
-	 * Constructor of AndQuery that initialises the instance
-	 * variables(normalQueryResult, notQueryResult and subQueryCollection).
+	 * Instantiate AndQuery with one or more subqueries.
 	 * 
-	 * @param subQuery a TreeSet<String> of sub-query.
+	 * @param subQuery a TreeSet<String> of subqueries.
 	 */
 	public AndQuery(TreeSet<String> subQuery) {
 		this.subQueryCollection = subQuery;
@@ -37,13 +37,17 @@ public class AndQuery implements Query {
 	}
 
 	/**
+	 * <p>
 	 * It is part of the recursion that the matches() method will call the
 	 * QueryBuilder.parse() to parse the sub-query of this AndQuery object, and then
-	 * calls the matches() of the sub-query.
-	 * 
-	 * This method searches through the given WebIndex based on the query to find
-	 * all the matched results. The AndQuery object finds the common parts of each
-	 * sub-queries.
+	 * calls the matches() of each subquery object to get the result for each
+	 * subquery.
+	 * </p>
+	 * <p>
+	 * This method searches through the given WebIndex based on its subqueries.
+	 * Since this is an AndQuery, it finds and combine the common parts of each
+	 * subquery.
+	 * </p>
 	 * 
 	 * @return a Set<WebDoc> that is found based on the query and the given
 	 *         WebIndex.
@@ -75,12 +79,17 @@ public class AndQuery implements Query {
 	}
 
 	/**
-	 * This method returns a String indicate the type of the query and the
-	 * sub-query. The sub-query is indicated using '[' and ']'. E.g.,
-	 * and(A,and(C,D)) -> AND([A],[and(C,D)])
+	 * <p>
+	 * This method returns a String indicating the type of the query and its
+	 * subqueries (that may not yet been parsed). The subqueries are indicated using
+	 * '[' and ']'.
+	 * </p>
+	 * <p>
+	 * E.g., and(A,and(C,D)) -> AND([A],[and(C,D)])
+	 * </p>
 	 * 
-	 * @return a string that indicates the type of this query as well as the
-	 *         sub-query of this query.
+	 * @return a string that indicates the type of this query as well as its
+	 *         subqueries.
 	 */
 	@Override
 	public String toString() {
