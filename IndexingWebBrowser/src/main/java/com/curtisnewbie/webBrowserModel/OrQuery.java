@@ -2,6 +2,7 @@ package com.curtisnewbie.webBrowserModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,18 +24,12 @@ public class OrQuery implements Query {
 	private TreeSet<String> subQueryCollection;
 
 	/**
-	 * It is a collection of results of the matches() of all the sub-query.
-	 */
-	private ArrayList<Set<WebDoc>> subQueryResult;
-
-	/**
 	 * Instantiate OrQuery
 	 * 
 	 * @param subQuery a TreeSet<String> of sub-query.
 	 */
 	public OrQuery(TreeSet<String> subQuery) {
 		this.subQueryCollection = subQuery;
-		subQueryResult = new ArrayList<>();
 	}
 
 	/**
@@ -53,13 +48,14 @@ public class OrQuery implements Query {
 	 */
 	@Override
 	public Set<WebDoc> matches(WebIndex wind) {
+		List<Set<WebDoc>> subqueriesResults = new ArrayList<>();
 		// Get the results of all the sub-queries
 		for (String eachQuery : subQueryCollection) {
 			Query subQuery = QueryBuilder.parse(eachQuery);
-			subQueryResult.add(subQuery.matches(wind));
+			subqueriesResults.add(subQuery.matches(wind));
 		}
 		Set<WebDoc> finalSubQueryResult = new TreeSet<>();
-		for (Set<WebDoc> eachSet : subQueryResult) {
+		for (Set<WebDoc> eachSet : subqueriesResults) {
 			if (eachSet != null) {
 				finalSubQueryResult.addAll(eachSet);
 			}
