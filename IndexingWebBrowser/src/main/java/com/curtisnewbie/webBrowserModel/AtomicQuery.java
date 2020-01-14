@@ -16,10 +16,9 @@ public class AtomicQuery implements Query {
 	private String query;
 
 	/**
-	 * Constructor of AtomicQuery that assigns the value to its (instance variable)
-	 * query.
+	 * Instantiate AtomicQuery
 	 * 
-	 * @param s the AtomicQuery itself or the word that is searched.
+	 * @param s a simple word as the query
 	 */
 	public AtomicQuery(String s) {
 		query = s;
@@ -29,9 +28,9 @@ public class AtomicQuery implements Query {
 	 * This method searches through the given WebIndex based on the query to find
 	 * all the matched results.
 	 * 
-	 * @return a Set<WebDoc> that is found based on the query and the given
+	 * @return a Set of WebDoc that is found based on the query and the given
 	 *         WebIndex.
-	 * @param wind the WebIndex that is used to search through based on the query.
+	 * @param wind the WebIndex that is being searched based on the query.
 	 * 
 	 */
 	@Override
@@ -40,12 +39,16 @@ public class AtomicQuery implements Query {
 	}
 
 	/**
-	 * This method returns a String indicate the type of the query and the
-	 * sub-query.The sub-query is indicated using '[' and ']'. E.g., banana ->
-	 * ATOMIC:[banana]
+	 * <p>
+	 * This method returns a String that indicates the type of the query and the
+	 * word that is searched. The word is indicated using '[' and ']'.
+	 * </p>
+	 * <p>
+	 * E.g., banana -> ATOMIC:[banana]
+	 * </p>
 	 * 
-	 * @return a string that indicates the type of this query as well as the
-	 *         sub-query of this query.
+	 * @return a string that indicates the type of this query as well as the word
+	 *         that is searched.
 	 */
 	public String toString() {
 		return "ATOMIC:[" + query + "]";
