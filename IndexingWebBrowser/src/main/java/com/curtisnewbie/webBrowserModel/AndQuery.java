@@ -2,6 +2,7 @@ package com.curtisnewbie.webBrowserModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -22,18 +23,12 @@ public class AndQuery implements Query {
 	private TreeSet<String> subQueryCollection;
 
 	/**
-	 * A collection of results this AndQuery.
-	 */
-	private ArrayList<Set<WebDoc>> queryResults;
-
-	/**
 	 * Instantiate AndQuery with one or more subqueries.
 	 * 
 	 * @param subQuery a TreeSet<String> of subqueries.
 	 */
 	public AndQuery(TreeSet<String> subQuery) {
 		this.subQueryCollection = subQuery;
-		queryResults = new ArrayList<>();
 	}
 
 	/**
@@ -55,6 +50,7 @@ public class AndQuery implements Query {
 	 * @Override
 	 */
 	public Set<WebDoc> matches(WebIndex wind) {
+		List<Set<WebDoc>> queryResults = new ArrayList<>();
 		// Get the results of all the sub-queries
 		for (String eachQuery : subQueryCollection) {
 			Query subQuery = QueryBuilder.parse(eachQuery);
