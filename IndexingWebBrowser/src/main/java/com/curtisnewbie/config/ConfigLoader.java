@@ -20,8 +20,7 @@ public class ConfigLoader {
     public Map<String, String> loadConfigFile() {
 
         var in = classLoader.getResourceAsStream(CONFIG_PATH);
-        try {
-            JsonParser parser = new JsonFactory().createParser(in);
+        try (JsonParser parser = new JsonFactory().createParser(in);) {
             Map<String, String> map = new HashMap<>(); // may be modified in the future, it is now used for simple json
                                                        // file.
             while (parser.nextToken() != JsonToken.END_OBJECT) {
