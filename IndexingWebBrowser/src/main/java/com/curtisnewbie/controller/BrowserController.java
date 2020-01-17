@@ -1,5 +1,6 @@
 package com.curtisnewbie.controller;
 
+import com.curtisnewbie.config.*;
 import com.curtisnewbie.view.*;
 import com.curtisnewbie.webBrowserModel.WebDoc;
 import com.curtisnewbie.webBrowserModel.WebIndexForBody;
@@ -39,6 +40,8 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class BrowserController {
 
+    private final String DEF_URL = "https://www.google.com";
+
     private BrowserView view;
     private String default_url;
     private WebIndexForHead headIndex;
@@ -51,11 +54,12 @@ public class BrowserController {
     private Transformer transformer;
 
     public BrowserController(BrowserView view) {
+        // initialise components
         this.view = view;
-        this.default_url = "https://www.google.com";
         this.headIndex = new WebIndexForHead();
         this.bodyIndex = new WebIndexForBody();
         this.allWebDocs = new HashMap<>();
+        this.default_url = DEF_URL;
 
         // register EventHandlers
         this.view.addMenuEventHandlers(createMenuEventHandlers());
@@ -69,6 +73,13 @@ public class BrowserController {
         // by default, display a new tab displaying the default_url
         var firstTab = this.view.getDisplayPane().addTab(default_url);
         regStateChangeHandler(firstTab);
+    }
+
+    public BrowserController(BrowserView view, Map<String, String> configMap) {
+        this(view);
+        if (configMap != null) {
+            default_url = configMap.get(Config.CONFIG_URL);
+        }
     }
 
     /**
