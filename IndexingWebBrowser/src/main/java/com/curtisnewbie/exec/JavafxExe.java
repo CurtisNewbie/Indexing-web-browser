@@ -33,7 +33,7 @@ public class JavafxExe extends Application {
         Map<String, String> configMap = configLoader.loadConfigFile();
         if (configMap != null) {
             this.configMap = configMap;
-            this.title = configMap.get(Config.CONFIG_NAME);
+            this.title = configMap.get(Config.CONFIG_TITLE);
         }
     }
 

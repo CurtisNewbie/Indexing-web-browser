@@ -4,5 +4,5 @@ package com.curtisnewbie.config;
 public class Config {
 
     public static final String CONFIG_URL = "defaultUrl";
-    public static final String CONFIG_NAME = "name";
+    public static final String CONFIG_TITLE = "title";
 }
