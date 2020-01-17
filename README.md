@@ -1,12 +1,16 @@
 # A-simple-indexing-web-browser
 
-This is a very simple indexing web browser, it builds a searchable index of web page contents dynamically as the user browses. This program has two "views"/"windows", one is for browsing webpages, and another is for searching content words with queries.
+This is a very simple indexing web browser, it builds a searchable index of web page contents dynamically as the user browses. This program has two "views"/"windows", one is for browsing webpages, and another is for searching content words with queries. The users are able to browse online websites (by entering URL) or local html files (by providing path to these files). Once the webpages are visited, users can then search through these webpages using <b>infix or prefix queries</b>. There are two type of contents words that can be searched for: the uniques words within the <b>\<head>...\</head></b> tags and the unique words within the <b>\<body>...\</body></b> tags.
 
-The users are able to browse online websites (by entering URL) or local html files (by providing path to these files). Once the webpages are visited, users can then search through these webpages using <b>infix or prefix queries</b>. There are two type of contents words that can be searched for: the uniques words within the <b>\<head>...\</head></b> tags and the unique words within the <b>\<body>...\</body></b> tags.
+If you are only interested in what it does, you can have a look at the demos in Section 2. Using it as a simple web browser would only need to know the basic functionalities in **Section 2 (Demo)** and **Section 3 (loading web pages)**. Some basic configuration (e.g., default URL for new tab) is also explained is **Section 4 (Configuration with JSON)**. If you want to use the query functions to search through contents, you may need to have a look at **Section 5 (Query)**, it shouldn't be hard to understand, but I hope that I have explained it clearly. :D
 
-If you are only interested in what it does, you can have a look at the demos in Section 2. Using it as a simple web browser would only need to know the basic functionalities in Section 2 and Section 3 (for loading local webpage).
+#### Content:
 
-If you want to use the query functions to search through contents, you may need to have a look at Section 4, it shouldn't be hard to understand, but I hope that I have explained it clearly. :D
+1. Running Program With Maven
+2. Demo of Functionalities
+3. Browsing Online and local web pages
+4. Custom Configuration
+5. Query
 
 This program is developed using:
 
@@ -14,7 +18,10 @@ This program is developed using:
 	<li>JavaSE</li>
 	<li>JavaFX</li>
 	<li>JSoup</li>
+    <li>Jackson</li>
 </ul>
+
+---
 
 <h2>1. Running This Program With Maven</h2>
 
@@ -25,6 +32,8 @@ External dependencies are resolved using Maven, which include JavaFx, JSoup and 
 If you have problems downloading the dependencies, you can execute the command below before the one above.
 
     mvn dependency:resolve
+
+---
 
 <h2>2. Demonstration of Functionalities With GIF</h2>
 
@@ -64,7 +73,9 @@ Using <b>"/all"</b> command can display all the webpages in the results panel, s
 
 <img src="https://user-images.githubusercontent.com/45169791/71386854-96bf9600-25e8-11ea-90b3-e8b31654087a.gif" width=711 height=400 >
 
-<h2>2. How to Browse Online Website and Local WebPage</h2>
+---
+
+<h2>3. How to Browse Online Website and Local WebPage</h2>
 
 You can either use it as a normal browser to visit online website by entering url, if no "http://" or "https://" protocols are given, the browser will automatically complete it for you.
 
@@ -77,7 +88,20 @@ If you want to load a local webpage (html file), then you need to use specific s
 
     file:/home/yongjie/test.html
 
-<h2>3. Explanation of Queries</h2>
+---
+
+<h2>4. Custom Configuration</h2>
+
+This program uses **Json** file for configuration. It now only supports configuring two properties. 1) **_"defaultUrl"_** - The default url (i.e., the one that is loaded when a new tab is created), this is usually the search engine. 2) **_"title"_** - The title of the application. The configuration file is located at **src/main/resources/config.json**. It looks like this:
+
+    {
+        "defaultUrl": "https://www.google.com",
+        "title": "Hi Curtis"
+    }
+
+---
+
+<h2>5. Explanation of Queries</h2>
 
 <h3>Operators</h3>
 
