@@ -69,10 +69,6 @@ public class BrowserController {
         this.view.addForwardBtnHandler(createForwardBtnHandler());
         this.view.addInfixQueryHandler(createInfixQueryHandler());
         this.view.addPrefixQueryHandler(createPrefixQueryHandler());
-
-        // by default, display a new tab displaying the default_url
-        var firstTab = this.view.getDisplayPane().addTab(default_url);
-        regStateChangeHandler(firstTab);
     }
 
     public BrowserController(BrowserView view, Map<String, String> configMap) {
