@@ -50,6 +50,10 @@ public class JavafxExe extends Application {
         double width = screen.getWidth();
         double height = screen.getHeight();
 
+        // set min size of primaryStage
+        primaryStage.setMinWidth(900);
+        primaryStage.setMinHeight(600);
+
         Scene scene = new Scene(view, width * 0.7, height * 0.7);
         primaryStage.setScene(scene);
         primaryStage.setTitle(title == null ? DEF_TITLE : title);
